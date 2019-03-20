@@ -1,0 +1,341 @@
+@misc{1406.2661v1,
+	abstract = {  We propose a new framework for estimating generative models via an
+adversarial process, in which we simultaneously train two models: a generative
+model G that captures the data distribution, and a discriminative model D that
+estimates the probability that a sample came from the training data rather than
+G. The training procedure for G is to maximize the probability of D making a
+mistake. This framework corresponds to a minimax two-player game. In the space
+of arbitrary functions G and D, a unique solution exists, with G recovering the
+training data distribution and D equal to 1/2 everywhere. In the case where G
+and D are defined by multilayer perceptrons, the entire system can be trained
+with backpropagation. There is no need for any Markov chains or unrolled
+approximate inference networks during either training or generation of samples.
+Experiments demonstrate the potential of the framework through qualitative and
+quantitative evaluation of the generated samples.
+},
+	archiveprefix = {arXiv},
+	author = {Goodfellow, Ian J. and Pouget-Abadie, Jean and Mirza, Mehdi and Xu, Bing and Warde-Farley, David and Ozair, Sherjil and Courville, Aaron and Bengio, Yoshua},
+	comment = {published = 2014-06-10T18:58:17Z, updated = 2014-06-10T18:58:17Z},
+	eprint = {1406.2661v1},
+	localfile = {/home/nikolas/Studium/Bachelorarbeit/bibliography_resources/goodfellow - Generative Adversarial Networks},
+	localfile2 = {/home/nikolas/Studium/Bachelorarbeit/bibliography_resources/goodfellow - Generative Adversarial Networks.pdf},
+	month = jun,
+	primaryclass = {stat.ML},
+	title = {{Generative Adversarial Networks}},
+	url = {http://arxiv.org/abs/1406.2661v1; http://arxiv.org/pdf/1406.2661v1},
+	x-fetchedfrom = {arXiv.org},
+	year = {2014}
+}
+
+@misc{1808.07182v1,
+	abstract = {  3D pose estimation from a single image is a challenging task in computer
+vision. We present a weakly supervised approach to estimate 3D pose points,
+given only 2D pose landmarks. Our method does not require correspondences
+between 2D and 3D points to build explicit 3D priors. We utilize an adversarial
+framework to impose a prior on the 3D structure, learned solely from their
+random 2D projections. Given a set of 2D pose landmarks, the generator network
+hypothesizes their depths to obtain a 3D skeleton. We propose a novel Random
+Projection layer, which randomly projects the generated 3D skeleton and sends
+the resulting 2D pose to the discriminator. The discriminator improves by
+discriminating between the generated poses and pose samples from a real
+distribution of 2D poses. Training does not require correspondence between the
+2D inputs to either the generator or the discriminator. We apply our approach
+to the task of 3D human pose estimation. Results on Human3.6M dataset
+demonstrates that our approach outperforms many previous supervised and weakly
+supervised approaches.
+},
+	archiveprefix = {arXiv},
+	author = {Drover, Dylan and MV, Rohith and Chen, Ching-Hang and Agrawal, Amit and Tyagi, Ambrish and Huynh, Cong Phuoc},
+	comment = {published = 2018-08-22T01:57:33Z, updated = 2018-08-22T01:57:33Z, Appearing in ECCVW 2018 proceedings},
+	eprint = {1808.07182v1},
+	localfile = {/home/nikolas/Studium/Bachelorarbeit/bibliography_resources/drover - can 3d poses be learned from 2d projections alone.pdf},
+	month = aug,
+	primaryclass = {cs.CV},
+	title = {{Can 3D Pose be Learned from 2D Projections Alone?}},
+	url = {http://arxiv.org/abs/1808.07182v1; http://arxiv.org/pdf/1808.07182v1},
+	x-fetchedfrom = {arXiv.org},
+	year = {2018}
+}
+
+@article{Ionescu_2014,
+	author = {Ionescu, Catalin and Papava, Dragos and Olaru, Vlad and Sminchisescu, Cristian},
+	doi = {10.1109/tpami.2013.248},
+	issn = {2160-9292},
+	journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+	localfile = {/home/nikolas/Studium/Bachelorarbeit/bibliography_resources/ionescu - Large Scale Datasets and Predictive Methods for 3D Human Sensing in Natural Environments.pdf},
+	month = {Jul},
+	number = {7},
+	pages = {1325--1339},
+	publisher = {Institute of Electrical and Electronics Engineers (IEEE)},
+	title = {{Human3.6M: Large Scale Datasets and Predictive Methods for 3D Human Sensing in Natural Environments}},
+	url = {http://dx.doi.org/10.1109/TPAMI.2013.248},
+	volume = {36},
+	x-fetchedfrom = {DOI},
+	year = {2014}
+}
+
+@misc{1704.00159v3,
+	abstract = {  Regression based methods are not performing as well as detection based
+methods for human pose estimation. A central problem is that the structural
+information in the pose is not well exploited in the previous regression
+methods. In this work, we propose a structure-aware regression approach. It
+adopts a reparameterized pose representation using bones instead of joints. It
+exploits the joint connection structure to define a compositional loss function
+that encodes the long range interactions in the pose. It is simple, effective,
+and general for both 2D and 3D pose estimation in a unified setting.
+Comprehensive evaluation validates the effectiveness of our approach. It
+significantly advances the state-of-the-art on Human3.6M and is competitive
+with state-of-the-art results on MPII.
+},
+	archiveprefix = {arXiv},
+	author = {Sun, Xiao and Shang, Jiaxiang and Liang, Shuang and Wei, Yichen},
+	comment = {published = 2017-04-01T11:59:41Z, updated = 2017-08-02T03:31:39Z, Accepted by International Conference on Computer Vision (ICCV) 2017},
+	eprint = {1704.00159v3},
+	localfile = {/home/nikolas/Studium/Bachelorarbeit/bibliography_resources/sun - Compositional Human Pose Regression.pdf},
+	month = aug,
+	primaryclass = {cs.CV},
+	title = {{Compositional Human Pose Regression}},
+	url = {http://arxiv.org/abs/1704.00159v3; http://arxiv.org/pdf/1704.00159v3},
+	x-fetchedfrom = {arXiv.org},
+	year = {2017}
+}
+
+@misc{1705.03098v2,
+	abstract = {  Following the success of deep convolutional networks, state-of-the-art
+methods for 3d human pose estimation have focused on deep end-to-end systems
+that predict 3d joint locations given raw image pixels. Despite their excellent
+performance, it is often not easy to understand whether their remaining error
+stems from a limited 2d pose (visual) understanding, or from a failure to map
+2d poses into 3-dimensional positions. With the goal of understanding these
+sources of error, we set out to build a system that given 2d joint locations
+predicts 3d positions. Much to our surprise, we have found that, with current
+technology, "lifting" ground truth 2d joint locations to 3d space is a task
+that can be solved with a remarkably low error rate: a relatively simple deep
+feed-forward network outperforms the best reported result by about 30\% on
+Human3.6M, the largest publicly available 3d pose estimation benchmark.
+Furthermore, training our system on the output of an off-the-shelf
+state-of-the-art 2d detector (\ie, using images as input) yields state of the
+art results -- this includes an array of systems that have been trained
+end-to-end specifically for this task. Our results indicate that a large
+portion of the error of modern deep 3d pose estimation systems stems from their
+visual analysis, and suggests directions to further advance the state of the
+art in 3d human pose estimation.
+},
+	archiveprefix = {arXiv},
+	author = {Martinez, Julieta and Hossain, Rayat and Romero, Javier and Little, James J.},
+	comment = {published = 2017-05-08T21:48:37Z, updated = 2017-08-04T18:36:24Z, Accepted to ICCV 17},
+	eprint = {1705.03098v2},
+	localfile = {/home/nikolas/Studium/Bachelorarbeit/bibliography_resources/martinez - a simple baseline for 3d hume pose estimation.pdf},
+	month = aug,
+	primaryclass = {cs.CV},
+	title = {{A simple yet effective baseline for 3d human pose estimation}},
+	url = {http://arxiv.org/abs/1705.03098v2; http://arxiv.org/pdf/1705.03098v2},
+	x-fetchedfrom = {arXiv.org},
+	year = {2017}
+}
+
+@misc{1511.09439v2,
+	abstract = {  This paper addresses the challenge of 3D full-body human pose estimation from
+a monocular image sequence. Here, two cases are considered: (i) the image
+locations of the human joints are provided and (ii) the image locations of
+joints are unknown. In the former case, a novel approach is introduced that
+integrates a sparsity-driven 3D geometric prior and temporal smoothness. In the
+latter case, the former case is extended by treating the image locations of the
+joints as latent variables. A deep fully convolutional network is trained to
+predict the uncertainty maps of the 2D joint locations. The 3D pose estimates
+are realized via an Expectation-Maximization algorithm over the entire
+sequence, where it is shown that the 2D joint location uncertainties can be
+conveniently marginalized out during inference. Empirical evaluation on the
+Human3.6M dataset shows that the proposed approaches achieve greater 3D pose
+estimation accuracy over state-of-the-art baselines. Further, the proposed
+approach outperforms a publicly available 2D pose estimation baseline on the
+challenging PennAction dataset.
+},
+	archiveprefix = {arXiv},
+	author = {Zhou, Xiaowei and Zhu, Menglong and Leonardos, Spyridon and Derpanis, Kosta and Daniilidis, Kostas},
+	comment = {published = 2015-11-30T19:41:06Z, updated = 2016-04-28T14:53:43Z, Published in CVPR2016},
+	eprint = {1511.09439v2},
+	localfile = {/home/nikolas/Studium/Bachelorarbeit/bibliography_resources/zhou - Sparseness Meets Deepness: 3D Human Pose Estimation from Monocular Video.pdf},
+	month = apr,
+	primaryclass = {cs.CV},
+	title = {{Sparseness Meets Deepness: 3D Human Pose Estimation from Monocular Video}},
+	url = {http://arxiv.org/abs/1511.09439v2; http://arxiv.org/pdf/1511.09439v2},
+	x-fetchedfrom = {arXiv.org},
+	year = {2016}
+}
+
+@misc{1611.05708v3,
+	abstract = {  Most recent approaches to monocular 3D human pose estimation rely on Deep
+Learning. They typically involve regressing from an image to either 3D joint
+coordinates directly or 2D joint locations from which 3D coordinates are
+inferred. Both approaches have their strengths and weaknesses and we therefore
+propose a novel architecture designed to deliver the best of both worlds by
+performing both simultaneously and fusing the information along the way. At the
+heart of our framework is a trainable fusion scheme that learns how to fuse the
+information optimally instead of being hand-designed. This yields significant
+improvements upon the state-of-the-art on standard 3D human pose estimation
+benchmarks.
+},
+	archiveprefix = {arXiv},
+	author = {Tekin, Bugra and M{\'a}rquez-Neila, Pablo and Salzmann, Mathieu and Fua, Pascal},
+	comment = {published = 2016-11-17T14:40:53Z, updated = 2017-04-10T10:49:00Z},
+	eprint = {1611.05708v3},
+	localfile = {bibliography_resources/tekin - learning to fuse 2d and 3d image cues.pdf},
+	month = apr,
+	primaryclass = {cs.CV},
+	title = {{Learning to Fuse 2D and 3D Image Cues for Monocular Body Pose Estimation}},
+	url = {http://arxiv.org/abs/1611.05708v3; http://arxiv.org/pdf/1611.05708v3},
+	x-fetchedfrom = {arXiv.org},
+	year = {2017}
+}
+
+@misc{1502.03167v3,
+	abstract = {  Training Deep Neural Networks is complicated by the fact that the
+distribution of each layer's inputs changes during training, as the parameters
+of the previous layers change. This slows down the training by requiring lower
+learning rates and careful parameter initialization, and makes it notoriously
+hard to train models with saturating nonlinearities. We refer to this
+phenomenon as internal covariate shift, and address the problem by normalizing
+layer inputs. Our method draws its strength from making normalization a part of
+the model architecture and performing the normalization for each training
+mini-batch. Batch Normalization allows us to use much higher learning rates and
+be less careful about initialization. It also acts as a regularizer, in some
+cases eliminating the need for Dropout. Applied to a state-of-the-art image
+classification model, Batch Normalization achieves the same accuracy with 14
+times fewer training steps, and beats the original model by a significant
+margin. Using an ensemble of batch-normalized networks, we improve upon the
+best published result on ImageNet classification: reaching 4.9\% top-5
+validation error (and 4.8\% test error), exceeding the accuracy of human raters.
+},
+	archiveprefix = {arXiv},
+	author = {Ioffe, Sergey and Szegedy, Christian},
+	comment = {published = 2015-02-11T01:44:18Z, updated = 2015-03-02T20:44:12Z},
+	eprint = {1502.03167v3},
+	localfile = {bibliography_resources/ioffe - Batch Normalization.pdf},
+	month = mar,
+	primaryclass = {cs.LG},
+	title = {{Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift}},
+	url = {http://arxiv.org/abs/1502.03167v3; http://arxiv.org/pdf/1502.03167v3},
+	x-fetchedfrom = {arXiv.org},
+	year = {2015}
+}
+
+@misc{1509.06720v2,
+	abstract = {  One major challenge for 3D pose estimation from a single RGB image is the
+acquisition of sufficient training data. In particular, collecting large
+amounts of training data that contain unconstrained images and are annotated
+with accurate 3D poses is infeasible. We therefore propose to use two
+independent training sources. The first source consists of images with
+annotated 2D poses and the second source consists of accurate 3D motion capture
+data. To integrate both sources, we propose a dual-source approach that
+combines 2D pose estimation with efficient and robust 3D pose retrieval. In our
+experiments, we show that our approach achieves state-of-the-art results and is
+even competitive when the skeleton structure of the two sources differ
+substantially.
+},
+	archiveprefix = {arXiv},
+	author = {Yasin, Hashim and Iqbal, Umar and Kr{\"u}ger, Bj{\"o}rn and Weber, Andreas and Gall, Juergen},
+	comment = {published = 2015-09-22T18:38:16Z, updated = 2016-03-27T11:43:06Z, Accepted to CVPR 2016. The source code and models are publicly available. Title changed from the previous version},
+	eprint = {1509.06720v2},
+	localfile = {bibliography_resources/yasin - a dual-source approach for 3d pose estimation.pdf},
+	month = mar,
+	primaryclass = {cs.CV},
+	title = {{A Dual-Source Approach for 3D Pose Estimation from a Single Image}},
+	url = {http://arxiv.org/abs/1509.06720v2; http://arxiv.org/pdf/1509.06720v2},
+	x-fetchedfrom = {arXiv.org},
+	year = {2016}
+}
+
+@misc{1902.09868v2,
+	abstract = {  This paper addresses the problem of 3D human pose estimation from single
+images. While for a long time human skeletons were parameterized and fitted to
+the observation by satisfying a reprojection error, nowadays researchers
+directly use neural networks to infer the 3D pose from the observations.
+However, most of these approaches ignore the fact that a reprojection
+constraint has to be satisfied and are sensitive to overfitting. We tackle the
+overfitting problem by ignoring 2D to 3D correspondences. This efficiently
+avoids a simple memorization of the training data and allows for a weakly
+supervised training. One part of the proposed reprojection network (RepNet)
+learns a mapping from a distribution of 2D poses to a distribution of 3D poses
+using an adversarial training approach. Another part of the network estimates
+the camera. This allows for the definition of a network layer that performs the
+reprojection of the estimated 3D pose back to 2D which results in a
+reprojection loss function. Our experiments show that RepNet generalizes well
+to unknown data and outperforms state-of-the-art methods when applied to unseen
+data. Moreover, our implementation runs in real-time on a standard desktop PC.
+},
+	archiveprefix = {arXiv},
+	author = {Wandt, Bastian and Rosenhahn, Bodo},
+	comment = {published = 2019-02-26T11:23:54Z, updated = 2019-03-12T14:20:04Z, accepted to CVPR 2019},
+	eprint = {1902.09868v2},
+	localfile = {bibliography_resources/wandt - repnet weakly supervised training of an adversarioal network.pdf},
+	month = mar,
+	primaryclass = {cs.CV},
+	title = {{RepNet: Weakly Supervised Training of an Adversarial Reprojection Network for 3D Human Pose Estimation}},
+	url = {http://arxiv.org/abs/1902.09868v2; http://arxiv.org/pdf/1902.09868v2},
+	x-fetchedfrom = {arXiv.org},
+	year = {2019}
+}
+
+@misc{1607.08128v1,
+	abstract = {  We describe the first method to automatically estimate the 3D pose of the
+human body as well as its 3D shape from a single unconstrained image. We
+estimate a full 3D mesh and show that 2D joints alone carry a surprising amount
+of information about body shape. The problem is challenging because of the
+complexity of the human body, articulation, occlusion, clothing, lighting, and
+the inherent ambiguity in inferring 3D from 2D. To solve this, we first use a
+recently published CNN-based method, DeepCut, to predict (bottom-up) the 2D
+body joint locations. We then fit (top-down) a recently published statistical
+body shape model, called SMPL, to the 2D joints. We do so by minimizing an
+objective function that penalizes the error between the projected 3D model
+joints and detected 2D joints. Because SMPL captures correlations in human
+shape across the population, we are able to robustly fit it to very little
+data. We further leverage the 3D model to prevent solutions that cause
+interpenetration. We evaluate our method, SMPLify, on the Leeds Sports,
+HumanEva, and Human3.6M datasets, showing superior pose accuracy with respect
+to the state of the art.
+},
+	archiveprefix = {arXiv},
+	author = {Bogo, Federica and Kanazawa, Angjoo and Lassner, Christoph and Gehler, Peter and Romero, Javier and Black, Michael J.},
+	comment = {published = 2016-07-27T14:46:36Z, updated = 2016-07-27T14:46:36Z, To appear in ECCV 2016},
+	eprint = {1607.08128v1},
+	localfile = {bibliography_resources/bogo - keep it smpl.pdf},
+	month = jul,
+	primaryclass = {cs.CV},
+	title = {{Keep it SMPL: Automatic Estimation of 3D Human Pose and Shape from a Single Image}},
+	url = {http://arxiv.org/abs/1607.08128v1; http://arxiv.org/pdf/1607.08128v1},
+	x-fetchedfrom = {arXiv.org},
+	year = {2016}
+}
+
+@misc{1611.09010v1,
+	abstract = {  This paper addresses the problem of 3D human pose estimation from a single
+image. We follow a standard two-step pipeline by first detecting the 2D
+position of the $N$ body joints, and then using these observations to infer 3D
+pose. For the first step, we use a recent CNN-based detector. For the second
+step, most existing approaches perform 2$N$-to-3$N$ regression of the Cartesian
+joint coordinates. We show that more precise pose estimates can be obtained by
+representing both the 2D and 3D human poses using $N\times N$ distance
+matrices, and formulating the problem as a 2D-to-3D distance matrix regression.
+For learning such a regressor we leverage on simple Neural Network
+architectures, which by construction, enforce positivity and symmetry of the
+predicted matrices. The approach has also the advantage to naturally handle
+missing observations and allowing to hypothesize the position of non-observed
+joints. Quantitative results on Humaneva and Human3.6M datasets demonstrate
+consistent performance gains over state-of-the-art. Qualitative evaluation on
+the images in-the-wild of the LSP dataset, using the regressor learned on
+Human3.6M, reveals very promising generalization results.
+},
+	archiveprefix = {arXiv},
+	author = {Moreno-Noguer, Francesc},
+	comment = {published = 2016-11-28T07:36:31Z, updated = 2016-11-28T07:36:31Z},
+	eprint = {1611.09010v1},
+	localfile = {bibliography_resources/moreno-noguer - 3d human pose estimation from a single image.pdf},
+	month = nov,
+	primaryclass = {cs.CV},
+	title = {{3D Human Pose Estimation from a Single Image via Distance Matrix Regression}},
+	url = {http://arxiv.org/abs/1611.09010v1; http://arxiv.org/pdf/1611.09010v1},
+	x-fetchedfrom = {arXiv.org},
+	year = {2016}
+}
+
