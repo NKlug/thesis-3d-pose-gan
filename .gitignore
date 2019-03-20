@@ -1,5 +1,6 @@
 out/
 bibliography_resources/
+bibliography.bib*
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

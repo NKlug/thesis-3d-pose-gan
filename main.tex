@@ -13,7 +13,88 @@
 \begin{document}
 	\section{Protocols}
 	\subsection{Protocol 1}
-	
+		\begin{itemize}
+			\item Training: S1, S5, S6, S7, S8, S9 (commonly used, e.g. in \cite{chen17})
+			\begin{itemize}
+				\item \cite{drover18} do not use S9.
+				\item The available code suggests that not every pose is used, but only such where at least one joint has moved by 40mm with respect to the former frame.
+			\end{itemize} 			
+			\item Evaluation: S11
+			\begin{itemize}
+				\item \cite{sun17} use every 64th frame (and also the code suggests this). If they only use the available code this would mean a frontal view.
+				\item \cite{drover18} use ground truth 2d points for testing (might be the same as \cite{sun17})
+				\item \cite{moreno-noguer16} use every 64th frame of the frontal view for testing
+			\end{itemize}
+
+			\item Error: \begin{itemize}
+				\item \cite{drover18} use Mean per Joint Position Error (MPJPE) with scaling and rigid alignment to the ground truth skeleton (they don't mention which exactly)
+				\item \cite{sun17} also use MPJPE after rigid alignment using Procrustes Analysis
+				\item \cite{yasin16} use the MPJPE after alignment to the ground truth skeleton by a rigid transformation (they don't mention which exactly)
+				\item \cite{kostrikov14} align the poses by a rigid transformation using \emph{least squares} before computing the MPJPE error
+				\item \cite{tome17} perform a similarity transformation using a Procrustes Analysis
+			\end{itemize}
+			
+		\end{itemize}
 	\subsection{Protocol 2}
+		\begin{itemize}
+			\item Training: S1, S5, S6, S7, S8, S9
+			\begin{itemize}
+				\item Similar to protocol 1 the code suggests that not every pose is used, but only such where at least one joint has moved by 40mm with respect to the former frame.
+				\item \cite{bogo16} evaluate on five different action sequences captured from the frontal camera
+				\item \cite{tekin16, tekin17} use all camera views for training
+			\end{itemize}
+			\item Evaluation: S9, S11 
+			\begin{itemize}
+				\item \cite{sun17} use every 64th frame
+				\item \cite{tekin16, tekin17} use all camera views for testing
+				\item \cite{moreno-noguer16} say they use all images for testing (whatever this means) 
+			\end{itemize}
+			\item Error: \begin{itemize}
+				\item \cite{sun17} use MPJPE apparently without any alignment and scaling
+				\item \cite{martinez17} align the root (central hip), they do not mention any scaling
+				\item \cite{tome17} do not mention any alignment
+				\item \cite{zhou18} scale the output such that the mean limb length is identical to the average value of all training subjects and align the root locations. Procrustes Analysis is not allowed.
+				\item \cite{bogo16} apply a similarity transformation to align the reconstructed 3D joints via the Procrustes analysis on every frame
+				\item \cite{zhou16} align the root locations and scale the output such that the mean limb length is identical to the average value of all training subjects. Procrustes alignment is not allowed.
+				\item it seems that \cite{tekin16} also align the root nodes
+				\item \cite{tekin17} use a Procrustes transformation before measuring the MPJPE
+				\item \cite{pavlakos17} align the root joints
+			\end{itemize}
+		\end{itemize}
 	
+	\subsection{Miscellaneous}
+	\begin{itemize}
+		\item \cite{jahangiri17} evaluate using all subjects after a similarity transformation obtained by Procrustes alignment
+	\end{itemize}
+	
+	\section{Questions and Problems}
+	\begin{itemize}
+		\item It is sometimes not clear which 2d poses are used for testing.
+		\item The transformations applied before calculating the error are not consistent within the protocols.
+	\end{itemize}
+	
+	
+	\section{Our approach}
+		\subsection{Protocol 1}
+			\begin{itemize}
+				\item Training subjects: S1, S5, S6, S7, S8, S9
+				\item Testing/Evaluation subjects: S11
+				\item For now we train on all frames available, \emph{not} such where at least one joint has moved by 40mm
+				\item For evaluation every 64th frame available for the according subjects is used
+				\item Error metric: MPJPE
+				\item Before calculation the error, the poses are transformed using a Procrustes Transformation and the root nodes are aligned
+			\end{itemize}
+		\subsection{Protocol 2}
+			\begin{itemize}
+				\item Training subjects: S1, S5, S6, S7, S8
+				\item Testing/Evaluation subjects: S9, S11
+				\item For now we train on all frames available, \emph{not} such where at least one joint has moved by 40mm
+				\item For evaluation every 64th frame available for the according subjects is used
+				\item Error metric: MPJPE
+				\item Before calculation the error, the root nodes are aligned
+			\end{itemize}
+	
+  \bibliography{bibliography}
+  \bibliographystyle{apalike}
+  
 \end{document}
