@@ -29,24 +29,42 @@
 \begin{document}
 	\maketitle
 	\newpage
-	\begin{abstract}
-		This is the abstract.
-	\end{abstract}
+	
+	\input{abstract}
 	\newpage
+	
 	\tableofcontents
 	\newpage
-	\section{Introduction}
+
+	\input{chapters/introduction}
+	
 	\section{Network architecture}
+	\begin{itemize}
+		\item basic principle of gans???
+		\item Basic architecture used in the paper
+		\item Mention batch norm not working?
+		\item Projection and reprojection.
+	\end{itemize}
 	\section{Data}
+	\begin{itemize}
+		\item Dataset Human3.6m
+		\item Original and augmented data
+		\item Data used for training, evaluation and testing.
+	\end{itemize}
 	Assumptions:
 	\begin{itemize}
 		\item All 2d data can be scaled in a way that a norm limb is of length 0.1. 
 		Problems with correct camera distance, see section \ref{sec:z-shift-error}
+		\item All data was captured with the same camera distance.
 	\end{itemize}
 	\subsection{Evaluation Metrics}
 	\subsubsection{Protocol 2}\label{sec:protocol2}
 	%	\input{evaluation_protocols} 
-	\subsection{Results for data}
+	\subsection{Results for data}\label{sec:data-results}
+	\begin{itemize}
+		\item Results for self created data
+		\item Results for original 2d data
+	\end{itemize}
 	\subsection{Different errors for different sets of joints}
 		Using only 15 joints yields a much lower MPJPE than using 32 joints. Reasons: ...	
 		From now on all numbers are calculated for 15 joint poses.
@@ -124,7 +142,8 @@
 			\includegraphics[scale=0.5]{images/x_shift_error.png}
 			\caption{Plot of theoretical (red) and observed (blue) MPJPEs for different values of $dx$. 
 				The theoretical errors are obtained by calculating the mean of the per pose errors $\alpha \Delta d$ for the evaluation data.}
-			\Todo[inline]{Add axes titles, use proper image}
+			\Todo[inline]{Add axes titles, use proper image.
+			Think about nice ways to display the values: Plot, Table?}
 			\label{fig:x-shift-error}
 		\end{figure}
 	
@@ -133,6 +152,12 @@
 		As $dx$ increases, so does the offset between the observed and the theoretical results until it seems to converge to a constant.
 		This motivates adjusting not only how the inferred points are reprojected into three dimensions but also the input the network receives.
 		This will be discussed further in section \ref{sec:network-adjusting}.
+		
+		As shown in section \ref{sec:data-results} the MPJPE for the original 2D poses is about \Todo{Check this number} 30mm higher than the one for the synthetically generated data.
+		The simplest explanation for this is that the original 2D poses do not fulfill the constraints for the system.
+		The camera is not centered on the root joint and also the camera distance is most certainly not exactly ten times the length of the norm limb.
+		
+		Numbers: ...
 		
 	\subsection{Shifting along the z axis}
 	\label{sec:z-shift-error}
@@ -159,7 +184,15 @@
 	
 	
 	\subsubsection{Experimental results}
-	
+		This phenomenon is also affecting our ground truth data. The poses are all projected with a camera distance $ \text{length-of-norm-limb} \cdot 10$. 
+		That means the length of the projected norm limb is not exactly $0.1$ but a bit smaller or bigger. 
+		Like in the discussed above those projected poses are then normalized. 
+		The system estimates the depths of the normalized pose and re-projects it assuming a perfect perspective projection. 
+		It therefore does not consider the effect of small deviations in z direction.
+		A way to fix this would be to calculate the perfect camera distance for each pose individually before projecting them onto the image plane.
+		This is not very realistic though since one might be able to determine the camera's distance to a human approximately, but definitely not exactly. This phenomenon therefore is kind of inevitable.
+		 
+		
 	\subsection{Total minimal error}
 	
 	Combining results of the previous two chapters
@@ -170,7 +203,14 @@
 	
 	\section{Part 2: Adjusting the network to tolerate shifting}
 	\label{sec:network-adjusting}
+	Error on original poses when training on "shift generator": 73.75
+	\subsubsection{Original network with correct reprojection}
+	
+	\subsubsection{"New" network}
+	Network that takes a shifted input.
+	
 	\section{Conclusion}
+	This is the conclusion of the thesis.
 	\newpage
 	\bibliography{bibliography}
 	\bibliographystyle{apalike}
