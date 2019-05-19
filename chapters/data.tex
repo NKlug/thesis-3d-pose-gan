@@ -30,7 +30,11 @@ It allows rigid alignment \cite{drover18, yasin16, kostrikov14, sun17, tome17, c
 
 
 Most authors do not explicitly state which kind of rigid alignment is applied to the predicted poses.
-Those who do mention a Procrustes Analysis \cite{sun17, tome17} or a Least Squares transformation \cite{kostrikov14}. 
+Those who do mention a Procrustes Analysis \cite{sun17, tome17} or a Least Squares transformation \cite{kostrikov14}.
+That basically allows kinds of translation, scaling and rotation can be applied in order to best fit the predicted poses to the ground truth data.
+
+This approach is not very realistic though as in production there is no ground truth data the predicted poses can be fitted to.
+A more realistic testing technique is presented in the Section \ref{sec:protocol2}.
 
 In accordance with the code shipped with the Human3.6M dataset, \citet{sun17}, \citet{chen17} and \citet{moreno-noguer16} use only every \nth{64} frame of the available data for testing.
 
@@ -42,8 +46,23 @@ In accordance with the code shipped with the Human3.6M dataset, \citet{sun17}, \
 	\item Original and augmented data
 	\item Data used for training, evaluation and testing.
 \end{itemize}
-\subsubsection{Protocol 2}\label{sec:protocol2}
-%	\input{evaluation_protocols} 
+\subsection{Protocol 2}\label{sec:protocol2}
+
+The second protocol found in the literature is \textbf{Protocol 2}.
+In this case only S1, S5, S6, S7 and S8 are used for training, while testing is done on S9 and S11.
+
+This method only allows certain noninvasive changes to the predicted poses.
+In general a Procrustes Analysis is not allowed.
+The degree of the changes applied to the predicted poses strongly depends on the model.
+In a system that predicts absolute 3D poses usually no changes have to be made to the predicted poses in order to obtain meaningful results.
+With only a monocular 2D projection of a pose, it is not possible to estimate the absolute 3D poses as there are multiple 3D poses which all have the same 2D projection.
+Therefore many models \cite{martinez17, zhou18, zhou16, tekin16, pavlakos17} allow aligning two designated root joints (usually the central hip) of the predicted and the ground truth poses.
+In cases where it is not possible to correctly estimate the global scale of the poses scaling is also allowed.
+\citet{zhou18} do this by scaling the predicted poses such that "the mean limb length is identical to the average value of all training subjects".
+One can even go a step further and scale the poses in a way that the mean limb length of the predicted poses is equal to the mean limb length of the subject.
+This avoids the artificially introduced bias of different heights of the subjects.
+
+
 \subsection{Results for data}\label{sec:data-results}
 \begin{itemize}
 	\item Results for self created data
