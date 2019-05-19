@@ -1,0 +1,54 @@
+\section{Data}
+\label{sec:data}
+
+For training and evaluation of the models the dataset Human3.6M is used \cite{ionescu14}. 
+It contains 3.6 million three dimensional human poses captured by digital and motion capture cameras, consisting of data from 11 subjects (6 male, 5 female) performing 15 different activities such as walking, taking a photo, eating or smoking.
+The poses are available in different parametrizations, but only the one with 3D joint positions transformed with the camera parameters of the 4 digital cameras were used for training and evaluation (called \texttt{D3\_Positions\_mono} in the dataset).
+
+32 joints and 15 / 17 joints
+
+In the literature multiple different evaluation methods are used. 
+This is partly because not all models produce absolute 3D poses, but some only up to a scaling factor or alignment of joints.
+Therefore, some modifications have to be made in order to measure the quality and allow a fair comparison to other approaches.
+Essentially two different evaluation protocols with minor variations have emerged which will be presented and discussed in the following.
+
+\subsection{Evaluation Metrics}
+The most commonly used metric for evaluation is the Mean per Joint Position Error (MPJPE).
+For $n$ joints, original 3D joint positions $O_i$ and predicted positions $P_i$ it is defined as
+\begin{equation}
+	\frac{1}{n} \sum_{i = 1}^{n}  \norm{O_i - P_i}_2 \ .
+\end{equation}
+
+\subsection{Protocol 1}
+
+This protocol is used under different names in slightly different variations in \cite{sun17, drover18, moreno-noguer16, yasin16, kostrikov14, tome17}.
+The method commonly referred to as \textbf{Protocol 1} uses subjects S1, S5, S6, S7, S8 and S9 for training and S11 for testing.
+
+Sometimes the train data is thinned out further by the elimination of similar poses \cite{yasin16}.
+\citet{drover18} even completely leave out S8 for training.
+It allows rigid alignment \cite{drover18, yasin16, kostrikov14, sun17, tome17, chen17} of the predicted poses to the ground truth data.
+
+
+Most authors do not explicitly state which kind of rigid alignment is applied to the predicted poses.
+Those who do mention a Procrustes Analysis \cite{sun17, tome17} or a Least Squares transformation \cite{kostrikov14}. 
+
+In accordance with the code shipped with the Human3.6M dataset, \citet{sun17}, \citet{chen17} and \citet{moreno-noguer16} use only every \nth{64} frame of the available data for testing.
+
+
+
+\input{evaluation_protocols}
+\begin{itemize}
+	\item Dataset Human3.6m
+	\item Original and augmented data
+	\item Data used for training, evaluation and testing.
+\end{itemize}
+\subsubsection{Protocol 2}\label{sec:protocol2}
+%	\input{evaluation_protocols} 
+\subsection{Results for data}\label{sec:data-results}
+\begin{itemize}
+	\item Results for self created data
+	\item Results for original 2d data
+\end{itemize}
+\subsection{Different errors for different sets of joints}
+	Using only 15 joints yields a much lower MPJPE than using 32 joints. Reasons: ...	
+	From now on all numbers are calculated for 15 joint poses.
