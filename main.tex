@@ -17,6 +17,9 @@
 \usepackage[super]{nth} % use superscripts for 1st, 2nd, 3rd
 \usepackage[square]{natbib} % citeauthor, citet
 \usepackage{physics} % norm
+\usepackage{enumitem} % changing enumeration styles
+\usepackage{gensymb} % degree
+
 
 \usepackage{xr-hyper}  
 \usepackage[hidelinks, pagebackref,pdftex]{hyperref}
@@ -31,6 +34,7 @@
 \newcommandx{\unsure}[2][1=]{\todo[linecolor=orange,backgroundcolor=orange!25,bordercolor=orange,#1]{#2}}
 \newcommandx{\Todo}[2][1=]{\todo[linecolor=yellow,backgroundcolor=yellow!25,bordercolor=yellow,#1]{#2}}
 
+\setenumerate{label=(\arabic*),itemsep=0mm} % enumerate labeling and line distance
 \renewcommand{\baselinestretch}{1.15} % line distance
 
 \author{Nikolas Klug \\ Universität Augsburg}
