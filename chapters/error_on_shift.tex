@@ -1,4 +1,4 @@
-\section{Part 1: MPJPE increase when shifting}
+\section{Analysis of the MPJPE when deviating from the constraints}
 
 Possible deviations of the assumptions about the three dimensional poses and how they are projected onto the image plane: Deviation in x and y direction, deviation in z direction, different focal length.
 
@@ -68,12 +68,13 @@ The MPJPE $\Delta d$ for a pose can then be calculated as the mean of all $\Delt
 	\Todo{Explain why} Therefore the actual error is $\Delta d' = \alpha \cdot \Delta d$.
 	
 	\begin{figure}[ht]
+		
 		\centering
 		\includegraphics[scale=0.5]{images/x_shift_error.png}
 		\caption{Plot of theoretical (red) and observed (blue) MPJPEs for different values of $dx$. 
 			The theoretical errors are obtained by calculating the mean of the per pose errors $\alpha \Delta d$ for the evaluation data.}
 		\Todo[inline]{Add axes titles, use proper image.
-		Think about nice ways to display the values: Plot, Table?}
+		use pgfplots to plot data}
 		\label{fig:x-shift-error}
 	\end{figure}
 
