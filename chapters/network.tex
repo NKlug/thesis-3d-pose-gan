@@ -20,8 +20,17 @@ Assumptions:
 	\item[(2)] All data was captured with the same camera distance.
 \end{itemize}
 
+Generative Adversarial Networks (GANs) have first been presented by \citet{goodfellow14} in 2014.
+The basic principle is two players playing a minimax game against each other.
+One of the players, the \textit{discriminator} tries to guess whether the input comes from a real data distribution or a data distribution captured by the second player, the so called \textit{generator}. 
+The generator's goal is to fool the discriminator, that is, to produce such elements that the probability of the discriminator making a mistake is maximal.
+\citet{goodfellow14} have shown that this is the case if and only if the fake data distribution matches the real one.
+In this case, the discriminator produces an output of $\frac{1}{2}$ for all inputs.
+
+A (three dimensional) \textit{pose} is a collection of $n$ points in $\mathbb{R}^3$.
+
 For the projection and re-projection of poses a pinhole camera model is used.
-It has a focal length $f$ and is described by
+It has a focal length $f$ and is described by the perspective projection equation
 \begin{equation}
 	p = 
 	\begin{pmatrix}
@@ -37,7 +46,7 @@ It has a focal length $f$ and is described by
 where $P = (X, Y, Z)$ is a point in camera coordinates and p the projected point on the (virtual) image plane.
 Throughout this work coordinates of 3D points will be denoted by capital letters and 2D points by lower case letters.
 
-In general, the \textit{generator} $G$ is a neural network that outputs \unsure{wording: elements or values?} elements from the distribution $P_{fake}$.
+In general, the \textit{generator} $G$ is a neural network that produces \unsure{wording: elements or values?} elements from the distribution $P_{fake}$.
 In the application of 3D human pose estimation the generator receives a projection of a 3D pose as input and outputs the corresponding 3D pose.
 More precisely the generator only produces a depth offset $o_i$ for each joint in the input.
 The entire pose can then be calculated by first calculating absolute depths:
@@ -56,11 +65,11 @@ Afterwards the 2D points are re-projected along the projection rays:
 	x_i\\
 	y_i
 	\end{pmatrix}
-\end{equation}
+\end{equation} 
 The 3D pose is then given by $\{(X_i, Y_i, Z_i)~|~ 1 \leq i \leq n\}$.
 
 In production the generation process would be over at this point but for training, 2D poses have to be sampled from the reprojected 3D pose.
-The 3D poses are aligned with the origin and randomly rotated with azimuth angles in $[0, 359]$ and elevation $[0, 19]$.
+The 3D poses are aligned with the origin and randomly rotated with azimuth angles between $0$ and $360$ and elevation between $0$ between $20$ degrees.
 \Todo{When 2D poses are sampled, the extrinsic parameters of the synthetic camera model should match those of the real camera(s)}
 
 The \textit{discriminator} $D$ is defined as a neural network that consumes real 2D poses from the distribution $P_{real}$ and fake 2D poses drawn from $P_{fake}$ and outputs a scalar value in $[0, 1]$.
@@ -71,6 +80,8 @@ A GAN can be formulated as as a minimax game with a value function $V(D, G)$ as 
 
 De facto loss functions for generator and discriminator:
 \begin{align}
+	\label{eq:generator-loss}
 	loss_G &= \mathbb{E}_{p\sim P_{fake}}(\log(1 - D(p))) \\
+	\label{eq:discriminator-loss}
 	loss_D &= \mathbb{E}_{r\sim P_{real}}(\log(D(r))) + \mathbb{E}_{p\sim P_{fake}}(\log(1 - D(p)))
 \end{align} 
