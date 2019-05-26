@@ -24,8 +24,8 @@ Generative Adversarial Networks (GANs) have first been presented by \citet{goodf
 The basic principle is two players playing a minimax game against each other.
 One of the players, the \textit{discriminator} tries to guess whether the input comes from a real data distribution or a data distribution captured by the second player, the so called \textit{generator}. 
 The generator's goal is to fool the discriminator, that is, to produce such elements that the probability of the discriminator making a mistake is maximal.
-\citet{goodfellow14} have shown that this is the case if and only if the fake data distribution matches the real one.
-In this case, the discriminator produces an output of $\frac{1}{2}$ for all inputs.
+
+
 
 A (three dimensional) \textit{pose} is a collection of $n$ points in $\mathbb{R}^3$.
 
@@ -43,7 +43,7 @@ It has a focal length $f$ and is described by the perspective projection equatio
 	Y
 	\end{pmatrix} \ ,
 \end{equation}
-where $P = (X, Y, Z)$ is a point in camera coordinates and p the projected point on the (virtual) image plane.
+where $P = (X, Y, Z)^\mathrm{T}$ is a 3D point in the camera coordinate system and $p = (x, y)^\mathrm{T}$ the projected point on the (virtual) image plane.
 Throughout this work coordinates of 3D points will be denoted by capital letters and 2D points by lower case letters.
 
 In general, the \textit{generator} $G$ is a neural network that produces \unsure{wording: elements or values?} elements from the distribution $P_{fake}$.
@@ -66,7 +66,7 @@ Afterwards the 2D points are re-projected along the projection rays:
 	y_i
 	\end{pmatrix}
 \end{equation} 
-The 3D pose is then given by $\{(X_i, Y_i, Z_i)~|~ 1 \leq i \leq n\}$.
+The 3D pose is then given by $\left(\left(X_i, Y_i, Z_i\right)\right)_{1\leq i \leq n}$.
 
 In production the generation process would be over at this point but for training, 2D poses have to be sampled from the reprojected 3D pose.
 The 3D poses are aligned with the origin and randomly rotated with azimuth angles between $0$ and $360$ and elevation between $0$ between $20$ degrees.
@@ -78,10 +78,35 @@ A GAN can be formulated as as a minimax game with a value function $V(D, G)$ as 
 	\min_G \max_D V(D, G) = \mathbb{E}_{r\sim P_{real}}(\log(D(r))) + \mathbb{E}_{p\sim P_{fake}}(\log(1 - D(p)))
 \end{equation}
 
-De facto loss functions for generator and discriminator:
+\citet{goodfellow14} have shown that this expression takes on its global minimum if and only $P_{fake} = P_{real}$.
+In this case, the discriminator produces an output of $\frac{1}{2}$ for all inputs.
+
+The loss functions used for the generator and the discriminator are the following \cite{goodfellow17}:
 \begin{align}
 	\label{eq:generator-loss}
-	loss_G &= \mathbb{E}_{p\sim P_{fake}}(\log(1 - D(p))) \\
+	loss_G &= -\mathbb{E}_{p\sim P_{fake}}(\log(D(p))) \\
 	\label{eq:discriminator-loss}
-	loss_D &= \mathbb{E}_{r\sim P_{real}}(\log(D(r))) + \mathbb{E}_{p\sim P_{fake}}(\log(1 - D(p)))
-\end{align} 
+	loss_D &= -\frac{1}{2}\mathbb{E}_{r\sim P_{real}}(\log(D(r))) - \frac{1}{2} \mathbb{E}_{p\sim P_{fake}}(\log(1 - D(p)))
+\end{align}
+
+\Todo[inline]{Figure of residual blocks}
+
+Both generator and discriminator consist of several consecutive residual blocks.
+A residual block consists of two fully connected layers of size $1024$ each followed by RELU activation and a residual connection adding the input to the last layer's output.
+\citet{drover18} suggest two additional Batch Normalization layers \cite{ioffe15} immediately after each fully connected layer.
+\Todo{Mention correspondence with other authors and code.}
+Practical tests have shown that when using those additional layers the training does not converge at all.
+\unsure{Wording of "auf die Batch Norm wurde verzichtet"}
+As competitive results could also be achieved with the reduced network design, Batch Normalization has been left out completely in this work.
+
+The generator takes $n$ 2D joint locations (i.e. $2n$ scalar inputs) as input and feeds them to a fully connected layer of size 1024.
+This is followed by four of the residual blocks described above and concluded by another fully connected layer of size 1024 mapping the output of the last residual block to a vector of size $n$ representing the depth offset of each joint.
+The 2D input and the estimated depth offsets are then combined to a 3D pose as described above.
+From each predicted 3D pose a random 2D projection is created that is used for training.
+
+\Todo{Figure of whole model: One "exit" to production right after the re-projection, one for training that goes into the 2D pose sampling layer}
+
+The discriminator's architecture is very similar to the generator's. 
+It also accepts $n$ 2D joint locations as input which are fed into a fully connected layer of size 1024, followed by three residual blocks.
+The output is then reduced by by another fully connected layer to a vector of size 2.
+When softmax is applied during the error calculation, the values will imply the probability of the input being real or generated.

@@ -28,12 +28,12 @@ After the system estimated the depth $\widetilde{z}_i$ of the point, it is repro
 The euclidean distance of the reprojected point to the original point is given by
 \begin{equation}
 \label{eq:delta-d}
-	\Delta d_i = \left \| 
+	\Delta d_i = \norm{ 
 	\begin{pmatrix}
 		\widetilde{x}_i^R - x_i \\
 		\widetilde{z}_i - z_i
 	\end{pmatrix}
-	\right \|_2
+	}_2
 \end{equation}
 This expression takes on its minimum when 
 \begin{equation}
@@ -93,25 +93,25 @@ The MPJPE $\Delta d$ for a pose can then be calculated as the mean of all $\Delt
 \subsection{Shifting along the z axis}
 \label{sec:z-shift-error}
 \subsubsection{Theoretical analysis}
-Again consider a point $P_i=(x_i, y_i, z_i) \in \mathbb{R}^3$. Assume that $P_i$ is shifted by $dz$ along the z axis.
+Again consider a point $P_i=(X_i, Y_i, Z_i) \in \mathbb{R}^3$. Assume that $P_i$ is shifted by $dz$ along the z axis.
 The x coordinate of the projected point on the image plane is
 \begin{equation}
-	x_i^\mathrm{P} = f \frac{x_i}{z_i + dz}
+	x_i = f \frac{X_i}{Z_i + dz}
 \end{equation}
 The projected points are now scaled in a way that they have the same (arbitrary) scale.  Let $\alpha$ be the scale of the set of the original projected points and $\beta$ the one of the set of shifted projected points. The scaled projected point is given by
 
 \begin{equation}
-		\widetilde{x}_i^\mathrm{P} = x_i^\mathrm{P} \cdot \frac{\alpha}{\beta} 
-		= f \frac{x_i}{z_i + dz}\cdot \frac{\alpha}{\beta} 
+		\widetilde{x}_i = x_i \cdot \frac{\alpha}{\beta} 
+		= f \frac{Z_i}{Z_i + dz}\cdot \frac{\alpha}{\beta} 
 \end{equation}
-After the system estimates the depth $\widetilde{z}_i$ of each point, they are reprojected into 3 dimensional space.
+After the system estimates the depth $\widetilde{Z}_i$ of each point, they are reprojected into 3 dimensional space.
 The reprojected points are given by
 \begin{equation}
-	\widetilde{x}_i^\mathrm{R} = \frac{\widetilde{x}_i^\mathrm{P}}{f} \cdot \widetilde{z}_i
-	= \frac{x_i}{z_i + dz}\cdot \frac{\alpha}{\beta}  \cdot \widetilde{z}_i
+	\widetilde{X}_i = \frac{\widetilde{x}_i}{f} \cdot \widetilde{Z}_i
+	= \frac{X_i}{Z_i + dz}\cdot \frac{\alpha}{\beta}  \cdot \widetilde{Z}_i
 \end{equation}
 Again we want to minimize equation \eqref{eq:delta-d}.
-If we define $a := \frac{x_i}{z_i + dz}\cdot \frac{\alpha}{\beta}$, the minimal value for $\Delta d$ is the same as in equation \eqref{eq:minimum-delta-d}.
+If we define $a := \frac{X_i}{Z_i + dz}\cdot \frac{\alpha}{\beta}$, the minimal value for $\Delta d$ is the same as in equation \eqref{eq:minimum-delta-d}.
 
 
 \subsubsection{Experimental results}

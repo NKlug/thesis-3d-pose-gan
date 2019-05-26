@@ -8,7 +8,7 @@
 \end{itemize}
  
 
-For training and evaluation of the models the dataset Human3.6M is used \cite{ionescu14}. 
+For training and evaluation of the models the dataset Human3.6M \cite{ionescu14} is used. 
 It contains 3.6 million three dimensional human poses captured by digital and motion capture cameras, consisting of data from 11 subjects (6 male, 5 female) performing 15 different activities such as walking, taking a photo, eating or smoking.
 The poses are available in different parametrizations, but only the one with 3D joint positions transformed with the camera parameters of the 4 digital cameras were used for training and evaluation (called \texttt{D3\_Positions\_mono} in the dataset).
 The dataset also contains the 2D projections of the monocular 3D poses onto the cameras' image plane.
@@ -21,8 +21,8 @@ Therefore, some modifications have to be made in order to measure the quality an
 Essentially two different evaluation protocols with minor variations have emerged which will be presented and discussed in the following.
 
 \subsection{Evaluation Metrics}
-The most commonly used metric for evaluation is the Mean per Joint Position Error (MPJPE).
-For $n$ joints, original 3D joint positions $O_i$ and predicted positions $P_i$ it is defined as
+The most commonly used metric for evaluation is the \textit{Mean per Joint Position Error} (MPJPE).
+For a pose with $n$ joints, original 3D joint positions $O_i$ and predicted positions $P_i$ it is defined as
 \begin{equation}
 	\frac{1}{n} \sum_{i = 1}^{n}  \norm{O_i - P_i}_2 \ .
 \end{equation}
