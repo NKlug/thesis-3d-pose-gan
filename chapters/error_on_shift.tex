@@ -1,14 +1,33 @@
 \section{Analysis of the MPJPE when deviating from the constraints}
 
-Possible deviations of the assumptions about the three dimensional poses and how they are projected onto the image plane: Deviation in x and y direction, deviation in z direction, different focal length.
+The original model of the 3D pose estimation system by \citet{drover18}, which is described in Section \ref{sec:network}, requires the input pose to be normalized in the following way:
+\begin{enumerate}[label=(\Alph*)]
+	\item The 2D input pose's root joint is centered at the origin.
+	\item A designated norm limb has length 0.1.
+\end{enumerate}
 
-We regard the system as a black box that takes a normalized set of two dimensional points as input and outputs the depths (the z coordinates) of the input points which then can be reprojected into three dimensional space.
+In reality both assumptions are rarely satisfied.
+Thus \citet{drover18} normalize the input 2D poses by shifting and scaling before feeding them to the generator.
+In this chapter we will see both theoretically and experimentally that this approach inevitably leads to additional errors being introduced to the system.
+
+In the following we will assume that the camera used for projection is located at the origin of the coordinate system and looks into positive z direction.
+All poses are assumed to have z coordinates greater than camera's focal length $f$ in order to be projected in front of the camera.
+The generator $G$ will be regarded as a black box that takes a normalized 2D pose as input and outputs the depths (the z coordinates) of the input points which then can be reprojected into three dimensional space like in Equation \eqref{eq:perspective-re-projection}.
+
 \subsection{Shifting along one image plane axis}
 \Todo{Add introduction to nomenclature and notation.}
 \label{sec:x-shift-error}
+First we will analyze assumption (A) by examining a 3D pose $P$ which is centered at the origin of the x-y-plane.
+$P$ is then shifted along by the vector $(dx, dy, 0)$ along the x-y-plane and projected into two dimensions.
+After 2D pose has been aligned with the image plane's origin, it is re-projected into three dimensions.
+The resulting 3D pose $P^\mathrm{R}$ will then be compared to the original 3D pose $P$ to obtain a lower bound for the MPJPE measured.
+
+Let $P= [(X_1, Y_1, Z_1), \dotsc, (X_n, Y_n, Z_n)]$ be a 3D pose and $P = [(x_1, y_1), \dotsc, (x_n, y_n)]$ be it's projection onto the image plane.
+For simplicity we will assume that $dy = 0$, that is, the pose $P$ is only shifted along the x-axis.
+
 \subsubsection{Theoretical analysis}
 \Todo{Properly define the pose and the camera.}
-Let $P_i=(x_i, y_i, z_i) \in \mathbb{R}^3$ and $f$ the focal length of a camera which is located at the origin along the x-y-plane and looks at $(0, 0, z)$, the location of the root joint. 
+Let $P_i=(X_i, Y_i, Z_i) \in \mathbb{R}^3$ and $f$ the focal length of a camera which is located at the origin along the x-y-plane and looks at $(0, 0, z)$, the location of the root joint. 
 Assume $P_i$ is shifted by $dx$ along the x axis.
 The x coordinate of the projected point on the image plane is
 \begin{equation}
@@ -23,7 +42,7 @@ Subsequently all projected points are shifted along the x axis such that the roo
 After the system estimated the depth $\widetilde{z}_i$ of the point, it is reprojected into three dimensions. The resulting x coordinate is 
 \begin{equation}
 	\widetilde{x}_i^\mathrm{R} = \frac{\widetilde{x}_i^\mathrm{P}}{f} \cdot \widetilde{z}_i
-	= x_i \frac{\widetilde{z}_i}{z_i} + dx (\frac{1}{z_i} - \frac{1}{z}) \widetilde{z}_i
+	= x_i \frac{\widetilde{z}_i}{z_i} + dx (\frac{1}{z_i} - \frac{1}{z}) \widetilde{z}_i \ .
 \end{equation}
 The euclidean distance of the reprojected point to the original point is given by
 \begin{equation}
@@ -42,7 +61,7 @@ This expression takes on its minimum when
 \end{equation}
 is minimal. 
 Substituting $a = \left( \frac{x_i}{z_i} + dx \left( \frac{1}{z_i} - \frac{1}{z} \right) \right )$ makes the equation more readable. 
-In order to obtain the optimal value for $\widetilde{z}_i$, \eqref{eq:minimum-distance} is differentiated by $\widetilde{z}_i$:
+In order to obtain the optimal value for $\widetilde{z}_i$, equation \eqref{eq:minimum-distance} is differentiated by $\widetilde{z}_i$:
 \begin{equation}
 	f'(\widetilde{z}_i) = 2 \cdot (\widetilde{z}_i a^2 - a x_i + \widetilde{z}_i - z_i)
 \end{equation}
@@ -58,6 +77,8 @@ Substituting this into \eqref{eq:delta-d} again yields a total minimal error of
 	= dx (1 -  \frac{z_i}{z}) \sqrt{\frac{1}{a^2 + 1}} .
 \end{equation}
 The MPJPE $\Delta d$ for a pose can then be calculated as the mean of all $\Delta d_i$s.
+
+Intuition: the poses inner angles change when shifting. Shift means we see the pose more from the side.
 
 \subsubsection{Experimental results}
 	In practice, the observable error has the same approximate shape of this function, but is much smaller than the theoretical results.

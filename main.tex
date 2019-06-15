@@ -1,8 +1,8 @@
-%\newcommand*{\DocType}{scrartcl}
-\newcommand*{\DocType}{article}
+\newcommand*{\DocType}{scrartcl}
+%\newcommand*{\DocType}{article}
 \newcommand*\ClassList{scrartcl,article}
 
-\documentclass[\DocType, paper=a4, fontsize=11pt]{generalclass}
+\documentclass[\DocType, abstract=on, paper=a4, fontsize=11pt]{generalclass}
 
 % Packages
 \usepackage[a4paper]{geometry}
@@ -34,24 +34,26 @@
 
 \newcommandx{\unsure}[2][1=]{\todo[linecolor=orange,backgroundcolor=orange!25,bordercolor=orange,#1]{#2}}
 \newcommandx{\Todo}[2][1=]{\todo[linecolor=yellow,backgroundcolor=yellow!25,bordercolor=yellow,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=green,backgroundcolor=green!25,bordercolor=green,#1]{#2}}
 
 \setenumerate{label=(\arabic*),itemsep=0mm} % enumerate labeling and line distance
-\renewcommand{\baselinestretch}{1.15} % line distance
+\renewcommand{\baselinestretch}{1.1} % line distance
 
-\author{Nikolas Klug \\ Universität Augsburg}
-\date{\today}
-\title{To be determined}
 
+\pagenumbering{gobble}
 
 \begin{document}
-	\maketitle
-	\newpage
+	\input{chapters/header}
+	
+	\input{chapters/reviewers}
 	
 	\input{abstract}
-	\newpage
+	\pagebreak
 	
 	\tableofcontents
-	\newpage
+	\pagebreak
+	
+	\pagenumbering{arabic}
 
 	\input{chapters/introduction}
 	

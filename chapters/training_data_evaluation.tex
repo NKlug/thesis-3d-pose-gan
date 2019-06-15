@@ -4,6 +4,11 @@ Training hyper parameters:
 Batch size 32768 as in \cite{drover18}, AdamOptimizer with $\beta_1 = 0.5$ and learning rate $0.0002$, Training generator and discriminator with same data at the same time, one step each. Gradient clipping like \citet{chorowski14} section 3.2.1.
 
 
+\begin{itemize}
+	\item Results for self created data
+	\item Results for original 2d data
+\end{itemize}
+
 \Todo[inline]{Compare sampled data error and error on real 2D poses from the dataset} 
 \subsection{Different errors for different sets of joints}
 Using only 15 joints yields a much lower MPJPE than using 32 joints. Reasons: ...	

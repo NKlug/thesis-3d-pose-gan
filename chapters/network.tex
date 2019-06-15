@@ -3,15 +3,16 @@
 \begin{itemize}
 	\item basic principle of gans
 	\item Basic architecture used in the paper
+	\item Motivation for predicting depth offsets
 	\item Mention batch norm not working with reference to other paper and communication with authors
 	\item Projection and reprojection.
 	\item Norm limb normalization
 \end{itemize}
 
 Assumptions:
-\begin{enumerate}
+\begin{enumerate}[label=(\Alph*)]
 	\item The camera is centered at the root joint.
-	\item The distance between the camera is such that the length of the projected norm limb is $0.1$. 
+	\item The distance between the camera and the pose is (approximately) constant. 
 \end{enumerate}
 \begin{itemize}
 	\item[(1)] All 2d data can be scaled in a way that a norm limb is of length 0.1. 
@@ -29,9 +30,10 @@ The generator's goal is to fool the discriminator, that is, to produce such elem
 
 A (three dimensional) \textit{pose} is a collection of $n$ points in $\mathbb{R}^3$.
 
-For the projection and re-projection of poses a pinhole camera model is used.
+For the projection and re-projection of poses the simplified camera model of a pinhole camera is used.
 It has a focal length $f$ and is described by the perspective projection equation
 \begin{equation}
+	\label{eq:perspective-projection}
 	p = 
 	\begin{pmatrix}
 	x\\
@@ -57,6 +59,7 @@ The clipping makes sure the points are re-projected in front of the camera.
 \Todo{During training: $Z = 10$ and $f = 1$}
 Afterwards the 2D points are re-projected along the projection rays:
 \begin{equation}
+	\label{eq:perspective-re-projection}
 	\begin{pmatrix}
 	X_i\\
 	Y_i
@@ -91,9 +94,9 @@ The loss functions used for the generator and the discriminator are the followin
 
 \Todo[inline]{Figure of residual blocks}
 
-Both generator and discriminator consist of several consecutive residual blocks.
+Both generator and discriminator consist of several consecutive \textit{residual blocks}.
 A residual block consists of two fully connected layers of size $1024$ each followed by RELU activation and a residual connection adding the input to the last layer's output.
-\citet{drover18} suggest two additional Batch Normalization layers \cite{ioffe15} immediately after each fully connected layer.
+\citet{drover18} suggest two additional Batch Normalization layers \cite{ioffe15}, one immediately after each fully connected layer.
 \Todo{Mention correspondence with other authors and code.}
 Practical tests have shown that when using those additional layers the training does not converge at all.
 \unsure{Wording of "auf die Batch Norm wurde verzichtet"}
@@ -108,5 +111,5 @@ From each predicted 3D pose a random 2D projection is created that is used for t
 
 The discriminator's architecture is very similar to the generator's. 
 It also accepts $n$ 2D joint locations as input which are fed into a fully connected layer of size 1024, followed by three residual blocks.
-The output is then reduced by by another fully connected layer to a vector of size 2.
+The output is then reduced by another fully connected layer to a vector of size 2.
 When softmax is applied during the error calculation, the values will imply the probability of the input being real or generated.

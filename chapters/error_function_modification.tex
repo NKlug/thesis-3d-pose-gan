@@ -2,9 +2,12 @@
 
 
 Modification of GAN loss function for generator:
-The discriminator loss is the same as in equation \ref{eq:discriminator-loss}. An additional term is added to the generator loss. Let a \textit{limb} $l = (u, v)$ be the connection between joints $u$ and $v$ and $S \coloneqq \{(l_1, l_2)~|~ l_1, l_2~\text{are limbs in a skeleton and have equal lengths}\}$ the set of all symmetric limbs. The generator loss with symmetric limb error is defined as \Todo{Find proper formulation of limbs: symmetric limbs are defined for the skeleton, but the error is calculated for the predicted points}
+The discriminator loss is the same as in equation \ref{eq:discriminator-loss}. 
+An additional term is added to the generator loss. Let a \textit{limb} $l = (u, v)$ be the connection between joints $u$ and $v$ and $S \coloneqq \{(l_1, l_2)~|~ l_1, l_2~\text{are limbs in a skeleton and have equal lengths}\}$ the set of all symmetric limbs. 
+The generator loss with symmetric limb error basically takes into account the difference in length of two symmetric limbs.
+Formally, it is defined as \Todo{Find proper formulation of limbs: symmetric limbs are defined for the skeleton, but the error is calculated for the predicted points}
 \begin{equation}
-	loss_G = \mathbb{E}_{p\sim P_{fake}}(\log(1 - D(p))) 
+	loss_G = -\mathbb{E}_{p\sim P_{fake}}(\log(D(p))) 
 	+ \frac{1}{|S|}\sum_{((u_1, v_1), (u_2, v_2)) \in S} \bigl\lvert \norm{u_1 - v_1}_2 - \norm{u_2 - v_2}_2 \bigr\rvert \ .
 \end{equation}
 In practice, the symmetric limbs for the 15 joint skeleton are the upper arms, the lower arms, the upper legs, the lower legs, the hips (distance from left and right hip to the root joint) and the shoulders (distance from shoulders to neck).
