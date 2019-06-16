@@ -10,74 +10,89 @@ In reality both assumptions are rarely satisfied.
 Thus \citet{drover18} normalize the input 2D poses by shifting and scaling before feeding them to the generator.
 In this chapter we will see both theoretically and experimentally that this approach inevitably leads to additional errors being introduced to the system.
 
+\Todo[inline]{Figure of camera projection}
+
 In the following we will assume that the camera used for projection is located at the origin of the coordinate system and looks into positive z direction.
 All poses are assumed to have z coordinates greater than camera's focal length $f$ in order to be projected in front of the camera.
 The generator $G$ will be regarded as a black box that takes a normalized 2D pose as input and outputs the depths (the z coordinates) of the input points which then can be reprojected into three dimensional space like in Equation \eqref{eq:perspective-re-projection}.
 
 \subsection{Shifting along one image plane axis}
-\Todo{Add introduction to nomenclature and notation.}
 \label{sec:x-shift-error}
 First we will analyze assumption (A) by examining a 3D pose $P$ which is centered at the origin of the x-y-plane.
-$P$ is then shifted along by the vector $(dx, dy, 0)$ along the x-y-plane and projected into two dimensions.
+$P$ is then shifted by the vector $(dx, dy, 0)$ along the x-y-plane and projected into two dimensions.
 After 2D pose has been aligned with the image plane's origin, it is re-projected into three dimensions.
-The resulting 3D pose $P^\mathrm{R}$ will then be compared to the original 3D pose $P$ to obtain a lower bound for the MPJPE measured.
+The resulting 3D pose $\widetilde{P}$ will then be compared to the original 3D pose $P$ to obtain a lower bound for the MPJPE measured.
 
-Let $P= [(X_1, Y_1, Z_1), \dotsc, (X_n, Y_n, Z_n)]$ be a 3D pose and $P = [(x_1, y_1), \dotsc, (x_n, y_n)]$ be it's projection onto the image plane.
-For simplicity we will assume that $dy = 0$, that is, the pose $P$ is only shifted along the x-axis.
+Let $P = [(X_1, Y_1, Z_1), \dotsc, (X_n, Y_n, Z_n)]$ be a 3D pose.
+For simplicity we will assume that $dy = 0$, that is, the pose $P$ is only shifted along the x axis.
 
 \subsubsection{Theoretical analysis}
-\Todo{Properly define the pose and the camera.}
-Let $P_i=(X_i, Y_i, Z_i) \in \mathbb{R}^3$ and $f$ the focal length of a camera which is located at the origin along the x-y-plane and looks at $(0, 0, z)$, the location of the root joint. 
+Let $P_i = (X_i, Y_i, Z_i) \in P$. 
 Assume $P_i$ is shifted by $dx$ along the x axis.
 The x coordinate of the projected point on the image plane is
 \begin{equation}
-	x_i^\mathrm{P} = f \frac{x_i + dx}{z_i} = f \frac{x_i}{z_i} + f \frac{dx}{z_i}\ .
+	x_i = f \frac{X_i + dx}{Z_i} = f \frac{X_i}{Z_i} + f \frac{dx}{Z_i}\ .
 \end{equation}
-Subsequently all projected points are shifted along the x axis such that the root node which is located at $(0, 0, z)$ is in the origin of the image plane. That means:
+The projected pose is then normalized by shifting all projected points along the x axis such that the root node is located in the origin of the image plane.
+Let the shifted root node have coordinates $(dx, 0, Z)$.
+Then each point is shifted by $- f \frac{dx}{Z}$.
+That means the new x coordinate $\widetilde{x}_i$ is given by
 \begin{equation}
-	\widetilde{x}_i^\mathrm{P} = f \frac{x_i}{z_i} + f \frac{dx}{z_i} - f \frac{dx}{z} 
-	= f \frac{x_i}{z_i} + f dx (\frac{1}{z_i} - \frac{1}{z})
-	= x_i^\mathrm{P} + f dx (\frac{1}{z_i} - \frac{1}{z})\ .
+	\widetilde{x}_i = f \frac{X_i}{Z_i} + f \frac{dx}{Z_i} - f \frac{dx}{Z} 
+	= f \frac{X_i}{Z_i} + f dx (\frac{1}{Z_i} - \frac{1}{Z})
+	= x_i + f dx (\frac{1}{Z_i} - \frac{1}{Z})\ .
 \end{equation}
-After the system estimated the depth $\widetilde{z}_i$ of the point, it is reprojected into three dimensions. The resulting x coordinate is 
+After $G$ estimates the depth $\widetilde{Z}_i$ of the point, it is reprojected into three dimensions. The resulting x coordinate is 
 \begin{equation}
-	\widetilde{x}_i^\mathrm{R} = \frac{\widetilde{x}_i^\mathrm{P}}{f} \cdot \widetilde{z}_i
-	= x_i \frac{\widetilde{z}_i}{z_i} + dx (\frac{1}{z_i} - \frac{1}{z}) \widetilde{z}_i \ .
+	\label{eq:re-projected-X}
+	\widetilde{X}_i = \frac{\widetilde{x}_i}{f} \cdot \widetilde{Z}_i
+	= x_i \frac{\widetilde{Z}_i}{Z_i} + dx (\frac{1}{Z_i} - \frac{1}{Z}) \widetilde{Z}_i \ .
 \end{equation}
-The euclidean distance of the reprojected point to the original point is given by
+The Euclidean distance and therefore Joint Position Error of the reprojected point to the original point is given by
 \begin{equation}
 \label{eq:delta-d}
 	\Delta d_i = \norm{ 
 	\begin{pmatrix}
-		\widetilde{x}_i^R - x_i \\
-		\widetilde{z}_i - z_i
+		\widetilde{X}_i - X_i \\
+		\widetilde{Z}_i - Z_i
 	\end{pmatrix}
 	}_2
 \end{equation}
-This expression takes on its minimum when 
-\begin{equation}
+\Todo{Think about how to formulate the "linear relationship". "With a perfect estimation of $Z_i = \widetilde{Z_i}$, one would expect..." }
+With perfect estimation of $\widetilde{Z_i} = Z_i$ Equation \eqref{eq:re-projected-X} describes a linear relationship between the offset $dx$ and the Joint Position Error (JPE) $\Delta d_i$.
+But since the generator's estimation of $\widetilde{Z_i}$ can vary for different offsets $dx$ and the JPE might be smaller for other $\widetilde{Z_i} \neq Z_i$, in order to obtain a correct lower bound for the Joint Position Error, we have to calculate the $\widetilde{Z_i}$ for which $\Delta d_i$ is minimal.
+The function to be minimized is
+\begin{align}
 	\label{eq:minimum-distance}
-	f(\widetilde{z}_i) = \left ( \widetilde{z}_i \cdot \left( \frac{x_i}{z_i} + dx \left( \frac{1}{z_i} - \frac{1}{z} \right) \right ) - x_i \right)^2 + ( \widetilde{z}_i - z_i ) ^2
-\end{equation}
-is minimal. 
-Substituting $a = \left( \frac{x_i}{z_i} + dx \left( \frac{1}{z_i} - \frac{1}{z} \right) \right )$ makes the equation more readable. 
-In order to obtain the optimal value for $\widetilde{z}_i$, equation \eqref{eq:minimum-distance} is differentiated by $\widetilde{z}_i$:
+	f(\widetilde{Z}_i) &= \left ( \widetilde{Z}_i \cdot \left( \frac{X_i}{Z_i} + dx \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right ) - X_i \right)^2 + ( \widetilde{Z}_i - Z_i ) ^2 \\
+	&= \left ( \widetilde{Z}_i \cdot a - X_i \right)^2 + ( \widetilde{Z}_i - Z_i )^2 \ ,
+\end{align}
+where $\left( \frac{X_i}{Z_i} + dx \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right )$ has been substituted by $a$.
+In order to obtain the optimal value for $\widetilde{Z}_i$, $f$ is differentiated by $\widetilde{Z}_i$:
 \begin{equation}
-	f'(\widetilde{z}_i) = 2 \cdot (\widetilde{z}_i a^2 - a x_i + \widetilde{z}_i - z_i)
+	f'(\widetilde{Z}_i) = 2 \cdot (\widetilde{Z}_i a^2 - a X_i + \widetilde{Z}_i - Z_i)
 \end{equation}
 Setting this equal to zero gives
-\begin{align*}
-	0 &= f'(\widetilde{z}_i) \\
-	\Leftrightarrow \widetilde{z}_i & = \frac{a x_i + z_i}{1 + a^2} \ .
-\end{align*}
-Substituting this into \eqref{eq:delta-d} again yields a total minimal error of 
+\begin{align}
+	0 &= f'(\widetilde{Z}_i) \\
+	\Leftrightarrow \widetilde{Z}_i & = \frac{a X_i + Z_i}{1 + a^2} \ .
+\end{align}
+Putting this into \eqref{eq:delta-d} yields a total minimal error of 
 \begin{equation}
 	\label{eq:minimum-delta-d}
-	\Delta d_i = \sqrt{\frac{(a z_i - x_i)^2}{a^2 + 1}}\
-	= dx (1 -  \frac{z_i}{z}) \sqrt{\frac{1}{a^2 + 1}} .
+	\Delta d_i = \sqrt{\frac{(a Z_i - X_i)^2}{a^2 + 1}}\
+	= dx (1 -  \frac{Z_i}{Z}) \sqrt{\frac{1}{a^2 + 1}} \ .
 \end{equation}
-The MPJPE $\Delta d$ for a pose can then be calculated as the mean of all $\Delta d_i$s.
 
+The MPJPE $\Delta d$ for the whole pose is then calculated as the mean of all $\Delta d_i$s.
+
+In contrast to the linear relationship, for large offsets $dx$ the minimal MPJPE converges to a constant.
+
+This result shows that even with a perfect generator, the estimated 3D poses can never be..
+In fact, the effects of 2D pose normalization by shifting only vanish if $Z_i = Z$ for all $(X_i, Y_i, Z_i) \in P$; in that all joints of the pose are located in a plane parallel to the image plane.
+
+
+It follows that all poses used for training and testing should have the same offsets or otherwise ambiguities are introduced to the system.
 Intuition: the poses inner angles change when shifting. Shift means we see the pose more from the side.
 
 \subsubsection{Experimental results}
@@ -143,11 +158,7 @@ If we define $a := \frac{X_i}{Z_i + dz}\cdot \frac{\alpha}{\beta}$, the minimal 
 	It therefore does not consider the effect of small deviations in z direction.
 	A way to fix this would be to calculate the perfect camera distance for each pose individually before projecting them onto the image plane.
 	This is not very realistic though since one might be able to determine the camera's distance to a human approximately, but definitely not exactly. This phenomenon therefore is kind of inevitable.
- 
-	
-\subsection{Total minimal error}
 
-Combining results of the previous two chapters
 
 \subsection{Alternation of the focal length}
 No difference
