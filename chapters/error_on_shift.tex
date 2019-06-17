@@ -6,7 +6,7 @@ The original model of the 3D pose estimation system by \citet{drover18}, which i
 	\item A designated norm limb has length 0.1.
 \end{enumerate}
 
-In reality both assumptions are rarely satisfied.
+In reality both assumptions are rarely satisfied from the start.
 Thus \citet{drover18} normalize the input 2D poses by shifting and scaling before feeding them to the generator.
 In this chapter we will see both theoretically and experimentally that this approach inevitably leads to additional errors being introduced to the system.
 
@@ -48,7 +48,7 @@ After $G$ estimates the depth $\widetilde{Z}_i$ of the point, it is reprojected 
 	\widetilde{X}_i = \frac{\widetilde{x}_i}{f} \cdot \widetilde{Z}_i
 	= x_i \frac{\widetilde{Z}_i}{Z_i} + dx (\frac{1}{Z_i} - \frac{1}{Z}) \widetilde{Z}_i \ .
 \end{equation}
-The Euclidean distance and therefore Joint Position Error of the reprojected point to the original point is given by
+The Euclidean distance and therefore Joint Position Error (JPE) of the reprojected point to the original point is given by
 \begin{equation}
 \label{eq:delta-d}
 	\Delta d_i = \norm{ 
@@ -58,10 +58,10 @@ The Euclidean distance and therefore Joint Position Error of the reprojected poi
 	\end{pmatrix}
 	}_2
 \end{equation}
-\Todo{Think about how to formulate the "linear relationship". "With a perfect estimation of $Z_i = \widetilde{Z_i}$, one would expect..." }
-With perfect estimation of $\widetilde{Z_i} = Z_i$ Equation \eqref{eq:re-projected-X} describes a linear relationship between the offset $dx$ and the Joint Position Error (JPE) $\Delta d_i$.
-But since the generator's estimation of $\widetilde{Z_i}$ can vary for different offsets $dx$ and the JPE might be smaller for other $\widetilde{Z_i} \neq Z_i$, in order to obtain a correct lower bound for the Joint Position Error, we have to calculate the $\widetilde{Z_i}$ for which $\Delta d_i$ is minimal.
-The function to be minimized is
+With perfect estimation of $\widetilde{Z_i} = Z_i$ Equation \eqref{eq:re-projected-X} describes a linear relationship between the offset $dx$ and the Joint Position Error $\Delta d_i$.
+But since the generator's estimation of $\widetilde{Z_i}$ can vary for different offsets $dx$ the JPE can actually become smaller for other $\widetilde{Z_i} \neq Z_i$. 
+In order to obtain a correct lower bound for the Joint Position Error, we have to calculate the $\widetilde{Z_i}$ for which $\Delta d_i$ is minimal.
+So the function to be minimized is
 \begin{align}
 	\label{eq:minimum-distance}
 	f(\widetilde{Z}_i) &= \left ( \widetilde{Z}_i \cdot \left( \frac{X_i}{Z_i} + dx \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right ) - X_i \right)^2 + ( \widetilde{Z}_i - Z_i ) ^2 \\
@@ -86,45 +86,51 @@ Putting this into \eqref{eq:delta-d} yields a total minimal error of
 
 The MPJPE $\Delta d$ for the whole pose is then calculated as the mean of all $\Delta d_i$s.
 
-In contrast to the linear relationship, for large offsets $dx$ the minimal MPJPE converges to a constant.
+In contrast to the linear relationship for $\widetilde{Z_i} = Z_i$, with optimal $Z_i$ minimal MPJPE converges to a constant for large $dx$.
 
-This result shows that even with a perfect generator, the estimated 3D poses can never be..
-In fact, the effects of 2D pose normalization by shifting only vanish if $Z_i = Z$ for all $(X_i, Y_i, Z_i) \in P$; in that all joints of the pose are located in a plane parallel to the image plane.
+This result shows that even with the generator estimating the depth of each point perfectly, the estimated 3D pose will never exactly match the original 3D pose up to shifting and scaling.
+Especially the re-projection of the 2D poses into three dimensional space without first shifting the 2D poses back as they were before normalization adds an essential part to the MPJPE.
+In fact, the effects of 2D pose normalization by shifting only vanish if $Z_i = Z$ for all $(X_i, Y_i, Z_i) \in P$; in that case all joints of the pose are located in a plane parallel to the image plane.
 
+The theoretical results above also show another downside of normalization by shifting.
+In case the generator is trained with 2D poses which have multiple different offsets $dx$ and $dy$, ambiguities are introduced to the system:
+As the generator can't know whether the pose it receives was originally located in the origin of the image plane or not, it can't correctly learn which depth offset belongs to which pose.
+\unsure{Should possible solutions already presented here?}
+One easy solution for this second problem is to train only with poses that all have the same offsets in x and y direction.
+As this is rarely the case in reality, that would make the system only viable for very specific tasks in practice.
 
-It follows that all poses used for training and testing should have the same offsets or otherwise ambiguities are introduced to the system.
-Intuition: the poses inner angles change when shifting. Shift means we see the pose more from the side.
+\unsure{Mention the intuition behind the phenomenon: The poses inner angles change when shifting. Shift means we see the pose more from the side.}
 
 \subsubsection{Experimental results}
-	In practice, the observable error has the same approximate shape of this function, but is much smaller than the theoretical results.
-	The reason for this is the scaling that is applied to the inferred poses during the evaluation of Protocol 2 (section \ref{sec:protocol2}).
-	\unsure{Validate if this is really the case. Also see in what way it is proportional.}
-	It appears that the average limb length of the inferred shifted poses is increasing monotonously with increasing offset $dx$.
-	That means the poses are downsized by a factor $\alpha$ in all dimensions. 
-	\Todo{Explain why} Therefore the actual error is $\Delta d' = \alpha \cdot \Delta d$.
-	
-	\begin{figure}[ht]
-		
-		\centering
-		\includegraphics[scale=0.5]{images/x_shift_error.png}
-		\caption{Plot of theoretical (red) and observed (blue) MPJPEs for different values of $dx$. 
-			The theoretical errors are obtained by calculating the mean of the per pose errors $\alpha \Delta d$ for the evaluation data.}
-		\Todo[inline]{Add axes titles, use proper image.
-		use pgfplots to plot data}
-		\label{fig:x-shift-error}
-	\end{figure}
+In practice, the observable error has the same approximate shape of this function, but is much smaller than the theoretical results.
+The reason for this is the scaling that is applied to the inferred poses during the evaluation of Protocol 2 (section \ref{sec:protocol2}).
+\unsure{Validate if this is really the case. Also see in what way it is proportional.}
+It appears that the average limb length of the inferred shifted poses is increasing monotonously with increasing offset $dx$.
+That means the poses are downsized by a factor $\alpha$ in all dimensions. 
+\Todo{Explain why} Therefore the actual error is $\Delta d' = \alpha \cdot \Delta d$.
 
-	It is noticeable that the performance of the network is not worse than the theoretical results by a constant offset.
-	For small deviations along the x axis the network seems to be able to compensate the error introduced by shifting.
-	As $dx$ increases, so does the offset between the observed and the theoretical results until it seems to converge to a constant.
-	This motivates adjusting not only how the inferred points are reprojected into three dimensions but also the input the network receives.
-	This will be discussed further in section \ref{sec:network-adjusting}.
+\begin{figure}[ht]
 	
-	As shown in section \ref{sec:data-results} the MPJPE for the original 2D poses is about \Todo{Check this number} 30mm higher than the one for the synthetically generated data.
-	The simplest explanation for this is that the original 2D poses do not fulfill the constraints for the system.
-	The camera is not centered on the root joint and also the camera distance is most certainly not exactly ten times the length of the norm limb.
-	
-	Numbers: ...
+	\centering
+	\includegraphics[scale=0.5]{images/x_shift_error.png}
+	\caption{Plot of theoretical (red) and observed (blue) MPJPEs for different values of $dx$. 
+		The theoretical errors are obtained by calculating the mean of the per pose errors $\alpha \Delta d$ for the evaluation data.}
+	\Todo[inline]{Add axes titles, use proper image.
+	use pgfplots to plot data}
+	\label{fig:x-shift-error}
+\end{figure}
+
+It is noticeable that the performance of the network is not worse than the theoretical results by a constant offset.
+For small deviations along the x axis the network seems to be able to compensate the error introduced by shifting.
+As $dx$ increases, so does the offset between the observed and the theoretical results until it seems to converge to a constant.
+This motivates adjusting not only how the inferred points are reprojected into three dimensions but also the input the network receives.
+This will be discussed further in section \ref{sec:network-adjusting}.
+
+As shown in section \ref{sec:data-results} the MPJPE for the original 2D poses is about \Todo{Check this number} 30mm higher than the one for the synthetically generated data.
+The simplest explanation for this is that the original 2D poses do not fulfill the constraints for the system.
+The camera is not centered on the root joint and also the camera distance is most certainly not exactly ten times the length of the norm limb.
+
+Numbers: ...
 	
 \subsection{Shifting along the z axis}
 \label{sec:z-shift-error}
