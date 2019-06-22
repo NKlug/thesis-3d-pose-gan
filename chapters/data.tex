@@ -85,6 +85,17 @@ Then, scale each predicted and ground truth pose in a way that the mean limb len
 
 Because adjusting the ground truth data is not a good practice in general, in this thesis only the predicted poses are scaled to match $L_s$.
 
+The scaling of the estimated 3D poses can be regarded as follows. Let $\alpha$ be the average limb lengths of the ground truth pose and $\beta$ be the one of the estimated poses.
+Then the error is calculated in the following way:
+\begin{align}
+	\Delta d &= \frac{1}{n} \sum_{i = 1}^{n}  \norm{\alpha \frac{O_i}{\beta} - \alpha \frac{P_i}{\alpha}}_2 \\
+	&=  \frac{1}{n} \sum_{i = 1}^{n} \abs{\alpha} \norm{\frac{O_i}{\beta} -\frac{P_i}{\alpha}}_2 \\
+	&=  \abs{\alpha} \frac{1}{n} \sum_{i = 1}^{n} \norm{\frac{O_i}{\beta} -\frac{P_i}{\alpha}}_2 \ .
+	\label{eq:protocol2-mpjpe-scaling}
+\end{align}
+
+This can be interpreted such that the MPJPE is first calculated for the poses with normalized average limb length and then scaled such that the original scale of the ground truth poses is represented. 
+
 \subsection{Training data}\label{sec:data-results}
 
 Unfortunately the 2D poses included in the dataset are not suitable for training the network supposed by \citet{drover18}, as both assumptions (1) and (2) are not satisfied.
