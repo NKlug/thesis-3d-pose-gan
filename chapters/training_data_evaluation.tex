@@ -1,4 +1,9 @@
-\section{Training with different data}
+\section{Evaluation on different datasets}
+\label{sec:evaluation}
+
+\unsure[inline]{If the thesis is too short (or maybe anyways) add protocol 1 evaluation}
+
+In this section the model's performance will be analyzed for different configurations of training and test data.
 
 Training hyper parameters:
 Batch size 32768 as in \cite{drover18}, AdamOptimizer with $\beta_1 = 0.5$ and learning rate $0.0002$, Training generator and discriminator with same data at the same time, one step each. Gradient clipping like \citet{chorowski14} section 3.2.1.
@@ -9,15 +14,26 @@ Batch size 32768 as in \cite{drover18}, AdamOptimizer with $\beta_1 = 0.5$ and l
 	\item Results for original 2d data
 \end{itemize}
 
+\subsection{Protocol 2 results of the original system}
+\begin{itemize}
+	\item Results of original system on augmented and real data.
+	\item Results per action and average
+	\item Results for real 2D data
+\end{itemize}
+
+
 \Todo[inline]{Compare sampled data error and error on real 2D poses from the dataset} 
 \subsection{Different errors for different sets of joints}
 Using only 15 joints yields a much lower MPJPE than using 32 joints. Reasons: ...	
 From now on all numbers are calculated for 15 joint poses.
 
 \subsection{Training with 1:1 mix of augmented and real data}
+Improvements of evaluation on real 2D data. 
+This shows that the system is expected to perform well in scenarios where it is trained with data it should later infer.
 Results for original data get better
 
 
 
 \subsection{Training with augmented cameras similar to the real cameras}
-Results for original data
+Performance of system with cameras similar to the real cameras.
+Results for real 2D data.

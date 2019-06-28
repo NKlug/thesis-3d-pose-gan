@@ -1,10 +1,13 @@
 \section{Part 2: Adjusting the network to tolerate shifting}
 \label{sec:network-adjusting}
 
+The results of Section \ref{sec:z-shift-error} show that the model proposed by \citet{drover18} is not really viable for practical use.
 Error on original poses when training on "shift generator": 73.75
-\subsection{Original network with correct reprojection}
+\subsection{Original network with correct re-projection}
 These are the results of the original network with a correct re-projection of the estimated poses into three dimensional space.
 
 
 \subsection{"New" network}
+\Todo[inline]{Figure of new network}
 Network that takes a shifted input and also correctly re-projects the estimated poses.
+Experimental results: Very low error for shifted points
