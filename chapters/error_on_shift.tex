@@ -91,21 +91,34 @@ Setting this equal to zero gives
 	\Leftrightarrow \widetilde{Z}_i & = \frac{a X_i + Z_i}{1 + a^2} \ .
 	\label{eq:z_i-min}
 \end{align}
-As $f$ becomes infinitely large for $\widetilde{Z_i} \rightarrow \pm \infty$, it is easy to see that $f$'s only extremum is a minimum.
-With this $\widetilde{Z_i}$ the $\widetilde{X}_i$ from Equation \eqref{eq:re-projected-X} can be calculated:
+As $f$ converges towards infinity for $\widetilde{Z_i} \rightarrow \pm \infty$, it is easy to see that $f$'s only extremum is a minimum.
+With this optimal $\widetilde{Z_i}$ the $\widetilde{X}_i$ from Equation \eqref{eq:re-projected-X} can now be calculated:
 \begin{equation}
-	\widetilde{X_i} 
+	\label{eq:x_i-min}
+	\widetilde{X}_i 
 	= \widetilde{Z_i} \cdot a
 	=  \frac{a^2 X_i + a Z_i}{1 + a^2} = \frac{a^2 X_i + X_i + dx \left (1 - \frac{Z_i}{Z} \right )}{1 + a^2}
 	= X_i + \frac{dx \left (1 - \frac{Z_i}{Z}\right )}{1 + a^2}
 \end{equation}
-Putting this into \eqref{eq:delta-d} yields a total minimal error of 
+\unsure[inline]{Adding y coordinates slightly changes the solution:}
+	\begin{align*}
+		&\sqrt{\frac{(a Z_i - X_i)^2 + (dx (\frac{1}{Z_i} - \frac{1}{Z}))^2}{1 + a^2 + b^2}}\\
+		& = \sqrt{\frac{(dx \left (1 -  \frac{Z_i}{Z} \right ))^2 + (dx (\frac{1}{Z_i} - \frac{1}{Z}))^2}{1 + a^2 + b^2}} \\
+		& = \sqrt{\frac{dx^2 \cdot (Z_i^2 + 1) \cdot (\frac{1}{Z_i} - \frac{1}{Z})^2}{1 + a^2 + b^2}}\\
+		& = \abs{dx \left (1 -  \frac{Z_i}{Z} \right )} \sqrt{\frac{(Z_i^2 + 1)}{1 + a^2 + b^2}}
+	\end{align*}
+With $b = \frac{Y_i}{Z_i}$
+Putting \eqref{eq:z_i-min} and \eqref{eq:x_i-min} into \eqref{eq:delta-d} yields a total minimal error of 
 \begin{equation}
 	\label{eq:minimum-delta-d}
 	\Delta d_i = \sqrt{\frac{(a Z_i - X_i)^2}{1 + a^2}}\
 	= \abs{dx \left (1 -  \frac{Z_i}{Z} \right )} \sqrt{\frac{1}{1 + a^2}} \ .
 \end{equation}
-The MPJPE $\Delta d$ for the whole pose is then calculated as the mean of all $\Delta d_i$s.
+The MPJPE for the whole pose can then be calculated as the mean of all $\Delta d_i$s:
+\begin{equation}
+	\label{eq:minimum-mpjpe-on-shift}
+	\Delta d = \frac{1}{n} \sum_{i = 1}^{n} \Delta d_i 
+\end{equation}
 In contrast to the linear relationship for $\widetilde{Z_i} = Z_i$, for optimal $\widetilde{Z_i}$ the minimal MPJPE converges to a constant for large $dx$.
 
 This result shows that even with the generator estimating the depth of each point perfectly, the estimated 3D pose will never exactly match the original 3D pose up to shifting and scaling.
@@ -124,12 +137,17 @@ As this is rarely the case in reality, that would make the system only viable fo
 \subsubsection{Experimental results}
 
 In this section the observable MPJPEs of shifted poses will be compared to the theoretical results above. 
-Figure \ref{fig:x-shift-error} depicts a plot of the MPJPEs (measured using Protocol 2; see Section \ref{sec:protocol2}) for 2D poses sampled from subjects 9 and 11 with different offsets in x direction and also a plot of the minimal MPJPE calculated in the above section.
-As it turns out both curves have the same approximate shape, with the difference that the sampled poses' MPJPE is smaller than the theoretical minimal MPJPE for large offsets $dx$.
+Figure \ref{fig:x-shift-error} depicts a plot of the MPJPEs (measured using Protocol 2; Section \ref{sec:protocol2}) for 2D poses sampled from subjects 9 and 11 with different offsets in x direction along with a plot of the minimal MPJPE calculated in Equation \eqref{eq:minimum-mpjpe-on-shift}.
+As it turns out, both curves have the same approximate shape, but the sampled poses' MPJPE is significantly smaller than the theoretical MPJPE.
+The discrepancy between the curves is increasing for larger offsets $\abs{dx}$.
 At first glance, this seemingly contradicts the fact that the above $\Delta d$ represents a lower bound for the error.
-One important detail has not been taken into account yet:
-During the evaluation with Protocol 2, scaling might be applied to the estimated poses such that their average limb lengths match those of the ground truth poses.
-It appears that the average limb lengths of the inferred poses is increasing monotonously with increasing offset $\abs{dx}$.
+
+But one important detail has not been taken into account yet:
+During the evaluation with Protocol 2, shifting and scaling might be applied to the estimated poses. 
+For the root node $r$ we have $Z_i = Z$ in \eqref{eq:minimum-delta-d}, so $\Delta d_r = 0$. That means $(\widetilde{X}_i, \widetilde{Y_i}, \widetilde{Z}_i) = (X_i, Y_i, Z_i)$, that is, the root nodes of both poses are already aligned.
+It is not as easy to make a statement about scale of the pose $\widetilde{P}$ though.
+Experimental results show that the average limb length of $\widetilde{P}$ is increasing monotonously with increasing offset $\abs{dx}$.
+
 That means with Protocol 2 each pose $P$ is re-scaled by a factor $\alpha_P$ in all dimensions before the MPJPE is calculated.
 
 As the MPJPE is linear, if all 
@@ -139,7 +157,7 @@ Hence, for a fair comparison, the theoretical error is $\Delta d' = \alpha \cdot
 	\centering
 	\includegraphics[scale=0.5]{figures/x_shift_error.png}
 	\caption{Plot of theoretical (red) and observed (blue) MPJPEs for different values of $dx$. 
-		The theoretical errors are obtained by calculating the mean of the per pose errors $\alpha \Delta d$ for the evaluation data.}
+		The theoretical errors are obtained by calculating the mean of MPJPES $\alpha \Delta d$ for the evaluation data.}
 	\Todo[inline]{Add axes titles, use proper image.
 	use pgfplots to plot data}
 	\label{fig:x-shift-error}
