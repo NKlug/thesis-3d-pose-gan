@@ -34,18 +34,18 @@ For simplicity we will assume that $dy = 0$, that is, the pose $P$ is only shift
 \subsubsection{Theoretical analysis}
 \label{sec:x-shift-error-theoretical}
 Let $P_i = (X_i, Y_i, Z_i) \in P$.
-Then the x coordinate of the projected point on the image plane is given by
+Then the coordinates of the projected point on the image plane are given by
 \begin{equation}
-	x_i = f \frac{X_i}{Z_i} \ .
+	x_i = f \frac{X_i}{Z_i} \ ,\enspace y_i = f \frac{Y_i}{Z_i} \ .
 \end{equation}
 Now assume that $P_i$ is shifted by $dx$ along the x axis.
 This results in a projected x coordinate of
 \begin{equation}
 	x_i^\mathrm{S} = f \frac{X_i + dx}{Z_i} = f \frac{X_i}{Z_i} + f \frac{dx}{Z_i} = x_i + f \frac{dx}{Z_i}\ .
 \end{equation}
-The projected pose is then normalized by shifting all projected points along the x axis such that the root node is located in the origin of the image plane.
+The projected pose is then normalized by shifting all projected points such that the root node is located in the origin of the image plane. 
 Let the shifted root node have coordinates $(dx, 0, Z)$.
-Then each point is shifted by $- f \frac{dx}{Z}$.
+Since $dy = 0$, each point is only shifted by $- f \frac{dx}{Z}$ along the x axis.
 That means the x coordinate of the normalized point $\widetilde{x}_i$ is given by
 \begin{equation}
 	\widetilde{x}_i
@@ -53,73 +53,77 @@ That means the x coordinate of the normalized point $\widetilde{x}_i$ is given b
 	= x_i + f \frac{dx}{Z_i} - f \frac{dx}{Z}
 	= x_i + f dx (\frac{1}{Z_i} - \frac{1}{Z})\ .
 \end{equation}
-After $G$ estimates the depth $\widetilde{Z}_i$ of the point, it is reprojected into three dimensions. The resulting x coordinate is 
-\begin{equation}
+After $G$ estimates the depth $\widetilde{Z}_i$, it is reprojected into three dimensions. The resulting coordinates are 
+\begin{align}
 	\label{eq:re-projected-X}
-	\widetilde{X}_i = \frac{\widetilde{x}_i}{f} \cdot \widetilde{Z}_i
+	\widetilde{X}_i &= \frac{\widetilde{x}_i}{f} \cdot \widetilde{Z}_i
 	= X_i \frac{\widetilde{Z}_i}{Z_i} + dx (\frac{1}{Z_i} - \frac{1}{Z}) \widetilde{Z}_i
-	= \widetilde{Z_i} \left( \frac{X_i}{Z_i} + dx \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right ) \ .
-\end{equation}
+	= \widetilde{Z_i} \left( \frac{X_i}{Z_i} + dx \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right) \ , \\
+	\label{eq:re-projected-Y}
+	\widetilde{Y}_i &= \frac{y_i}{f} \cdot \widetilde{Z}_i = \frac{Y_i}{Z_i} \cdot \widetilde{Z}_i \ .
+\end{align}
 The Euclidean distance (the Joint Position Error (JPE)) of the reprojected point to the original point is given by
 \begin{equation}
 \label{eq:delta-d}
 	\Delta d_i = \norm{ 
 	\begin{pmatrix}
 		\widetilde{X}_i - X_i \\
+		\widetilde{Y}_i - Y_i \\
 		\widetilde{Z}_i - Z_i
 	\end{pmatrix}
 	}_2
 \end{equation}
-With perfect estimation of $\widetilde{Z_i} = Z_i$ Equation \eqref{eq:re-projected-X} describes a linear relationship between the offset $dx$ and the Joint Position Error $\Delta d_i$.
+With perfect estimation of $\widetilde{Z_i} = Z_i$, we have $\widetilde{Y}_i = Y_i$ and Equation \eqref{eq:delta-d} together with \eqref{eq:re-projected-X} describes a linear relationship between the offset $dx$ and the Joint Position Error $\Delta d_i$.
 But since the generator's estimation of $\widetilde{Z_i}$ can vary for different offsets $dx$, the JPE can actually become smaller for other $\widetilde{Z_i} \neq Z_i$. 
 In order to obtain a correct lower bound for the Joint Position Error, we have to calculate the $\widetilde{Z_i}$ for which $\Delta d_i$ is minimal.
 So the function to be minimized is
 \begin{align}
 	\label{eq:minimum-distance}
-	f(\widetilde{Z}_i) &= \left ( \widetilde{Z}_i \cdot \left( \frac{X_i}{Z_i} + dx \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right ) - X_i \right)^2 + ( \widetilde{Z}_i - Z_i ) ^2 \\
-	&= \left ( \widetilde{Z}_i \cdot a - X_i \right)^2 + ( \widetilde{Z}_i - Z_i )^2 \ ,
+	f(\widetilde{Z}_i) &= \left ( \widetilde{Z}_i \cdot \left( \frac{X_i}{Z_i} + dx \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right ) - X_i \right)^2 + \left ( \widetilde{Z_i} \cdot \frac{Y_i}{Z_i} - Y_i \right )^2 + \left ( \widetilde{Z}_i - Z_i \right ) ^2 \\
+	&= \left ( \widetilde{Z}_i \cdot a - X_i \right)^2 + \left ( \widetilde{Z_i} \cdot b - Y_i \right )^2 + \left ( \widetilde{Z}_i - Z_i \right )^2 \ ,
 \end{align}
-where $\left( \frac{X_i}{Z_i} + dx \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right )$ has been substituted by $a$ for better readability.
+where $a \coloneqq \left( \frac{X_i}{Z_i} + dx \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right )$ and $b \coloneqq \frac{Y_i}{Z_i}$ have been substituted for better readability.
 In order to obtain the optimal value for $\widetilde{Z}_i$, $f$ is differentiated by $\widetilde{Z}_i$:
 \begin{equation}
 	\label{eq:derivative-minimum-distance}
-	f'(\widetilde{Z}_i) = 2 \cdot (\widetilde{Z}_i a^2 - a X_i + \widetilde{Z}_i - Z_i)
+	f'(\widetilde{Z}_i) = 2 \cdot \left ( \widetilde{Z}_i \left (a^2 + b^2 \right ) - a X_i - b Y_i + \widetilde{Z}_i - Z_i \right )
 \end{equation}
 Setting this equal to zero gives
 \begin{align}
-	0 &= f'(\widetilde{Z}_i) \\
-	\Leftrightarrow \widetilde{Z}_i & = \frac{a X_i + Z_i}{1 + a^2} \ .
+	0 &= f'(\widetilde{Z}_i^\ast) \\
+	\Leftrightarrow \widetilde{Z}_i^\ast & = \frac{a X_i + b Y_i + Z_i}{1 + a^2 + b^2} \ .
 	\label{eq:z_i-min}
 \end{align}
-As $f$ converges towards infinity for $\widetilde{Z_i} \rightarrow \pm \infty$, it is easy to see that $f$'s only extremum is a minimum.
-With this optimal $\widetilde{Z_i}$ the $\widetilde{X}_i$ from Equation \eqref{eq:re-projected-X} can now be calculated:
-\begin{equation}
+As $f$ converges towards infinity for $\widetilde{Z_i} \rightarrow \pm \infty$, it is easy to see that $\widetilde{Z}_i^\ast$ is $f$'s only extremum; a minimum.
+With $\widetilde{Z}_i^\ast$ the optimal $\widetilde{X}_i^\ast$ and $\widetilde{Y}_i^\ast$ from Equation \eqref{eq:re-projected-X} and \eqref{eq:re-projected-Y} can now be calculated:
+\begin{align}
 	\label{eq:x_i-min}
-	\widetilde{X}_i 
-	= \widetilde{Z_i} \cdot a
-	=  \frac{a^2 X_i + a Z_i}{1 + a^2} = \frac{a^2 X_i + X_i + dx \left (1 - \frac{Z_i}{Z} \right )}{1 + a^2}
-	= X_i + \frac{dx \left (1 - \frac{Z_i}{Z}\right )}{1 + a^2}
-\end{equation}
-\unsure[inline]{Adding y coordinates slightly changes the solution:}
-	\begin{align*}
-		&\sqrt{\frac{(a Z_i - X_i)^2 + (dx (\frac{1}{Z_i} - \frac{1}{Z}))^2}{1 + a^2 + b^2}}\\
-		& = \sqrt{\frac{(dx \left (1 -  \frac{Z_i}{Z} \right ))^2 + (dx (\frac{1}{Z_i} - \frac{1}{Z}))^2}{1 + a^2 + b^2}} \\
-		& = \sqrt{\frac{dx^2 \cdot (Z_i^2 + 1) \cdot (\frac{1}{Z_i} - \frac{1}{Z})^2}{1 + a^2 + b^2}}\\
-		& = \abs{dx \left (1 -  \frac{Z_i}{Z} \right )} \sqrt{\frac{(Z_i^2 + 1)}{1 + a^2 + b^2}}
-	\end{align*}
-With $b = \frac{Y_i}{Z_i}$
-Putting \eqref{eq:z_i-min} and \eqref{eq:x_i-min} into \eqref{eq:delta-d} yields a total minimal error of 
-\begin{equation}
+	\widetilde{X}_i^\ast &= \widetilde{Z}_i^\ast \cdot a
+	= \frac{a^2 X_i + a b Y_i +  a Z_i}{1 + a^2 + b^2} \ ,\\
+	\label{eq:y_i-min}
+	\widetilde{Y}_i^\ast &= \widetilde{Z}_i^\ast \cdot b
+	= \frac{b^2 Y_i + a b X_i + b Z_i}{1 + a^2 + b^2} \ . 
+\end{align}
+
+Putting \eqref{eq:z_i-min}, \eqref{eq:x_i-min} and \eqref{eq:y_i-min} into \eqref{eq:delta-d} yields a total minimal error of 
+\begin{align}
+	\Delta d_i &= 
+	\sqrt{\left (\widetilde{X}_i^\ast - X_i \right )^2 + \left (\widetilde{Y}_i^\ast - Y_i \right )^2 + \left (\widetilde{Z}_i^\ast - Z_i \right )^2}\\
+	& = \sqrt{\frac{\left (a Y_i - b X_i \right )^2 + \left (a Z_i - X_i \right )^2 + \left (b Z_i - Y_i \right )^2}{1 + a^2 + b^2}} \\
+	\label{eq:bzy-zero}
+	&= \sqrt{\frac{\left (dx \cdot Y_i \cdot \left (\frac{1}{Z_i} - \frac{1}{Z} \right) \right)^2 + \left (a Z_i - X_i \right )^2}{1 + a^2 + b^2}}\\
+	& = \sqrt{\frac{\left (dx \cdot Y_i \cdot \left (\frac{1}{Z_i} - \frac{1}{Z} \right ) \right)^2 + \left (dx \cdot Z_i \cdot \left (\frac{1}{Z_i} - \frac{1}{Z} \right ) \right)^2}{1 + a^2 + b^2}} \\
+	& = \sqrt{\frac{dx^2 \cdot \left (\frac{1}{Z_i} - \frac{1}{Z} \right )^2 \cdot \left (Y_i^2 + Z_i^2 \right ) }{1 + a^2 + b^2}}\\
 	\label{eq:minimum-delta-d}
-	\Delta d_i = \sqrt{\frac{(a Z_i - X_i)^2}{1 + a^2}}\
-	= \abs{dx \left (1 -  \frac{Z_i}{Z} \right )} \sqrt{\frac{1}{1 + a^2}} \ .
-\end{equation}
-The MPJPE for the whole pose can then be calculated as the mean of all $\Delta d_i$s:
+	& = \abs{dx \left (\frac{1}{Z_i} - \frac{1}{Z} \right )} \sqrt{\frac{(Y_i^2 + Z_i^2)}{1 + a^2 + b^2}} \ .
+\end{align}
+In Equation \eqref{eq:bzy-zero} $b Z_i - Y_i = 0$ has been used.
+With this $\Delta d_i$ the MPJPE for the whole pose can then be calculated as the mean of all $\Delta d_i$s:
 \begin{equation}
 	\label{eq:minimum-mpjpe-on-shift}
 	\Delta d = \frac{1}{n} \sum_{i = 1}^{n} \Delta d_i 
 \end{equation}
-In contrast to the linear relationship for $\widetilde{Z_i} = Z_i$, for optimal $\widetilde{Z_i}$ the minimal MPJPE converges to a constant for large $dx$.
+In contrast to the linear relationship for $\widetilde{Z_i} = Z_i$, for optimal $\widetilde{Z_i}$, the minimal MPJPE converges to a constant for large $dx$.
 
 This result shows that even with the generator estimating the depth of each point perfectly, the estimated 3D pose will never exactly match the original 3D pose up to shifting and scaling.
 Especially the re-projection of the 2D poses into three dimensional space without first shifting the 2D poses back as they were before normalization adds an essential part to the MPJPE.
@@ -144,14 +148,21 @@ At first glance, this seemingly contradicts the fact that the above $\Delta d$ r
 
 But one important detail has not been taken into account yet:
 During the evaluation with Protocol 2, shifting and scaling might be applied to the estimated poses. 
-For the root node $r$ we have $Z_i = Z$ in \eqref{eq:minimum-delta-d}, so $\Delta d_r = 0$. That means $(\widetilde{X}_i, \widetilde{Y_i}, \widetilde{Z}_i) = (X_i, Y_i, Z_i)$, that is, the root nodes of both poses are already aligned.
-It is not as easy to make a statement about scale of the pose $\widetilde{P}$ though.
+For the root joint $r$ we have $Z_i = Z$ in \eqref{eq:minimum-delta-d}, so $\Delta d_r = 0$. That means $(\widetilde{X}_i, \widetilde{Y_i}, \widetilde{Z}_i) = (X_i, Y_i, Z_i)$, that is, the root nodes of both poses are already aligned.
+It is not as easy to make a statement about scale of the pose $\widetilde{P}$ from a theoretical point of view only though.
 Experimental results show that the average limb length of $\widetilde{P}$ is increasing monotonously with increasing offset $\abs{dx}$.
+That means with Protocol 2 each pose $\widetilde{P}$ is re-scaled by a factor $\alpha_{\widetilde{P}}$ in all dimensions before the MPJPE is calculated, so
+\begin{equation}
+	\Delta d_i = \norm{ 
+	\begin{pmatrix}
+		\alpha_{\widetilde{P}} \cdot \widetilde{X}_i - X_i \\
+		\alpha_{\widetilde{P}} \cdot \widetilde{Y}_i - Y_i \\
+		\alpha_{\widetilde{P}} \cdot \widetilde{Z}_i - Z_i
+	\end{pmatrix}
+	}_2 \ .
+\end{equation}
 
-That means with Protocol 2 each pose $P$ is re-scaled by a factor $\alpha_P$ in all dimensions before the MPJPE is calculated.
-
-As the MPJPE is linear, if all 
-Hence, for a fair comparison, the theoretical error is $\Delta d' = \alpha \cdot \Delta d$.
+The 
 
 \begin{figure}[ht]	
 	\centering
@@ -166,7 +177,7 @@ Hence, for a fair comparison, the theoretical error is $\Delta d' = \alpha \cdot
 It is also noticeable that the performance of the network is not worse than the theoretical results by a constant offset.
 For small deviations along the x axis the network seems to be able to compensate the error introduced by shifting.
 As $dx$ increases, so does the offset between the observed and the theoretical results until it seems to converge to a constant.
-This motivates adjusting not only how the inferred points are reprojected into three dimensions but also the input the network receives.
+This motivates adjusting not only how the inferred points are reprojected into three dimensions but also network itself.
 This will be discussed further in section \ref{sec:network-adjusting}.
 
 As shown in Section \ref{sec:data-results} the MPJPE for the original 2D poses is about \Todo{Check this number} 30mm higher than the one for the synthetically generated data.
@@ -221,10 +232,16 @@ So with the same optimal
 \end{equation}
 we can obtain a total minimal JPE of 
 \begin{equation}
+	\label{eq:z-shift-error}
 	\Delta d_i = \sqrt{\frac{(a Z_i - X_i)^2}{1 + a^2}} 
 	= \abs{\frac{X_i dz}{Z_i + dz}} \sqrt{\frac{1}{1 + a^2}} \ .
 \end{equation}
-Again, the MPJPE $\Delta d$ of the whole pose $P$ can be calculated as the mean of all $\Delta d_i$s.
+Again, the MPJPE $\Delta d$ of the whole pose $P$ can be calculated as the mean of all $\Delta d_i$s (Equation \eqref{eq:delta-d}).
+
+In contrast to the results of the previous sections, this theoretical result is not as directly applicable to the system.
+Before the evaluation with Protocol 2, the root nodes of the estimated and ground truth poses are aligned.
+If the generator estimates the depths $\widetilde{Z}_i = Z_i + dz$ for all $i$, the estimated pose $\widetilde{P}$ equals $P$ up to a shift.
+
 
 In general, there exists no factor $\gamma$ such that $x_i = \widetilde{x_i}$ for all $i$ (to be precise, such factor only exists if for all $i$ $Z_i = \widetilde{Z_i}$).
 That means the shifted projected pose and the original projected pose usually do not match.
