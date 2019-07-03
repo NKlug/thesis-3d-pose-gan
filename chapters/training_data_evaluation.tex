@@ -4,17 +4,18 @@
 \unsure[inline]{If the thesis is too short (or maybe anyways) add protocol 1 evaluation}
 
 In this section the model's performance will be analyzed for different configurations of training and test data.
-
-Training hyper parameters:
-Batch size 32768 as in \cite{drover18}, AdamOptimizer with $\beta_1 = 0.5$ and learning rate $0.0002$, Training generator and discriminator with same data at the same time, one step each. Gradient clipping like \citet{chorowski14} section 3.2.1.
-
+For training the Adam Optimizer \cite{kingma17} with an initial learning rate of $0.0002$ and $\beta_1 = 0.5$ is used for both generator and discriminator.
+This particular choice of $\beta_1$ has shown to result in faster convergence.
+Like in the work by \citet{drover18}, the data is split up into batches of 32768 poses for training.
+Generator and discriminator are trained alternately with the same batch of poses.
+Before adjusting the networks' parameters, adaptive gradient clipping is applied  \cite[Section~3.2.1]{chorowski14}.
 
 \begin{itemize}
 	\item Results for self created data
 	\item Results for original 2d data
 \end{itemize}
 
-\subsection{Protocol 2 results of the original system}
+\subsection{Results of the Original System}
 \begin{itemize}
 	\item Results of original system on augmented and real data.
 	\item Results per action and average

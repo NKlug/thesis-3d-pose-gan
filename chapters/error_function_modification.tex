@@ -1,4 +1,14 @@
-\section{Additional priors for training improvement}
+\section{Improving the MPJPE using limb lengths}
+
+In a standard fully-supervised network, training is heavily dependent on ground truth data.
+As the key feature of the system described in this thesis is that it is only trained with 2D poses, without 3D ground truth poses, there is not much additional information that can be given to the system for improved results.
+For training, the generator only receives information about the distribution to be learned through the error from the discriminator, which on his part only receives elements from the real data distribution.
+Without 3D ground truth poses, the only additional information that can be given to the system originates from the kinematics and the structure of human 3D poses.
+The angles between certain limbs can only have certain values, e.g. an arm can only be folded to some extent behind one's back. 
+Even without any information about the kinematics, the generator already produces reasonably looking 3D poses that seem to have sensible limb angles, so simple restrictions for those are not expected to bring any advantage.
+Describing the exact kinematics of human 3D poses would become quite complex very quickly is out of the scope of this work.
+A fact that can be made use of much more easily comes from the basic structure of the human skeleton, more precisely its symmetry. 
+There are certain limbs the human body which can be safely assumed to have the equal lengths for all humans, such as the upper and lower arms and legs.
 
 
 Modification of GAN loss function for generator:

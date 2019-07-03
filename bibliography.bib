@@ -725,3 +725,66 @@ HMM-based decoders, on the TIMIT dataset.
 	year = {2014}
 }
 
+@article{tung17,
+	abstract = {  Researchers have developed excellent feed-forward models that learn to map
+images to desired outputs, such as to the images' latent factors, or to other
+images, using supervised learning. Learning such mappings from unlabelled data,
+or improving upon supervised models by exploiting unlabelled data, remains
+elusive. We argue that there are two important parts to learning without
+annotations: (i) matching the predictions to the input observations, and (ii)
+matching the predictions to known priors. We propose Adversarial Inverse
+Graphics networks (AIGNs): weakly supervised neural network models that combine
+feedback from rendering their predictions, with distribution matching between
+their predictions and a collection of ground-truth factors. We apply AIGNs to
+3D human pose estimation and 3D structure and egomotion estimation, and
+outperform models supervised by only paired annotations. We further apply AIGNs
+to facial image transformation using super-resolution and inpainting renderers,
+while deliberately adding biases in the ground-truth datasets. Our model
+seamlessly incorporates such biases, rendering input faces towards young, old,
+feminine, masculine or Tom Cruise-like equivalents (depending on the chosen
+bias), or adding lip and nose augmentations while inpainting concealed lips and
+noses.
+},
+	archiveprefix = {arXiv},
+	author = {Tung, Hsiao-Yu Fish and Harley, Adam W. and Seto, William and Fragkiadaki, Katerina},
+	comment = {published = 2017-05-31T16:30:07Z, updated = 2017-09-02T01:10:17Z},
+	eprint = {1705.11166v3},
+	localfile = {bibliography_resources/tung - adversarial inverse graphics networks.pdf},
+	month = sep,
+	pages = {The IEEE International Conference on Computer Vision },
+	primaryclass = {cs.CV},
+	title = {{Adversarial Inverse Graphics Networks: Learning 2D-to-3D Lifting and Image-to-Image Translation from Unpaired Supervision}},
+	url = {http://arxiv.org/abs/1705.11166v3; http://arxiv.org/pdf/1705.11166v3},
+	x-fetchedfrom = {arXiv.org},
+	year = {2017}
+}
+
+@misc{kingma17,
+	abstract = {  We introduce Adam, an algorithm for first-order gradient-based optimization
+of stochastic objective functions, based on adaptive estimates of lower-order
+moments. The method is straightforward to implement, is computationally
+efficient, has little memory requirements, is invariant to diagonal rescaling
+of the gradients, and is well suited for problems that are large in terms of
+data and/or parameters. The method is also appropriate for non-stationary
+objectives and problems with very noisy and/or sparse gradients. The
+hyper-parameters have intuitive interpretations and typically require little
+tuning. Some connections to related algorithms, on which Adam was inspired, are
+discussed. We also analyze the theoretical convergence properties of the
+algorithm and provide a regret bound on the convergence rate that is comparable
+to the best known results under the online convex optimization framework.
+Empirical results demonstrate that Adam works well in practice and compares
+favorably to other stochastic optimization methods. Finally, we discuss AdaMax,
+a variant of Adam based on the infinity norm.
+},
+	archiveprefix = {arXiv},
+	author = {Kingma, Diederik P. and Ba, Jimmy},
+	comment = {published = 2014-12-22T13:54:29Z, updated = 2017-01-30T01:27:54Z, Published as a conference paper at the 3rd International Conference for Learning Representations, San Diego, 2015},
+	eprint = {1412.6980v9},
+	month = jan,
+	primaryclass = {cs.LG},
+	title = {{Adam: A Method for Stochastic Optimization}},
+	url = {http://arxiv.org/abs/1412.6980v9; http://arxiv.org/pdf/1412.6980v9},
+	x-fetchedfrom = {arXiv.org},
+	year = {2017}
+}
+
