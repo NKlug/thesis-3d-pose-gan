@@ -1,14 +1,27 @@
-\section{Improving the MPJPE using limb lengths}
+\info{A wonderfully complex term :) }
+\section{Improving the MPJPE using bilateral symmetry}
 
 In a standard fully-supervised network, training is heavily dependent on ground truth data.
-As the key feature of the system described in this thesis is that it is only trained with 2D poses, without 3D ground truth poses, there is not much additional information that can be given to the system for improved results.
-For training, the generator only receives information about the distribution to be learned through the error from the discriminator, which on his part only receives elements from the real data distribution.
-Without 3D ground truth poses, the only additional information that can be given to the system originates from the kinematics and the structure of human 3D poses.
-The angles between certain limbs can only have certain values, e.g. an arm can only be folded to some extent behind one's back. 
-Even without any information about the kinematics, the generator already produces reasonably looking 3D poses that seem to have sensible limb angles, so simple restrictions for those are not expected to bring any advantage.
-Describing the exact kinematics of human 3D poses would become quite complex very quickly is out of the scope of this work.
-A fact that can be made use of much more easily comes from the basic structure of the human skeleton, more precisely its symmetry. 
-There are certain limbs the human body which can be safely assumed to have the equal lengths for all humans, such as the upper and lower arms and legs.
+As the key feature of the system described in this work is that only 2D poses are required for training, there substantially lesser information available to the system during the training process.
+
+In GANs, the generator only receives information about the distribution to be learned through the discriminator's error.
+The discriminator on his part only receives information about the elements of the real data distribution.
+Other than that, there is a priori no other information the generator can use to produce improved results.
+Without ground truth data, one of the only parts of additional knowledge which can be passed to the system during training are general facts that hold true for all elements of the distribution to be learned.
+
+In the special case of human 3D pose estimation, such facts can be the kinematics or the basic structure of the human skeleton.
+Generally, the movement of limbs relative to each other is very constrained.
+A leg can not (and if, only rarely) completely fold behind one's back and an hand cannot touch its one forearm.
+Everything exceeding simple restrictions for the relative angles between the limbs is extremely complex and out of the scope of this work.
+The results from the previous section already have sensible limb angles.
+Thus it is not to be expected to gain any benefit by engineering knowledge about simple kinematics into the system.
+
+That leaves the basic structure of the human skeleton.
+As all mammals, humans have a bilaterally symmetrical skeleton.
+That symmetry can be made use of in the following way:
+3D poses are expected to have equally long upper and lower arm, upper and lower legs, foots of equal size.
+Also, the distance between the shoulders and the neck and the hips and the base of the spine should not differ too much.
+
 
 
 Modification of GAN loss function for generator:
