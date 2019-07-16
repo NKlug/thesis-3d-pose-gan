@@ -1,5 +1,5 @@
-\info{A wonderfully complex term :) }
-\section{Improving the MPJPE using bilateral symmetry}
+\section{Exploiting bilateral symmetry for better results}
+\info[inline]{A wonderfully complex term :) }
 
 In a standard fully-supervised network, training is heavily dependent on ground truth data.
 As the key feature of the system described in this work is that only 2D poses are required for training, there substantially lesser information available to the system during the training process.
@@ -11,26 +11,39 @@ Without ground truth data, one of the only parts of additional knowledge which c
 
 In the special case of human 3D pose estimation, such facts can be the kinematics or the basic structure of the human skeleton.
 Generally, the movement of limbs relative to each other is very constrained.
-A leg can not (and if, only rarely) completely fold behind one's back and an hand cannot touch its one forearm.
-Everything exceeding simple restrictions for the relative angles between the limbs is extremely complex and out of the scope of this work.
-The results from the previous section already have sensible limb angles.
+A leg can not (and if, only rarely) completely fold behind one's back and an hand cannot touch its own forearm.
+Everything exceeding simple restrictions for the relative angles between the limbs is highly complex and out of the scope of this work.
+The results from the previous section show that the generated poses already have sensible limb angles.
 Thus it is not to be expected to gain any benefit by engineering knowledge about simple kinematics into the system.
 
 That leaves the basic structure of the human skeleton.
 As all mammals, humans have a bilaterally symmetrical skeleton.
 That symmetry can be made use of in the following way:
 3D poses are expected to have equally long upper and lower arm, upper and lower legs, foots of equal size.
-Also, the distance between the shoulders and the neck and the hips and the base of the spine should not differ too much.
+Also, the distance between the shoulders and the neck, and the hips and the base of the spine should not differ too much.
 
-
-
-Modification of GAN loss function for generator:
-The discriminator loss is the same as in equation \ref{eq:discriminator-loss}. 
-An additional term is added to the generator loss. Let a \textit{limb} $l = (u, v)$ be the connection between joints $u$ and $v$ and $S \coloneqq \{(l_1, l_2)~|~ l_1, l_2~\text{are limbs in a skeleton and have equal lengths}\}$ the set of all symmetric limbs. 
-The generator loss with symmetric limb error basically takes into account the difference in length of two symmetric limbs.
-Formally, it is defined as \Todo{Find proper formulation of limbs: symmetric limbs are defined for the skeleton, but the error is calculated for the predicted points}
+Concerning the GAN, that means this additional information can be passed to the generator through the error function.
+Let a \emph{limb} $l = (u, v)$ be the connecting body part between joints $u$ and $v$.
+For a set of symmetric limbs $S = \{(l_{i_1}, l_{i_2})~|~ l_{i_1}, l_{i_2}\ \text{are symmetric limbs} \}$ the \emph{limb loss} is defined as:
 \begin{equation}
-	loss_G = -\mathbb{E}_{p\sim P_{fake}}(\log(D(p))) 
-	+ \frac{1}{|S|}\sum_{((u_1, v_1), (u_2, v_2)) \in S} \bigl\lvert \norm{u_1 - v_1}_2 - \norm{u_2 - v_2}_2 \bigr\rvert \ .
+loss_{limb} = \frac{1}{|S|}\sum_{((u_1, v_1), (u_2, v_2)) \in S} \bigl\lvert \norm{u_1 - v_1}_2 - \norm{u_2 - v_2}_2 \bigr\rvert \ .
 \end{equation}
-In practice, the symmetric limbs for the 15 joint skeleton are the upper arms, the lower arms, the upper legs, the lower legs, the hips (distance from left and right hip to the root joint) and the shoulders (distance from shoulders to neck).
+
+The limb loss penalizes the generator if it produces poses with symmetric limbs of different lengths.
+The new loss for the generator is then given by
+\begin{equation}
+	loss_{G, limb} = loss_G + \alpha \cdot loss_{limb} \ ,
+\end{equation}
+where $\alpha$ is a weighting factor and $loss_G$ is given in Equation \eqref{eq:generator-loss}.
+
+\input{figures/limb_loss_table}
+
+During training, $\alpha$ was adapted dynamically.
+Initially it was set to $5$ and then linearly increased by $0.002$ each iteration, until $\alpha = 100$ was reached.
+That way, in the beginning the higher weighted standard loss ensures that the generator produces sensible 3D poses, and in later iterations the limb loss helps to refine those poses.
+For the 15 joint model, the employed symmetric limbs are the upper arms, the lower arms, the upper legs, the lower legs, the hips (distance from left and right hip to the root joint) and the shoulders (distance from shoulders to neck). 
+Figure \ref{fig:results-limb-loss} shows the results of that training procedure.
+\Todo{Verify when actual results are available}
+The generator with the modified loss function is able to outperform the generator with standard loss in all categories, with an error margin between Xmm and Ymm.
+The previous MPJPE is reduced by up to X\%.
+
