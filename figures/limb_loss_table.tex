@@ -1,0 +1,22 @@
+\begin{figure}[bt]	
+	\centering
+	\begin{tabularx}{\textwidth}{l *{8}{Y}}
+		\toprule
+		Method & Direct. & Discuss & Eat & Greet & Phone & Pose & Purchase & Sit \\
+		\midrule
+		$loss_G$ & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 & 88.8\\
+		$loss_{G, limb}$ & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 \\
+		\bottomrule
+		\toprule
+		Method & SitDown & Smoke & Photo & Wait & Walk & WDog & WTog. & \textbf{Avg.}\\
+		\midrule
+		$loss_G$ & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 & \textbf{88.8} \\
+		$loss_{G, limb}$ & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 & 88.8 & \textbf{88.8} \\
+		\bottomrule
+	\end{tabularx}
+	\caption{
+		Comparison of the MPJPEs with standard and modified loss for the Human3.6M dataset. 
+		The results were obtained using \textbf{Protocol 2}.
+	 }
+	\label{fig:results-limb-loss}
+\end{figure}
