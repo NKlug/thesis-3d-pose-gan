@@ -4,14 +4,15 @@
 		\toprule
 		Method & Acting3 & Freestyle3 & Walking2 & \textbf{Average}\\
 		\midrule
-		Protocol 1 & 65.5 & 68.3 & 74.7 & 65.7\\
-		Protocol 2 & 48.8 & 51.5 & 41.5 & 57.7\\
+		Protocol 1 & 65.5 & 74.7 & 65.7 & 68.3 \\
+		Protocol 2 & 98.8 & 105.8 &  96.8 & 100.2 \\
 		\bottomrule
 	\end{tabularx}
 	\caption{
-		MPJPEs of the replicated system trained with augmented data for the \textbf{TotalCapture} dataset \cite{trumble17}.
-		The results were obtained using Protocol 1 and 2 as indicated. The MPJPEs are given in millimeters.
+		MPJPEs for the test data of the \textbf{TotalCapture} dataset \cite{trumble17}. The system was trained with synthetic data from Human3.6M.
+		The results were obtained using the transformations of Protocol 1 and 2 as indicated. The MPJPEs are given in millimeters.
 	 }
 	\label{tbl:results-original-totalcapture}
-	\info[inline]{Protocol 1 obtained with best.ckpt-16161 from e\_03\_07\_original.json}
+	\info[inline]{Protocol 1 obtained with best.ckpt-16161 from e\_03\_07\_original.json;
+	Protocol 2 obtained with best.ckpt-16161 from e\_03\_07\_original.json}
 \end{table}

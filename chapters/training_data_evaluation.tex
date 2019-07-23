@@ -39,14 +39,18 @@ Before calculating the MPJPE, they apply a similarity transformation, but don't 
 Further discrepancy can also arise from different internal configurations, like the exact training procedure or the applied gradient clipping.
 Finally, extensive mining for the best performing model might also be a reason for the lower MPJPE.
 
-\Todo{Add correct comparison for the 2D Human3.6M results}
 Evaluation results for the monocular 2D poses in Human3.6M are also displayed in Table \ref{tbl:results-original-protocol1}.
 The MPJPEs for the different categories are slightly worse than the ones for the synthetic data.
 This comes as no surprise, as most machine learning systems will perform better on test data which is more similar to the training data.
 For the synthetic testing data, this is certainly the case.
 
-\Todo{Add proper numbers once available}
-On the test data of the TotalCapture dataset for Protocol 1, the average MPJPE is 88.8mm (Table \ref{tbl:results-original-totalcapture}).
+\Todo{Add correct difference}
+The results for \textbf{Protocol 2} are given in Table \ref{tbl:results-original-protocol2}.
+As rotation is not allowed for aligning the poses, the MPJPEs are approximately 88.8mm worse than those for Protocol 1.
+Overall, the same relations between the synthetic poses and the poses from Human3.6M can be seen.
+As \cite{drover18} also allow rigid alignment for Protocol 2, their results are not directly comparable.
+
+On the test data of the TotalCapture dataset, the average MPJPE for Protocol 1 is 68.3mm and for Protocol 2 100.2mm respectively (Table \ref{tbl:results-original-totalcapture}).
 Apart from the aforementioned phenomenon, the key points of the joints are slightly different from the ones in Human3.6M.
 Especially the angle between the "hip bones" is noticeable.
 In Human3.6M, this angle is 180 degrees and the spine is perpendicular to the hips, whereas in TotalCapture, the angle is substantially smaller than 180 degrees (see Figure \ref{fig:human-totalcapture}).
