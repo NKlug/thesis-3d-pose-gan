@@ -1,4 +1,4 @@
-\begin{table}[h]	
+\begin{table}[]	
 	\centering
 	\begin{tabularx}{\textwidth}{l *{8}{Y}}
 		\toprule
@@ -15,11 +15,10 @@
 		\bottomrule
 	\end{tabularx}
 	\caption{
-		Comparison of the MPJPEs of the replicated system trained and tested with synthetic data and 2D poses from the Human3.6M dataset \cite{ionescu14}. 
-		For \cite{drover18} only results with rigid alignment are available, which allows no fair comparison.
+		Comparison of the MPJPEs of the replicated system trained with monocular 2D poses from the Human3.6M dataset and synthetic data at a 1:1 ratio.
+		The results are given for synthetic data and 2D poses from the Human3.6M dataset \cite{ionescu14}.
 		The results were obtained using \textbf{Protocol 2}. The MPJPEs are given in millimeters.
 	 }
-	\label{tbl:results-original-protocol2}
-	\info[inline]{Augmented obtained with best.ckpt-16161 from e\_03\_07\_original.json;
-	Human3.6M obtained with real 2D poses}
+	\label{tbl:results-real-and-synthetic-protocol2}
+	\info[inline]{}
 \end{table}

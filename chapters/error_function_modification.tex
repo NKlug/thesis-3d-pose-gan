@@ -1,4 +1,4 @@
-\section{Exploiting bilateral symmetry for improved results}
+\section{Exploiting Bilateral Symmetry for Improved Results}
 \info[inline]{A wonderfully complex term :) }
 
 In a standard fully-supervised network, training is heavily dependent on ground truth data.
@@ -10,7 +10,7 @@ Other than that, there is a priori no other information the generator can use to
 Without ground truth data, one of the only parts of additional knowledge which can be passed to the system during training are general facts that hold true for all elements of the distribution to be learned.
 
 In the special case of human 3D pose estimation, such facts can be the kinematics or the basic structure of the human skeleton.
-Generally, the movement of limbs relative to each other is very constrained.
+Generally, the movement of limbs relative to each other is very constrained:
 A leg can not (and if, only rarely) completely fold behind one's back and an hand cannot touch its own forearm.
 Everything exceeding simple restrictions for the relative angles between the limbs is highly complex and out of the scope of this work.
 The results from the previous section show that the generated poses already have sensible limb angles.
