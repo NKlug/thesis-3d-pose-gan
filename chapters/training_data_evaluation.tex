@@ -9,7 +9,7 @@ Generator and discriminator are trained alternately with the same batch of poses
 Before adjusting the networks' parameters, adaptive clipping is applied to the gradients \cite[Section~3.2.1]{chorowski14}.
 
 
-\subsection{Results for Synthetic Data}
+\subsection{Results for Training with Synthetic Data}
 
 Later in this work, the effects of pose normalization will be analyzed.
 For a meaningful comparison of normalized and non-normalized poses, in a first step the results for poses which are naturally normalized are obtained.
@@ -62,7 +62,7 @@ Although the results are slightly worse for TotalCapture, they still show that t
 \input{figures/human-totalcapture-figure}
 
 
-\subsection{Training with Augmented and Real Data}
+\subsection{Results for Training with Augmented and Real Data}
 The results for the test data of the Human3.6M dataset are not quite satisfying, as they are only useful when rotation plays no role.
 The reasons for the worse results may be of different nature:
 A simple explanation would be that machine learning systems usually perform better on data which is more similar to the training data.
@@ -88,7 +88,7 @@ This means the discriminator still only receives synthetic poses for training.
 Table \ref{tbl:results-real-and-synthetic-protocol2} shows the results for both synthetic data and the monocular 2D test poses from Human3.6M.
 While the results for the synthetic data are approximately the same as the ones in the previous section, the results for the Human3.6M data improved by almost 8mm to 72.5mm.
 This has both positive and negative consequences:
-On the one hand, when the system is trained with real world data from a specific application, it will perform better for that application.
+On the one hand, when the system is trained with real world data from a specific application, it will perform better in that application.
 On the other hand, this shows that the system is not able to generalize to all kinds of human poses and a that part of the higher MPJPE can be attributed to a weak form of overfitting to the training data. 
 
 \subsection{Training with augmented cameras similar to the real cameras}

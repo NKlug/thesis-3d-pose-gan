@@ -145,18 +145,17 @@ As this is rarely the case in reality, that would make the system only viable fo
 
 \subsubsection{Experimental results}
 
-In this section the observable MPJPEs of shifted poses will be compared to the theoretical results above. 
-Figure \ref{fig:x-shift-error} depicts a plot of the MPJPEs (measured using Protocol 2; Section \ref{sec:protocol2}) for 2D poses sampled from subjects 9 and 11 with different offsets in x direction along with a plot of the minimal MPJPE calculated in Equation \eqref{eq:minimum-mpjpe-on-shift}.
+Figure \ref{fig:x-shift-error} depicts a plot of the observable MPJPEs (measured using Protocol 2; Section \ref{sec:protocol2}) for 2D poses sampled from subjects 9 and 11 with different offsets in x direction along with a plot of the minimal MPJPE calculated in the previous section in Equation \eqref{eq:minimum-mpjpe-on-shift}.
 As it turns out, both curves have the same approximate shape, but the sampled poses' MPJPE is significantly smaller than the theoretical MPJPE.
-The discrepancy between the curves is increasing for larger offsets $\abs{dx}$.
+The difference between the two curves is increasing for larger offsets $\abs{dx}$.
 At first glance, this seemingly contradicts the fact that the above $\Delta d$ represents a lower bound for the error.
 
-But one important detail has not been taken into account yet:
+One important detail has not been taken into account yet:
 During the evaluation with Protocol 2, shifting and scaling might be applied to the estimated poses. 
 For the root joint $r$ we have $Z_i = Z$ in \eqref{eq:minimum-delta-d}, so $\Delta d_r = 0$. That means $(\widetilde{X}_i, \widetilde{Y_i}, \widetilde{Z}_i) = (X_i, Y_i, Z_i)$, that is, the root nodes of both poses are already aligned.
 It is not as easy to make a statement about scale of the pose $\widetilde{P}$ from a theoretical point of view only though.
 Experimental results show that the average limb length of $\widetilde{P}$ is increasing monotonously with increasing offset $\abs{dx}$.
-That means with Protocol 2 each pose $\widetilde{P}$ is re-scaled by a factor $\alpha_{\widetilde{P}}$ in all dimensions before the MPJPE is calculated, so
+That means for a fair comparison with the observable results for Protocol 2 each pose $\widetilde{P}$ has to be re-scaled by a factor $\alpha_{\widetilde{P}}$ in all dimensions before the MPJPE is calculated:
 \begin{equation}
 	\Delta d_i = \norm{ 
 	\begin{pmatrix}
@@ -167,25 +166,19 @@ That means with Protocol 2 each pose $\widetilde{P}$ is re-scaled by a factor $\
 	}_2 \ .
 \end{equation}
 
-The 
-
-\begin{figure}[ht]	
-	\centering
-	\includegraphics[scale=0.5]{figures/x_shift_error.png}
-	\caption{Plot of theoretical (red) and observed (blue) MPJPEs for different values of $dx$. 
-		The theoretical errors are obtained by calculating the mean of MPJPES $\alpha \Delta d$ for the evaluation data.}
-	\Todo[inline]{Add axes titles, use proper image.
-	use pgfplots to plot data}
-	\label{fig:x-shift-error}
-\end{figure}
+\input{figures/x_shift_error_figure}
+ 
+A plot of the resulting function for the minimal error is shown in Figure \ref{fig:x-shift-error}.
+Here is is clearly visible that Equation \eqref{eq:delta-d} represents a lower bound to the MPJPE.
 
 It is also noticeable that the performance of the network is not worse than the theoretical results by a constant offset.
 For small deviations along the x axis the network seems to be able to compensate the error introduced by shifting.
 As $dx$ increases, so does the offset between the observed and the theoretical results until it seems to converge to a constant.
-This motivates adjusting not only how the inferred points are reprojected into three dimensions but also network itself.
-This will be discussed further in section \ref{sec:network-adjusting}.
 
-As shown in Section \ref{sec:data-results} the MPJPE for the original 2D poses is about \Todo{Check this number} 30mm higher than the one for the synthetically generated data.
+As shown in Section \ref{sec:evaluation} the MPJPE for the monocular 2D poses of the Human3.6M dataset is about 25mm higher than the one for the synthetically generated data.
+As those poses' root joints mostly have non-zero x and y offsets, the phenomenon discussed above might contribute to the error.
+
+
 The simplest explanation for this is that the original 2D poses do not fulfill the constraints for the system.
 The camera is not centered on the root joint and also the camera distance is most certainly not exactly ten times the length of the norm limb.
 
