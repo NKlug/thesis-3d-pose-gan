@@ -39,23 +39,19 @@ Before calculating the MPJPE, they apply a similarity transformation, but don't 
 Further discrepancy can also arise from different internal configurations, like the exact training procedure or the applied gradient clipping.
 Finally, extensive mining for the best performing model might also be a reason for the lower MPJPE.
 
-\Todo{Add correct difference}
 The results for \textbf{Protocol 2} are given in Table \ref{tbl:results-original-protocol2}.
-As rotation is not allowed for aligning the poses, the MPJPEs are approximately 88.8mm worse than those for Protocol 1.
-Overall, the same relations between the synthetic poses and the poses from Human3.6M can be seen.
-As \citet{drover18} also allow rigid alignment for Protocol 2 their results are not directly comparable.
+As \citet{drover18} also allow rigid alignment for Protocol 2 their results are not comparable to the ones obtained here.
+For this protocol, rotation is not allowed to fit the estimated poses to the ground truth.
+Hence the MPJPEs are approximately 14mm worse than those for Protocol 1.
 
-Evaluation results for the monocular 2D poses in Human3.6M are also displayed in Tables \ref{tbl:results-original-protocol1} and \ref{tbl:results-original-protocol2}.
+Tables \ref{tbl:results-original-protocol1} and \ref{tbl:results-original-protocol2} also display evaluation results for the monocular 2D poses in the Human3.6M dataset.
 For Protocol 1, the MPJPEs for the different categories are approximately as good as those for the synthetic data, for some activities even better.
 In contrast to this, the results for Protocol 2 are clearly worse than those for the synthetic data.
-The error margin is at 25.6mm.
-The key difference between Protocols 1 and 2 is that Protocol 1 allow rotation to fit the poses.
-It can be assumed that the translation and scaling of the Procrustes transformation is very similar to the ones applied for Protocol 2.
-Therefore it can be concluded that apart from rotation, the results for the Human3.6M poses are just as good as those for the synthetic data.
-Although these results look good from a theoretical perspective, for real world applications this is only helpful when the absolute rotation of the poses (and relative rotation for time series data) is not of interest.
+Here, the error margin is at 25.6mm.
+The key difference between Protocols 1 and 2 is that Protocol 1 allow rotation to fit the poses, as both protocols allow translation and scaling.
+Hence, disregarding rotation, the results for the Human3.6M poses are overall just as good as those for the synthetic data.
+Although this looks good from a theoretical perspective, for real world applications this is only helpful when the absolute rotation of the poses is not of interest.
 Otherwise, only the results Protocol 2 are meaningful.
-One simple explanation for the worse performance for it is that machine learning systems usually perform better on test data which is more similar to the training data.
-For the synthetic testing data this is certainly the case.
 
 On the test data of the TotalCapture dataset, the average MPJPE for Protocol 1 is 68.3mm and for Protocol 2 100.2mm respectively (Table \ref{tbl:results-original-totalcapture}).
 Apart from the aforementioned phenomenon, the key points of the joints are slightly different from the ones in Human3.6M.
@@ -64,43 +60,36 @@ In Human3.6M, this angle is 180 degrees and the spine is perpendicular to the hi
 Although the results are slightly worse for TotalCapture, they still show that the system generalizes to unseen data in a reasonable way.
 
 \input{figures/human-totalcapture-figure}
-\Todo{Add a few qualitative results.}
 
 
 \subsection{Training with Augmented and Real Data}
 The results for the test data of the Human3.6M dataset are not quite satisfying, as they are only useful when rotation plays no role.
-Ideally, the system performs equally good on all kinds of data.
 The reasons for the worse results may be of different nature:
-As mentioned above, machine learning systems tend to perform better on data similar to the training data.
-Another reason might be that Human3.6M's monocular 2D poses are in fact being normalized, both in scale and position, contrary to the synthetic data, which is already normalized in position.
+A simple explanation would be that machine learning systems usually perform better on data which is more similar to the training data.
+For the synthetic testing data this is certainly the case.
+On the other hand, the results for Protocol 1 show that the poses are already sensible and only seem to lack the right orientation.
+Another reason might be that Human3.6M's monocular 2D poses are in fact being normalized, both in scale and position, other than the synthetic data, which is already normalized in position.
 
-In order to figure out why the MPJPE is higher, the monocular 2D poses are added to the training set.
-The generator receives both real and synthetic poses at a 1:1 ratio.
+In order to figure out whether the first reason contributes to the discrepancy, the monocular 2D poses are added to the training set.
+A lower MPJPE would indicate that it does.
+For training, the generator receives both real and synthetic poses at a 1:1 ratio.
 As described in Section \ref{sec:network}, during training the generator tries to learn the real data distribution.
 In order to have a chance to achieve this, it must be able to generate poses similar to the real poses. 
 This comes down to the Random Projection Layer, where the poses are projected with camera distance $d$ and a root joint offset of $0$ (which means the camera is centered at the root joint).
 2D poses projected with a camera distance other than $d$ or with a non-zero root joint offset are inherently different.
-This will be elaborated on in Section \ref{sec:effects-of-normalization}.
+This will further be elaborated on in Section \ref{sec:effects-of-normalization}.
 Thus there are two options:
 Projecting the generated 3D poses with a camera distance and offset similar to the real data or feeding only data to the discriminator that resembles the generator's output.
-As the real camera distance might not be known in general, and offsets would still need to be sampled, option 2 was chosen.
-Thus the discriminator still only receives synthetic poses.
+As the real camera distance might not be known in general, and offsets would still need to be sampled, the second option was chosen.
+This means the discriminator still only receives synthetic poses for training.
 
 \input{figures/real_and_synthetic_protocol_2_table}
 
 Table \ref{tbl:results-real-and-synthetic-protocol2} shows the results for both synthetic data and the monocular 2D test poses from Human3.6M.
-\Todo[inline]{Add description of results when available}
-
-One the one hand, these results are positive regarding practical use:
-When the system is trained with real world data from a specific application, it will perform better in that application.
-On the other hand, because the results are still not competitive with those for synthetic data, 
-Important: Generator should output the same "kind" of data as the "real" data the discriminator receives.
-Improvements of evaluation on real 2D data. 
-This shows that the system is expected to perform well in scenarios where it is trained with data it should later infer.
-Results for original data get better
-
-\Todo{
-	"The reasons for the additional error of the real 2D data (shifting) will be extensively discussed in Section \ref{sec:effects-of-normalization}}
+While the results for the synthetic data are approximately the same as the ones in the previous section, the results for the Human3.6M data improved by almost 8mm to 72.5mm.
+This has both positive and negative consequences:
+On the one hand, when the system is trained with real world data from a specific application, it will perform better for that application.
+On the other hand, this shows that the system is not able to generalize to all kinds of human poses and a that part of the higher MPJPE can be attributed to a weak form of overfitting to the training data. 
 
 \subsection{Training with augmented cameras similar to the real cameras}
 Performance of system with cameras similar to the real cameras.
