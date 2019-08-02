@@ -22,7 +22,7 @@ For simplicity, the problem will only be regarded in two dimensions.
 For three dimensions the y coordinates are to be inserted at the appropriate places.
 }
 
-\subsection{Shifting along one image plane axis}
+\subsection{Shifting along one Image Plane Axis}
 \label{sec:x-shift-error}
 First we will analyze assumption (A) by examining a 3D pose $P$ which is centered at the origin of the x-y-plane.
 $P$ is then shifted by the vector $(dx, dy, 0)$ along the x-y-plane and projected into two dimensions.
@@ -32,7 +32,7 @@ The resulting 3D pose $\widetilde{P}$ will then be compared to the original 3D p
 Let $P = [(X_1, Y_1, Z_1), \dotsc, (X_n, Y_n, Z_n)]$ be a 3D pose.
 For simplicity we will assume that $dy = 0$, that is, the pose $P$ is only shifted along the x axis.
 
-\subsubsection{Theoretical analysis}
+\subsubsection{Theoretical Analysis}
 \label{sec:x-shift-error-theoretical}
 Let $P_i = (X_i, Y_i, Z_i) \in P$.
 Then the coordinates of the projected point on the image plane are given by
@@ -139,23 +139,25 @@ In case the generator is trained with 2D poses which have multiple different off
 As the generator can't know whether the pose it receives was originally located in the origin of the image plane or not, it can't correctly learn which depth offset belongs to which pose.
 \unsure{Should possible solutions already presented here?}
 One easy solution for this second problem is to train only with poses that all have the same offsets in x and y direction.
-As this is rarely the case in reality, that would make the system only viable for very specific tasks in practice.
+As this is rarely the case in reality, that would make the system only viable for very specific applications.
 
 \unsure{Mention the intuition behind the phenomenon: Shift means we see the pose more from the side.}
 
-\subsubsection{Experimental results}
+\subsubsection{Experimental Results}
 
-Figure \ref{fig:x-shift-error} depicts a plot of the observable MPJPEs (measured using Protocol 2; Section \ref{sec:protocol2}) for 2D poses sampled from subjects 9 and 11 with different offsets in x direction along with a plot of the minimal MPJPE calculated in the previous section in Equation \eqref{eq:minimum-mpjpe-on-shift}.
+In order to verify the theoretical findings, experimental MPJPEs are calculated for poses with different offsets.
+Figure \ref{fig:x-shift-error} (a) depicts a plot of the MPJPEs for synthetic 2D poses sampled from the 3D poses of Subjects 9 and 11 with different offsets in x direction (measured using Protocol 2), along with a plot of the minimal MPJPE calculated in the previous section in Equation \eqref{eq:minimum-mpjpe-on-shift}.
 As it turns out, both curves have the same approximate shape, but the sampled poses' MPJPE is significantly smaller than the theoretical MPJPE.
 The difference between the two curves is increasing for larger offsets $\abs{dx}$.
 At first glance, this seemingly contradicts the fact that the above $\Delta d$ represents a lower bound for the error.
 
-One important detail has not been taken into account yet:
+However, one important detail has not been taken into account yet:
 During the evaluation with Protocol 2, shifting and scaling might be applied to the estimated poses. 
-For the root joint $r$ we have $Z_i = Z$ in \eqref{eq:minimum-delta-d}, so $\Delta d_r = 0$. That means $(\widetilde{X}_i, \widetilde{Y_i}, \widetilde{Z}_i) = (X_i, Y_i, Z_i)$, that is, the root nodes of both poses are already aligned.
-It is not as easy to make a statement about scale of the pose $\widetilde{P}$ from a theoretical point of view only though.
+For the root joint $r$ we have $Z_i = Z$ in Equation \eqref{eq:minimum-delta-d}, so $\Delta d_r = 0$. 
+This means $(\widetilde{X}_r, \widetilde{Y}_ir, \widetilde{Z}_r) = (X_r, Y_r, Z_r)$, that is, the root nodes of both poses are already aligned.
+It is not as easy to make a statement about the scale of the pose $\widetilde{P}$ from a theoretical point of view only though.
 Experimental results show that the average limb length of $\widetilde{P}$ is increasing monotonously with increasing offset $\abs{dx}$.
-That means for a fair comparison with the observable results for Protocol 2 each pose $\widetilde{P}$ has to be re-scaled by a factor $\alpha_{\widetilde{P}}$ in all dimensions before the MPJPE is calculated:
+That means for a fair comparison with the observable results for Protocol 2 the pose $\widetilde{P}$ has to be re-scaled by a factor $\alpha_{\widetilde{P}}$ in all dimensions before the MPJPE is calculated:
 \begin{equation}
 	\Delta d_i = \norm{ 
 	\begin{pmatrix}
@@ -168,21 +170,18 @@ That means for a fair comparison with the observable results for Protocol 2 each
 
 \input{figures/x_shift_error_figure}
  
-A plot of the resulting function for the minimal error is shown in Figure \ref{fig:x-shift-error}.
-Here is is clearly visible that Equation \eqref{eq:delta-d} represents a lower bound to the MPJPE.
+A plot of the resulting function for the minimal error is shown in Figure \ref{fig:x-shift-error} (b).
+Here it becomes clear that Equation \eqref{eq:delta-d} represents a lower bound to the MPJPE.
+
+
+As shown in Section \ref{sec:evaluation} the MPJPE for the monocular 2D poses of the Human3.6M dataset is about 25mm higher than the one for the synthetically generated data.
+With those poses' root joints mostly having non-zero x and y offsets, the phenomenon discussed above is likely to contribute to the error.
+This motivates altering the network in order to tolerate shifted poses.
 
 It is also noticeable that the performance of the network is not worse than the theoretical results by a constant offset.
 For small deviations along the x axis the network seems to be able to compensate the error introduced by shifting.
 As $dx$ increases, so does the offset between the observed and the theoretical results until it seems to converge to a constant.
 
-As shown in Section \ref{sec:evaluation} the MPJPE for the monocular 2D poses of the Human3.6M dataset is about 25mm higher than the one for the synthetically generated data.
-As those poses' root joints mostly have non-zero x and y offsets, the phenomenon discussed above might contribute to the error.
-
-
-The simplest explanation for this is that the original 2D poses do not fulfill the constraints for the system.
-The camera is not centered on the root joint and also the camera distance is most certainly not exactly ten times the length of the norm limb.
-
-Numbers: ...
 	
 \subsection{Shifting along the z axis}
 \label{sec:z-shift-error}
@@ -201,39 +200,48 @@ The resulting MPJPE will be analyzed in the following section.
 
 \subsubsection{Theoretical analysis}
 Again consider a point $P_i=(X_i, Y_i, Z_i) \in P$ and a camera with focal length $f$. Assume that $P_i$ is shifted by $dz$ along the z axis.
-The x coordinate of the projected point on the image plane is
-\begin{equation}
-	x_i = f \frac{X_i}{Z_i + dz}
-\end{equation}
+The coordinates of the projected point on the image plane are
+\begin{align}
+	x_i &= f \frac{X_i}{Z_i + dz} \ , \\
+	y_i &= f \frac{Y_i}{Z_i + dz} \ .
+\end{align}
 The projected points are now scaled such that they have the same (arbitrary) scale, that is, a norm limb length of 0.1.
-Let $\alpha$ be the scale factor of the original projected points and $\beta$ be the one of the shifted projected points. 
-The x coordinate of the scaled projected point is given by
-\begin{equation}
-		\widetilde{x}_i = x_i \cdot \frac{\alpha}{\beta} 
-		= f \frac{X_i}{Z_i + dz}\cdot \frac{\alpha}{\beta} 
-\end{equation}
-After the generator estimates the depth $\widetilde{Z}_i$, the point is re-projected into three dimensional space.
-The re-projected point is given by
-\begin{equation}
-	\widetilde{X}_i = \frac{\widetilde{x}_i}{f} \cdot \widetilde{Z}_i
-	= \frac{X_i}{Z_i + dz}\cdot \frac{\alpha}{\beta}  \cdot \widetilde{Z}_i
-\end{equation}
+Let $\alpha$ be the scaling factor to achieve this.
+The scaled projected point is then given by
+\begin{align}
+		\widetilde{x}_i &= \alpha \cdot x_i 
+		= \alpha \cdot f \frac{X_i}{Z_i + dz} \ , \\
+		\widetilde{y}_i &= \alpha \cdot y_i
+		= \alpha \cdot f \frac{Y_i}{Z_i + dz} \ .
+\end{align}
+After the generator estimates the depth $\widetilde{Z}_i$, the point is re-projected into three dimensional space:
+\begin{align}
+	\widetilde{X}_i &= \frac{\widetilde{x}_i}{f} \cdot \widetilde{Z}_i
+	= \alpha \cdot \frac{X_i}{Z_i + dz} \cdot \widetilde{Z}_i \ , \\
+	\widetilde{Y}_i &= \frac{\widetilde{y}_i}{f} \cdot \widetilde{Z}_i
+	= \alpha \cdot \frac{Y_i}{Z_i + dz}\cdot \widetilde{Z}_i
+\end{align}
 Like in Section \ref{sec:x-shift-error-theoretical}, the Euclidean distance to the original point should be minimized with respect to $\widetilde{Z_i}$.
 We consider the function
 \begin{equation}
-	f(\widetilde{Z}_i) = \left ( \widetilde{Z}_i \cdot \frac{X_i}{Z_i + dz}\cdot \frac{\alpha}{\beta} - X_i \right)^2 + ( \widetilde{Z}_i - Z_i )^2 \ .
+	f(\widetilde{Z}_i) = \left ( \widetilde{Z}_i \cdot \frac{X_i}{Z_i + dz}\cdot \alpha - X_i \right)^2 + 
+					\left ( \widetilde{Z}_i \cdot \frac{Y_i}{Z_i + dz}\cdot \alpha - Y_i \right)^2
+					 + ( \widetilde{Z}_i - Z_i )^2 \ .
 \end{equation}
-If we define $a \coloneqq \frac{X_i}{Z_i + dz}\cdot \frac{\alpha}{\beta}$, we can obtain the same derivative as in Equation \eqref{eq:derivative-minimum-distance}.
-So with the same optimal 
+Let $a \coloneqq \frac{X_i}{Z_i + dz}\cdot \alpha$ and $b \coloneqq \frac{Y_i}{Z_i + dz}\cdot \alpha$, then one can obtain the same derivative as in Equation \eqref{eq:derivative-minimum-distance}.
+Again, this yields
 \begin{equation}
-	\widetilde{Z_i} = \frac{a X_i + Z_i}{1 + a^2} \ ,
+	\widetilde{Z}_i^\ast = \frac{a X_i + b Y_i + Z_i}{1 + a^2 + b^2}
 \end{equation}
-we can obtain a total minimal JPE of 
-\begin{equation}
+and $\widetilde{X}_i^\ast$ and $\widetilde{Y}_i^\ast$ as in Equations \eqref{eq:x_i-min} and \eqref{eq:y_i-min}.
+Then the JPE  is given by 
+\begin{align}
 	\label{eq:z-shift-error}
-	\Delta d_i = \sqrt{\frac{(a Z_i - X_i)^2}{1 + a^2}} 
-	= \abs{\frac{X_i dz}{Z_i + dz}} \sqrt{\frac{1}{1 + a^2}} \ .
-\end{equation}
+	\Delta d_i &= \sqrt{\frac{\left (a Y_i - b X_i \right )^2 + \left (a Z_i - X_i \right )^2 + \left (b Z_i - Y_i \right )^2}{1 + a^2 + b^2}} \\ 
+	&= \sqrt{\frac{\left (\alpha \cdot \frac{X_i}{Z_i + dz}\cdot Z_i - X_i \right )^2 + \left (\alpha \cdot \frac{Y_i }{Z_i + dz}\cdot Z_i- Y_i \right )^2}{1 + a^2 + b^2}} \\
+	&= \sqrt{\frac{\left (X_i^2 \left (\alpha \cdot \frac{Z_i}{Z_i + dz} - 1 \right) \right )^2 + \left (Y_i^2 \left (\alpha \cdot \frac{Z_i}{Z_i + dz}-1 \right ) \right )^2}{1 + a^2 + b^2}} \\
+	&= \abs{1 - \alpha \cdot \frac{Z_i}{Z_i + dz}}  \sqrt{\frac{X_i^2 + Y_i^2}{1 + a^2 + b^2}}\ .
+\end{align}
 Again, the MPJPE $\Delta d$ of the whole pose $P$ can be calculated as the mean of all $\Delta d_i$s (Equation \eqref{eq:delta-d}).
 
 In contrast to the results of the previous sections, this theoretical result is not as directly applicable to the system.
