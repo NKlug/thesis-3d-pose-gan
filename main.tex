@@ -45,6 +45,7 @@
 
 \setenumerate{label=(\arabic*),itemsep=0mm} % enumerate labeling and line distance
 \renewcommand{\baselinestretch}{1.1} % line distance
+\allowdisplaybreaks % Make big equations breakable
 
 
 \pagenumbering{gobble}
@@ -62,7 +63,10 @@
 	
 	\pagenumbering{arabic}
 
-	\Todo[inline]{Beim Korrekturlesen darauf achten ob Sachen benutzt werden, die vorher nicht erläutert wurden.}
+	\Todo[inline]{Beim Korrekturlesen darauf achten ob Sachen benutzt werden, die vorher nicht erläutert wurden. Außerdem:
+		Werden die Zusammenhänge überall klar?
+		Wird die Motivation, bestimmte Dinge zu tun/ zu analysieren klar?
+	}
 	\input{chapters/introduction}
 	
 	\input{chapters/network}

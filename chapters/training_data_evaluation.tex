@@ -1,10 +1,11 @@
-\section{Evaluation on Different Datasets}
+\section{\unsure{I'm not quite happy with this heading yet}
+	Evaluation on Different Datasets}
 \label{sec:evaluation}
 
-In this section the model's performance will be analyzed for different configurations of training and test data.
+In a first step, the model's performance will be analyzed for different configurations of training and test data.
 For training the Adam Optimizer \cite{kingma17} with an initial learning rate of $0.0002$ and $\beta_1 = 0.5$ is used for both generator and discriminator.
 This particular choice of $\beta_1$ has shown to result in faster convergence.
-As in the work by \citet{drover18}, the data is split up into batches of 32768 poses for training.
+As in the work by \citet{drover18}, the data is split up into batches of $32768$ poses for training.
 Generator and discriminator are trained alternately with the same batch of poses.
 Before adjusting the networks' parameters, adaptive clipping is applied to the gradients \cite[Section~3.2.1]{chorowski14}.
 
@@ -33,11 +34,11 @@ For training, \citet{drover18} follow a similar procedure and augment synthetic 
 Table \ref{tbl:results-original-protocol1} shows the results for \textbf{Protocol 1} reported in \cite{drover18} and for the replicated system trained with synthetic data.
 For the evaluation of the latter, one synthetic 2D pose is deterministically sampled from each monocular 3D pose available for Subject 11.
 The results for the synthetic training data can not compete with the results presented by \citet{drover18}.
-The exact source of the 6.8mm average discrepancy is not clear; the reasons can only be speculated about.
-\Todo{Another reason could be the batch norm}
+The exact source of the 6.8mm average discrepancy is not clear; the reasons can be of different origin.
 \citet{drover18} don't mention whether they also use synthetic poses for testing or evaluate only on 2D poses provided in Human3.6M.
-Before calculating the MPJPE, they apply a similarity transformation, but don't explicitly mention the Procrustes Analysis used in this work.
+Another reason can be that before calculating the MPJPE, they apply a similarity transformation, but don't explicitly mention the Procrustes Analysis used in this work.
 Further discrepancy can also arise from different internal configurations, like the exact training procedure or the applied gradient clipping.
+\citet{drover18} also report a Batch Normalization Layer in each of the residual blocks, which could not be found to function during the replication of their proposed system.
 Finally, extensive mining for the best performing model might also be a reason for the lower MPJPE.
 
 The results for \textbf{Protocol 2} are given in Table \ref{tbl:results-original-protocol2}.
