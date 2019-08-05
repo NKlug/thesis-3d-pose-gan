@@ -1,17 +1,20 @@
 \begin{figure}[ht]
-	\begin{subfigure}[]{.5\textwidth}
-		\begin{tikzpicture}
+	\begin{subfigure}[]{.3\textwidth}
+		\centering
+		\begin{tikzpicture}[trim axis left]
 		\begin{axis}[
-			small,
-			width=\textwidth,
+			tiny,
+			width=1.25\textwidth,
 			xlabel={$dx$ [m]},
-			axis lines = middle,
+%			axis lines = middle,
+    		y label style={at={(axis description cs:0.3,1.15)},rotate=-90,anchor=north},
 			ylabel={MPJPE [mm]},
 			grid=both,
 			grid style={draw=gray!50},
 			minor tick num = 1,
-			tick style={draw=none},
+			tick style={draw=gray!50},
 			xtick={-100,-50,0,50,100},
+			extra x ticks={0},
 			scaled x ticks = false,
 			no markers,
 			every axis plot/.append style={}
@@ -21,33 +24,59 @@
 		\end{axis}
 		\end{tikzpicture}
 		\subcaption{unscaled}
-	\end{subfigure}\hspace{5mm}
-	\begin{subfigure}[]{.5\textwidth}
-		\begin{tikzpicture}
+	\end{subfigure}\hfill
+	\begin{subfigure}[]{.3\textwidth}
+		\centering
+		\begin{tikzpicture}[trim axis left]
 		\begin{axis}[
-			small,
-width=\textwidth,
-xlabel={$dx$ [m]},
-axis lines = middle,
-ylabel={MPJPE [mm]},
-grid=both,
-grid style={draw=gray!50},
-minor tick num = 1,
-tick style={draw=none},
-xtick={-100,-50,0,50,100},
-scaled x ticks = false,
-no markers,
-every axis plot/.append style={}
+						tiny,
+			width=1.25\textwidth,
+			xlabel={$dx$ [m]},
+			%			axis lines = middle,
+			y label style={at={(axis description cs:0.3,1.15)},rotate=-90,anchor=north},
+			ylabel={MPJPE [mm]},
+			grid=both,
+			grid style={draw=gray!50},
+			minor tick num = 1,
+			tick style={draw=gray!50},
+			xtick={-100,-50,0,50,100},
+			extra x ticks={0},
+			scaled x ticks = false,
+			no markers,
+			every axis plot/.append style={}
 		]
 		\addplot table [x=a, y=b, col sep=comma] {figures/plot_e_03_07_original_x_shift.csv};
 		\addplot table [x=a, y=b, col sep=comma]{figures/plot_theoretical_x_shift_scaled.csv};
 		\end{axis}
 		\end{tikzpicture}
 		\subcaption{scaled}
+	\end{subfigure}\hfill
+	\begin{subfigure}[]{.3\textwidth}
+		\centering
+		\begin{tikzpicture}[trim axis left]
+			\begin{axis}[
+				tiny,
+				width=1.25\textwidth,
+				xlabel={$dx$ [m]},
+				%			axis lines = middle,
+				y label style={at={(axis description cs:0.3,1.15)},rotate=-90,anchor=north},
+				ylabel={MPJPE [mm]},
+				grid=both,
+				grid style={draw=gray!50},
+				minor tick num = 1,
+				tick style={draw=gray!50},
+				extra x ticks={0},
+				scaled x ticks = false,
+				no markers,
+				every axis plot/.append style={}
+				]
+				\addplot +[restrict expr to domain={\coordindex}{180:401}] table [x=a, y=b, col sep=comma] {figures/plot_e_03_07_original_x_shift.csv};
+				\addplot +[restrict expr to domain={\coordindex}{180:401}] table [x=a, y=b, col sep=comma]{figures/plot_theoretical_x_shift_scaled.csv};
+			\end{axis}
+		\end{tikzpicture}
+		\subcaption{scaled}
 	\end{subfigure}
-		
-		
-
+			
 
 	
 	\caption{Plot of theoretical (red) and observed (blue) MPJPEs for different values of $dx$. 
