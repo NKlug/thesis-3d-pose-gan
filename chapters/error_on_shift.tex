@@ -26,8 +26,8 @@ For three dimensions the y coordinates are to be inserted at the appropriate pla
 \label{sec:x-shift-error}
 First we will analyze assumption (A) by examining a 3D pose $P$ which is centered at the origin of the x-y-plane.
 $P$ is then shifted by the vector $(dx, dy, 0)$ along the x-y-plane and projected into two dimensions.
-After the 2D pose has been aligned with the image plane's origin, it is re-projected into three dimensions.
-The resulting 3D pose $\widetilde{P}$ will then be compared to the original 3D pose $P$ in order to gain insights in the additional error made through normalization.
+After the 2D pose has been aligned with the image plane's origin (this equals part of the normalization in \cite{drover18}), it is re-projected into three dimensions.
+The resulting 3D pose $\widetilde{P}$ is then compared to the original 3D pose $P$ in order to gain insights about the additional error made through normalization.
 
 Let $P = [(X_1, Y_1, Z_1), \dotsc, (X_n, Y_n, Z_n)]$ be a 3D pose.
 For simplicity we will assume that $dy = 0$, that is, the pose $P$ is only shifted along the x axis.
@@ -137,11 +137,8 @@ In the latter case all joints of the pose are located in a plane parallel to the
 The theoretical results above also show another downside of normalization by shifting.
 In case the generator is trained with 2D poses which have multiple different offsets $dx$ and $dy$, ambiguities are introduced to the system:
 As the generator can't know whether the pose it receives was originally located in the origin of the image plane or not, it can't correctly learn which depth offset belongs to which pose.
-\unsure{Should possible solutions already presented here?}
 One easy solution for this second problem is to train only with poses that all have the same offsets in x and y direction.
 As this is rarely the case in reality, that would make the system only viable for very specific applications.
-
-\unsure{Mention the intuition behind the phenomenon: Shift means we see the pose more from the side.}
 
 \subsubsection{Experimental Results}
 
@@ -245,7 +242,7 @@ Then the JPE  is given by
 \end{align}
 Again, the MPJPE $\Delta d$ of the whole pose $P$ can be calculated as the mean of all $\Delta d_i$s (Equation \eqref{eq:delta-d}).
 
-The additional MPJPE vanishes if $X_i = Y_i = 0$ or $\alpha \cdot \frac{Z_i}{Z_i + dz} = 1$, which is the case when $dz = 0$.
+The additional MPJPE vanishes if $X_i = Y_i = 0$ or $\alpha \cdot \frac{Z_i}{Z_i + dz} = 1$.
 Other than the results for shifting along an image plane axis, these results are -- theoretically -- not directly applicable to the system.
 If the generator estimates the depths $\widetilde{Z}_i = Z_i + dz$ for all $i$, the estimated pose $\widetilde{P}$ equals $P$ up to a shift.
 At the time of evaluation with Protocol 2, the root joints of the estimated and ground truth poses are aligned.
@@ -253,10 +250,9 @@ That means that it is theoretically possible for the system to still estimate pe
 In the next section it will be shown that these results provide some insight nonetheless.
 
 In general, there exists no factor $\alpha$ such that $x_i = \widetilde{x_i}$ for all $i$ (such factor exists e.g. if for all $i$ $Z_i = \widetilde{Z_i}$ or for all $i, j$ $Z_i = Z_j$).
-That means the shifted projected pose and the original projected pose usually do not match.
+That means the shifted projected pose and the original projected pose usually do not match (because the relative angles between the projection rays change).
 Thus, if the generator receives poses with different total depths, it can not know with which camera distance the pose has been captured.
 Again, this means ambiguities are introduced to the system.
-
 
 \subsubsection{Experimental Results}
 \label{sec:error-on-shift-experimental}
