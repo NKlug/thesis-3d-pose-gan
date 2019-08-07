@@ -89,12 +89,12 @@ This means the discriminator still only receives synthetic poses for training.
 
 Table \ref{tbl:results-real-and-synthetic-protocol2} shows the results for both synthetic data and the monocular 2D test poses from Human3.6M.
 While the results for the synthetic data are approximately the same as the ones in the previous section, the results for the Human3.6M data improved by almost 8mm to 72.5mm.
-This has both positive and negative consequences:
-On the one hand, when the system is trained with real world data from a specific application, it will perform better in that application.
-On the other hand, this shows that the system is not able to generalize to all kinds of human poses and a that part of the higher MPJPE can be attributed to a weak form of overfitting to the training data. 
 
-\subsection{Training with augmented cameras similar to the real cameras}
-Performance of system with cameras similar to the real cameras.
-Results for real 2D data.
+A training with augmented cameras similar to the four real cameras available in Human3.6M showed no major improvement to this number.
+For this, eight additional camera positions with equidistant azimuth angles were sampled.
+Synthetic 2D poses were projected like above.
+The Protocol 2 MPJPE for this setup is at 71.8mm.
 
-\unsure[inline]{See if it makes sense to include this section}
+These results have both positive and negative ramifications:
+On the one hand, when the system is trained with real world data from a specific application, it will perform better in that application, compared to a pre-trained model.
+On the other hand, this shows that the system is not able to generalize to all kinds of human poses with the same quality. 
