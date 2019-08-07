@@ -1,4 +1,4 @@
-\begin{figure}[ht]
+\begin{figure}
 	\begin{subfigure}[]{.3\textwidth}
 		\centering
 		\begin{tikzpicture}[trim axis left]
@@ -7,9 +7,10 @@
 			width=1.25\textwidth,
 			xlabel={$dx$ [m]},
 %			axis lines = middle,
-    		y label style={at={(axis description cs:0.3,1.15)},rotate=-90,anchor=north},
+    		y label style={at={(axis description cs:0.35,1.15)},rotate=-90,anchor=north},
 			ylabel={MPJPE [mm]},
 			grid=both,
+			enlarge x limits = false,
 			grid style={draw=gray!50},
 			minor tick num = 1,
 			tick style={draw=gray!50},
@@ -20,7 +21,7 @@
 			every axis plot/.append style={}
 		]
 		\addplot table [x=a, y=b, col sep=comma] {figures/plot_e_03_07_original_x_shift.csv};
-		\addplot table [x=a, y=b, col sep=comma]{figures/plot_theoretical_x_shift.csv};
+		\addplot table [x=a, y=b, col sep=comma] {figures/plot_theoretical_x_shift.csv};
 		\end{axis}
 		\end{tikzpicture}
 		\subcaption{unscaled}
@@ -33,9 +34,10 @@
 			width=1.25\textwidth,
 			xlabel={$dx$ [m]},
 			%			axis lines = middle,
-			y label style={at={(axis description cs:0.3,1.15)},rotate=-90,anchor=north},
+			y label style={at={(axis description cs:0.35,1.15)},rotate=-90,anchor=north},
 			ylabel={MPJPE [mm]},
 			grid=both,
+			enlarge x limits = false,
 			grid style={draw=gray!50},
 			minor tick num = 1,
 			tick style={draw=gray!50},
@@ -46,7 +48,7 @@
 			every axis plot/.append style={}
 		]
 		\addplot table [x=a, y=b, col sep=comma] {figures/plot_e_03_07_original_x_shift.csv};
-		\addplot table [x=a, y=b, col sep=comma]{figures/plot_theoretical_x_shift_scaled.csv};
+		\addplot table [x=a, y=b, col sep=comma] {figures/plot_theoretical_x_shift_scaled.csv};
 		\end{axis}
 		\end{tikzpicture}
 		\subcaption{scaled}
@@ -59,19 +61,21 @@
 				width=1.25\textwidth,
 				xlabel={$dx$ [m]},
 				%			axis lines = middle,
-				y label style={at={(axis description cs:0.3,1.15)},rotate=-90,anchor=north},
+				y label style={at={(axis description cs:0.35,1.15)},rotate=-90,anchor=north},
 				ylabel={MPJPE [mm]},
 				grid=both,
+				enlarge x limits = false,
 				grid style={draw=gray!50},
 				minor tick num = 1,
 				tick style={draw=gray!50},
+				xtick={-3,-2,-1,0,1,2,3},
 				extra x ticks={0},
 				scaled x ticks = false,
 				no markers,
 				every axis plot/.append style={}
 				]
 				\addplot +[restrict expr to domain={\coordindex}{180:401}] table [x=a, y=b, col sep=comma] {figures/plot_e_03_07_original_x_shift.csv};
-				\addplot +[restrict expr to domain={\coordindex}{180:401}] table [x=a, y=b, col sep=comma]{figures/plot_theoretical_x_shift_scaled.csv};
+				\addplot +[restrict expr to domain={\coordindex}{180:401}] table [x=a, y=b, col sep=comma] {figures/plot_theoretical_x_shift_scaled.csv};
 			\end{axis}
 		\end{tikzpicture}
 		\subcaption{scaled}
@@ -79,9 +83,10 @@
 			
 
 	
-	\caption{Plot of theoretical (red) and observed (blue) MPJPEs for different values of $dx$. 
-		The theoretical errors are obtained by calculating the mean of MPJPES $\alpha \Delta d$ for the evaluation data.}
-	\Todo[inline]{Add axes titles, use proper image.
-	use pgfplots to plot data}
+	\caption{Theoretical (red) and experimental (blue) MPJPEs for different values of $dx$.
+		The original theoretical minimal MPJPE does not represent a lower bound (a), meanwhile the one with scaled joint coordinates does (b and c). 
+		The theoretical errors are obtained by calculating $\Delta d$ for every pose in the Protocol 2 test data.
+		The distance between the camera and the poses is approximately 5m.}
 	\label{fig:x-shift-error}
+	\unsure[inline]{Should the plots be larger? Are angles better than absolute offsets as the x axis?}
 \end{figure}

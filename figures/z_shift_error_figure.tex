@@ -1,8 +1,32 @@
 \begin{figure}
-	\centering
-	\includegraphics[scale=0.5]{figures/plot_e_03_07_original_z_offset.png}
-	\caption{Plot of theoretical (red) and observed (blue) MPJPEs for different values of $dx$. 
-		The theoretical errors are obtained by calculating the mean of MPJPES $\alpha \Delta d$ for the evaluation data.}
+		\centering
+		\begin{tikzpicture}[trim axis left]
+		\begin{axis}[
+		tiny,
+		width=\textwidth,
+		height=8cm,
+		xlabel={$dx$ [m]},
+		%			axis lines = middle,
+		y label style={at={(axis description cs:0.12,1.08)},rotate=-90,anchor=north},
+		ylabel={MPJPE [mm]},
+		grid=both,
+		enlarge x limits = false,
+		grid style={draw=gray!50},
+		minor tick num = 1,
+		tick style={draw=gray!50},
+		scaled x ticks = false,
+		no markers,
+		xtick={-3,-2,...,15},
+		every axis plot/.append style={}
+		]
+		\addplot table [x=a, y=b, col sep=comma] {figures/plot_e_03_07_original_z_shift.csv};
+		\addplot table [x=a, y=b, col sep=comma] {figures/plot_theoretical_z_shift.csv};
+		\addplot[color=black!60!green] table [x=a, y=b, col sep=comma] {figures/plot_theoretical_z_shift_scaled.csv};
+		\end{axis}
+		\end{tikzpicture}
+	\caption{Experimental (blue), theoretical (red) and scaled theoretical (green) MPJPEs for different values of $dz$.
+		The theoretical errors are obtained by calculating $\Delta d$ for every pose in the Protocol 2 test data.
+		The distance between the camera and the poses is approximately 5m.}
 	\Todo[inline]{Add axes titles, use proper image.
 	use pgfplots to plot data}
 	\label{fig:z-shift-error}
