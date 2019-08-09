@@ -44,7 +44,7 @@ Finally, extensive mining for the best performing model might also be a reason f
 
 The results for \textbf{Protocol 2} are given in Table \ref{tbl:results-original-protocol2}.
 They are not directly comparable to those by \citet{drover18} because the authors also allow rigid alignment (which includes rotation) for Protocol 2.
-In this work, similar to most other literature, rotation is not allowed to fit the estimated poses to the ground truth.
+In this work, similar to most other literature, rotation is not allowed to fit the estimated poses to the ground truth for this protocol.
 This is also the reason for the MPJPEs being approximately 14mm higher than those for Protocol 1.
 
 Tables \ref{tbl:results-original-protocol1} and \ref{tbl:results-original-protocol2} also display evaluation results for the monocular 2D poses available in the Human3.6M dataset.
@@ -54,14 +54,14 @@ Here the error margin is at 25.6mm.
 The key difference between Protocols 1 and 2 is that Protocol 1 permits rotation to fit the poses, as both protocols allow translation and scaling.
 Hence, disregarding the absolute rotation of the poses, the results for the Human3.6M poses are overall just as good as those for the synthetic data.
 Although this looks good from a theoretical point of view, for real world applications this is only helpful when the absolute rotation of the poses is not of interest.
-Otherwise only the results Protocol 2 are meaningful.
+Otherwise only the results for Protocol 2 are meaningful.
 
-The system was also evaluated for a different dataset.
+The system is also evaluated for a different dataset.
 On the test data of TotalCapture \cite{trumble17}, the average MPJPE for Protocol 1 is 68.3mm and for Protocol 2 100.2mm respectively (Table \ref{tbl:results-original-totalcapture}).
 The pose structure in this dataset is slightly different from Human3.6M, which could explain the higher error.
-The most noticeable difference are the angles between the two hips.
+The most noticeable difference is the angle between the two hips.
 In Human3.6M, this angle measures 180 degrees and the spine is perpendicular to the hips, whereas in TotalCapture the angle is substantially smaller (see Figure \ref{fig:human-totalcapture}).
-Although the results are slightly worse for TotalCapture, they still show that the system generalizes to unseen data in a reasonable way.
+Although the results for TotalCapture are slightly worse, they still show that the system generalizes to unseen data in a reasonable way.
 
 \input{figures/human-totalcapture-figure}
 
@@ -69,28 +69,28 @@ Although the results are slightly worse for TotalCapture, they still show that t
 \subsection{Results for Training with Augmented and Real Data}
 The results for the test data of the Human3.6M dataset are not quite satisfying, as they are only useful when rotation plays no role.
 The reasons for the worse results may be of different nature:
-A simple explanation would be that machine learning systems usually perform better on data which is more similar to the training data.
+A simple explanation is that machine learning systems tend to perform better on data which is more similar to the training data.
 For the synthetic testing data this is certainly the case.
 On the other hand, the results for Protocol 1 show that the poses are already sensible and only seem to lack the right orientation.
-Another reason might be that Human3.6M's monocular 2D poses are in fact being normalized, both in scale and position, other than the synthetic data, which is already normalized in position.
+Another reason might be that Human3.6M's monocular 2D poses are in fact being normalized, both in scale and position, other than the synthetic data, which is already naturally normalized in position (and also almost in scale).
 
-In order to figure out whether the first reason contributes to the discrepancy, the monocular 2D poses are added to the training set.
+In order to figure out whether the first conjecture contributes to the discrepancy, the monocular 2D poses are added to the training set.
 A lower MPJPE would indicate that it does.
 For training, the generator receives both real and synthetic poses at a 1:1 ratio.
 As described in Section \ref{sec:network}, during training the generator tries to learn the real data distribution.
 In order to have a chance to achieve this, it must be able to generate poses similar to the real poses. 
-This comes down to the Random Projection Layer, where the poses are projected with camera distance $d$ and a root joint offset of $0$ (which means the camera is centered at the root joint).
-2D poses projected with a camera distance other than $d$ or with a non-zero root joint offset are inherently different.
+This comes down to the Random Projection Layer, where the poses are projected with a camera distance of $10$ and a root joint offset of $0$ (which means the camera is centered at the root joint).
+2D poses projected with a camera distance other than $10$ or with a non-zero root joint offset are inherently different.
 This will further be elaborated on in Section \ref{sec:effects-of-normalization}.
 Thus there are two options:
 Projecting the generated 3D poses with a camera distance and offset similar to the real data or feeding only data to the discriminator that resembles the generator's output.
-As the real camera distance might not be known in general, and offsets would still need to be sampled, the second option was chosen.
+As the real camera distance might not be known in general, and offsets would still need to be sampled, the second option is chosen.
 This means the discriminator still only receives synthetic poses for training.
 
 \input{figures/real_and_synthetic_protocol_2_table}
 
-Table \ref{tbl:results-real-and-synthetic-protocol2} shows the results for both synthetic data and the monocular 2D test poses from Human3.6M.
-While the results for the synthetic data are approximately the same as the ones in the previous section, the results for the Human3.6M data improved by almost 8mm to 72.5mm.
+Table \ref{tbl:results-real-and-synthetic-protocol2} shows the results for both synthetic data and the monocular 2D test poses from Human3.6M for this data configuration.
+While the results for the synthetic data are approximately the same as the ones in the previous section, the results for the Human3.6M poses improved by almost 8mm to 72.5mm.
 
 A training with augmented cameras similar to the four real cameras available in Human3.6M showed no major improvement to this number.
 For this, eight additional camera positions with equidistant azimuth angles were sampled.
@@ -100,3 +100,6 @@ The Protocol 2 MPJPE for this setup is at 71.8mm.
 These results have both positive and negative ramifications:
 On the one hand, when the system is trained with real world data from a specific application, it will perform better in that application, compared to a pre-trained model.
 On the other hand, this shows that the system is not able to generalize to all kinds of human poses with the same quality. 
+
+\unsure[inline]{Should I use present, past or past progressive tense?
+Should I also add (more) interpretation to the results (like e.g. to the error numbers)?}
