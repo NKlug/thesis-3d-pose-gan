@@ -1,7 +1,7 @@
 \section{Analysis of the Effects of Pose Normalization}
 \label{sec:effects-of-normalization}
 
-The original model of the 3D pose estimation system by \citet{drover18}, which is described in Section \ref{sec:network}, requires the input pose to be normalized in the following way:
+The 3D pose estimation system by \citet{drover18}, which is described in Section \ref{sec:network}, requires the input pose to be normalized in the following way:
 \begin{enumerate}[label=(\Alph*)]
 	\item The 2D input pose's root joint is centered at the origin.
 	\item A designated norm limb has length 0.1.
@@ -9,34 +9,32 @@ The original model of the 3D pose estimation system by \citet{drover18}, which i
 
 In reality both assumptions are rarely satisfied from the start.
 Thus \citet{drover18} normalize the input 2D poses by shifting and scaling before feeding them to the generator.
-In this chapter we will see both theoretically and experimentally that this approach inevitably leads to additional errors being introduced to the system.
+In this chapter it will be shown both theoretically and experimentally that this approach inevitably leads to additional errors being introduced to the system.
 
-\Todo[inline]{Figure of camera projection}
+\input{figures/camera_projection_figure}
 
-In the following we will assume that the camera used for projection is located at the origin of the coordinate system and looks into positive z direction.
+In the following the camera used for projection is located at the origin of the coordinate system and looks into positive z direction (Figure \ref{fig:camera-projection-setup}).
 All poses are assumed to have z coordinates greater than camera's focal length $f$ in order to be projected in front of the camera.
-The generator $G$ will be regarded as a black box that takes a normalized 2D pose as input and outputs the depths (the z coordinates) of the input points which then can be reprojected into three dimensional space like in Equation \eqref{eq:perspective-re-projection}.
-
-\Todo[inline]{
-For simplicity, the problem will only be regarded in two dimensions.
-For three dimensions the y coordinates are to be inserted at the appropriate places.
-}
+The generator $G$ will be regarded as a black box that takes a normalized 2D pose as input and outputs the depths (the z coordinates) of the input points which then can be re-projected into three dimensional space like in Equation \eqref{eq:perspective-re-projection}.
 
 \subsection{Shifting along one Image Plane Axis}
 \label{sec:x-shift-error}
-First we will analyze assumption (A) by examining a 3D pose $P$ which is centered at the origin of the x-y-plane.
-$P$ is then shifted by the vector $(dx, dy, 0)$ along the x-y-plane and projected into two dimensions.
-After the 2D pose has been aligned with the image plane's origin (this equals part of the normalization in \cite{drover18}), it is re-projected into three dimensions.
-The resulting 3D pose $\widetilde{P}$ is then compared to the original 3D pose $P$ in order to gain insights about the additional error made through normalization.
+First, assumption (A) will be analyzed.
+The basic approach here is the following:
+Let $P$ be a 3D pose which is centered at the origin of the x-y-plane at depth $Z$.
+$P$ is shifted by the vector $(dx, dy, 0)$ along the x-y-plane and projected into two dimensions.
+After the resulting 2D pose has been aligned with the image plane's origin (this equals part of the normalization in \cite{drover18}), it is re-projected into three dimensions.
+The resulting 3D pose $\widetilde{P}$ can then be compared to the original 3D pose $P$ in order to gain insights about the additional error made through normalization.
 
-Let $P = [(X_1, Y_1, Z_1), \dotsc, (X_n, Y_n, Z_n)]$ be a 3D pose.
-For simplicity we will assume that $dy = 0$, that is, the pose $P$ is only shifted along the x axis.
+In the following, let $P = [(X_1, Y_1, Z_1), \dotsc, (X_n, Y_n, Z_n)]$ be a 3D pose.
+For simplicity it will be assumed that $dy = 0$, that is, the pose $P$ is only shifted along the x axis.
 
 \subsubsection{Theoretical Analysis}
 \label{sec:x-shift-error-theoretical}
 Let $P_i = (X_i, Y_i, Z_i) \in P$.
 Then the coordinates of the projected point on the image plane are given by
 \begin{equation}
+	\label{eq:projected-point}
 	x_i = f \frac{X_i}{Z_i} \ ,\enspace y_i = f \frac{Y_i}{Z_i} \ .
 \end{equation}
 Now assume that $P_i$ is shifted by $dx$ along the x axis.
@@ -48,24 +46,25 @@ This results in a projected x coordinate of
 The projected pose is then normalized by shifting all projected points such that the root joint is located in the origin of the image plane. 
 Let the shifted root joint have coordinates $(dx, 0, Z)$.
 Since $dy = 0$, each point is only shifted by $- f \frac{dx}{Z}$ along the x axis.
-That means the x coordinate of the normalized point $\widetilde{x}_i$ is given by
+That means the x coordinate  $\widetilde{x}_i$ of the normalized point is given by
 \begin{equation}
 	\widetilde{x}_i
 	= x_i^\mathrm{S} - f \frac{dx}{Z}
 	= x_i + f \frac{dx}{Z_i} - f \frac{dx}{Z}
 	= x_i + f dx (\frac{1}{Z_i} - \frac{1}{Z}) \ , 
 \end{equation}
-while the y coordinate stays the same as in \eqref{eq:projected-x-y}.
-After $G$ estimates the depth $\widetilde{Z}_i$, the 2D point is reprojected into three dimensions using standard perspective projection. The resulting coordinates are 
+while the y coordinate is still the same as in \eqref{eq:projected-point}.
+After $G$ estimates the depth $\widetilde{Z}_i$, the 2D point is re-projected into three dimensions using standard perspective projection. 
+The resulting coordinates are 
 \begin{align}
 	\label{eq:re-projected-X}
 	\widetilde{X}_i &= \frac{\widetilde{x}_i}{f} \cdot \widetilde{Z}_i
 	= X_i \frac{\widetilde{Z}_i}{Z_i} + dx (\frac{1}{Z_i} - \frac{1}{Z}) \widetilde{Z}_i
-	= \widetilde{Z_i} \left( \frac{X_i}{Z_i} + dx \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right) \ , \\
+	= \widetilde{Z_i} \cdot \left( \frac{X_i}{Z_i} + dx \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right) \ , \\
 	\label{eq:re-projected-Y}
 	\widetilde{Y}_i &= \frac{y_i}{f} \cdot \widetilde{Z}_i = \frac{Y_i}{Z_i} \cdot \widetilde{Z}_i \ .
 \end{align}
-The Euclidean distance (the Joint Position Error (JPE)) of the reprojected point to the original point is given by
+The Euclidean distance (the Joint Position Error; JPE) of the re-projected point to the original point is given by
 \begin{equation}
 \label{eq:delta-d}
 	\Delta d_i = \norm{ 
@@ -78,7 +77,7 @@ The Euclidean distance (the Joint Position Error (JPE)) of the reprojected point
 \end{equation}
 With perfect estimation of $\widetilde{Z_i} = Z_i$, we have $\widetilde{Y}_i = Y_i$ and Equation \eqref{eq:delta-d} together with \eqref{eq:re-projected-X} describes a linear relationship between the offset $dx$ and the Joint Position Error $\Delta d_i$.
 But since the generator's estimation of $\widetilde{Z_i}$ can vary for different offsets $dx$, the JPE can actually become smaller for other $\widetilde{Z_i} \neq Z_i$. 
-In order to obtain a correct lower bound for the Joint Position Error, we have to calculate the $\widetilde{Z_i}$ for which $\Delta d_i$ is minimal.
+In order to obtain a correct lower bound for the Joint Position Error, the $\widetilde{Z_i}$ for which $\Delta d_i$ is minimal has to be calculated.
 So the function to be minimized is
 \begin{align}
 	\label{eq:minimum-distance}
@@ -98,7 +97,7 @@ Setting this equal to zero gives
 	\label{eq:z_i-min}
 \end{align}
 It is easy to see that $\widetilde{Z}_i^\ast$ is a minimum and $f$'s only extremum.
-With $\widetilde{Z}_i^\ast$ the optimal $\widetilde{X}_i^\ast$ and $\widetilde{Y}_i^\ast$ from Equation \eqref{eq:re-projected-X} and \eqref{eq:re-projected-Y} can now be calculated:
+With this $\widetilde{Z}_i^\ast$, the optimal $\widetilde{X}_i^\ast$ and $\widetilde{Y}_i^\ast$ from Equation \eqref{eq:re-projected-X} and \eqref{eq:re-projected-Y} can now be calculated:
 \begin{align}
 	\label{eq:x_i-min}
 	\widetilde{X}_i^\ast &= \widetilde{Z}_i^\ast \cdot a
@@ -107,7 +106,6 @@ With $\widetilde{Z}_i^\ast$ the optimal $\widetilde{X}_i^\ast$ and $\widetilde{Y
 	\widetilde{Y}_i^\ast &= \widetilde{Z}_i^\ast \cdot b
 	= \frac{b^2 Y_i + a b X_i + b Z_i}{1 + a^2 + b^2} \ . 
 \end{align}
-
 Putting \eqref{eq:z_i-min}, \eqref{eq:x_i-min} and \eqref{eq:y_i-min} into \eqref{eq:delta-d} yields a total minimal error of 
 \Todo{Make roots look nice}
 \begin{align}
@@ -129,7 +127,7 @@ With this $\Delta d_i$ the MPJPE for the whole pose can then be calculated as th
 \end{equation}
 In contrast to the linear relationship for $\widetilde{Z_i} = Z_i$, for optimal $\widetilde{Z_i}$, the minimal MPJPE converges to a constant for large $dx$.
 
-This result shows that even with the generator estimating the depth of each point optimally, the estimated 3D pose will never match the original 3D pose up to shifting and scaling.
+This result shows that even with the generator estimating the depth of each point optimally, the estimated 3D pose will never match the original 3D pose up to shifting and scaling (the poses' root joints are already aligned and in general there exists no factor $\alpha$ such that the pose are equal).
 Especially the re-projection of the 2D poses into three dimensional space without first shifting the 2D poses back as they were before normalization adds an essential part to the MPJPE.
 In fact, the effects of 2D pose normalization by shifting only vanish if $dx = 0$ or $Z_i = Z$ for all $i$. 
 In the latter case all joints of the pose are located in a plane parallel to the image plane.
@@ -140,9 +138,11 @@ As the generator can't know whether the pose it receives was originally located 
 One easy solution for this second problem is to train only with poses that all have the same offsets in x and y direction.
 As this is rarely the case in reality, that would make the system only viable for very specific applications.
 
+For a lower bound with $dx \neq 0$ \emph{and} $dy \neq 0$, $b$ has to be substituted with $\left( \frac{Y_i}{Z_i} + dy \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right )$ in the above calculations.
+
 \subsubsection{Experimental Results}
 
-In order to verify the theoretical findings, experimental MPJPEs are calculated for poses with different offsets.
+In order to verify the theoretical findings, experimental MPJPEs are calculated for poses with different x offsets.
 Figure \ref{fig:x-shift-error} (a) depicts a plot of the MPJPEs for synthetic 2D poses sampled from the 3D poses of Subjects 9 and 11 with different offsets in x direction (measured using Protocol 2), along with a plot of the minimal MPJPE calculated in the previous section in Equation \eqref{eq:minimum-mpjpe-on-shift}.
 As it turns out, both curves have the same approximate shape, but the sampled poses' MPJPE is significantly smaller than the theoretical MPJPE.
 The difference between the two curves is increasing for larger offsets $\abs{dx}$.
@@ -151,7 +151,7 @@ At first glance, this seemingly contradicts the fact that the above $\Delta d$ r
 However, one important detail has not been taken into account yet:
 During the evaluation with Protocol 2, shifting and scaling might be applied to the estimated poses. 
 For the root joint $r$ we have $Z_i = Z$ in Equation \eqref{eq:minimum-delta-d}, so $\Delta d_r = 0$. 
-This means $(\widetilde{X}_r, \widetilde{Y}_ir, \widetilde{Z}_r) = (X_r, Y_r, Z_r)$, that is, the root joints of both poses are already aligned.
+This means $(\widetilde{X}_r, \widetilde{Y}_r, \widetilde{Z}_r) = (X_r, Y_r, Z_r)$, that is, the root joints of both poses are already aligned.
 It is not as easy to make a statement about the scale of the pose $\widetilde{P}$ from a theoretical point of view only though.
 Experimental results show that the average limb length of $\widetilde{P}$ is increasing monotonously with increasing offset $\abs{dx}$.
 That means for a fair comparison with the those results the pose $\widetilde{P}$ has to be re-scaled by a factor $\alpha_{\widetilde{P}}$ in all dimensions before the MPJPE is calculated:
@@ -173,11 +173,11 @@ Here it becomes clear that Equation \eqref{eq:delta-d} does indeed represent a l
 
 As shown in Section \ref{sec:evaluation} the MPJPE for the monocular 2D poses of the Human3.6M dataset is about 25mm higher than the one for the synthetically generated data.
 With those poses' root joints mostly having non-zero x and y offsets, the phenomenon discussed above is likely to contribute to the error.
-This motivates altering the network in order to tolerate shifted poses.
+This motivates altering the network in order to tolerate shifted poses, which will be discussed in a later section.
 
 It is also noticeable that the performance of the network is not worse than the theoretical results by a constant offset.
 For small deviations along the x axis the network seems to be able to compensate the error introduced by shifting.
-As $dx$ increases, so does the offset between the observed and the theoretical results until it seems to converge to a constant.
+As $dx$ increases, so does the offset between the observed and the theoretical results until it converges to a constant.
 
 	
 \subsection{Shifting along the Z Axis}
@@ -187,14 +187,14 @@ In this section, assumption (B) will be analyzed.
 It states that a 2D pose's designated norm limb should have length $0.1$ when the pose is fed to the generator.
 In case the assumption is not fulfilled from the start, there can be two reasons for this: 
 An incorrect focal length $f$ of the camera, or an either to large or to small distance $Z$ between the camera and the 3D pose's root joint.
-When $Z$ and $f$ are the same for all poses, no matter the exact values, all poses can be normalized with the same factor and the generator's learning behavior is not affected by the scaling, as it could just as well receive the non-normalized poses.
+When $Z$ and $f$ are the same for all poses, no matter the exact values, all poses can be normalized with the same factor and the generator's learning behavior is not affected by the scaling, as it could just as well receive the non-normalized poses (ignoring numerical issues).
 
 In case $Z$ is fixed for all poses and only the focal length of the camera varies, the poses can be normalized without any problems.
 As the focal length is only a scale factor the projected points are multiplied with, dividing by it results in the same 2D pose as if $f$ has been correct in the first place.
 
 On the other hand, when the focal length $f$ of the camera is fixed and the varying lengths of the norm limb are caused by a varying distance between the camera and the root joint, normalization by scaling will introduce an additional error.
 The intuitional explanation behind this is that the projection rays' relative angles change when the 3D pose is projected with greater or smaller camera distance.
-The resulting change in MPJPE will be analyzed in the following section.
+The resulting MPJPE will be analyzed in the following section.
 
 \subsubsection{Theoretical Analysis}
 Again consider a point $P_i=(X_i, Y_i, Z_i) \in P$ and a camera with focal length $f$. Assume that $P_i$ is shifted by $dz$ along the z axis.
@@ -273,12 +273,12 @@ Compared to the effect of shifting along an image plane axis, the MPJPE does not
 For an offset of 20m, the MPJPE is about 5mm higher than the one without any offset.
 For negative offsets (i.e. poses closer to the camera), a 5mm increase is already measurable at 2.4m.
 It comes as no surprise that the effect is stronger for poses closer to the camera.
-The smaller the camera distance, the more extreme the change in relative projection ray angles. 
+The smaller the camera distance, the more extreme the change in relative projection ray angles, up until the pose moves behind the camera.
 
-It is remarkable that for $dz = 0$, the scaled theoretical MPJPE is already at 5mm.
+It is also remarkable that for $dz = 0$, the scaled theoretical MPJPE is already at 5mm.
 The reason for this lies in the scaling applied with Protocol 2.
 Because the poses are scaled to match the average limb length of the subject instead of the corresponding ground truth pose's, a minor error is introduced, as explained in Section \ref{sec:protocol2}.
 
 After all, these results show that poses having different absolute z coordinates than those the system was trained with can not be estimated just as good.
-Especially in production this issue could have been more severe, as the absolute depth of the 3D poses changes.
+Especially in production this issue could have been more severe, as the absolute depth of the 3D poses is likely to change.
 Due to the minor increase in MPJPE this effect might be negligible in most applications.
