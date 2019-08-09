@@ -6,7 +6,7 @@ In a first step, the model's performance will be analyzed for different configur
 For training, the Adam Optimizer \cite{kingma17} with an initial learning rate of $2 \cdot 10^{-4}$ and $\beta_1 = 0.5$ is used for both generator and discriminator.
 This particular choice of $\beta_1$ has shown to result in faster convergence.
 As in the work by \citet{drover18}, the data is split up into batches of $32768$ poses for training.
-Generator and discriminator are trained alternately with the same batch of poses.
+Generator and discriminator are trained alternately with the same batch of poses, for up to $50000$ iterations until convergence.
 Before adjusting the networks' parameters, adaptive clipping is applied to the gradients \cite[Section~3.2.1]{chorowski14}.
 
 

@@ -8,21 +8,22 @@ As the key feature of the system described in this work is that only 2D poses ar
 In GANs, the generator only receives information about the distribution to be learned through the discriminator's error.
 The discriminator on its part only receives information about the elements of the real data distribution.
 Other than that, there is a priori no other information the generator can use to produce improved results.
-Without ground truth data, one of the only parts of additional knowledge which can be passed to the system during training are general facts that hold true for all elements of the distribution to be learned.
+Without ground truth data available, one of the only parts of additional knowledge that can be passed to the system during training are general facts that hold true for all elements of the distribution to be learned.
 
 In the special case of human 3D pose estimation, such facts can be the kinematics or the basic structure of the human skeleton.
 Generally, the movement of limbs relative to each other is very constrained:
 A leg can not (and if, only rarely) completely fold behind one's back and an hand cannot touch its own forearm.
-Everything exceeding simple restrictions for the relative angles between the limbs is highly complex and out of the scope of this work.
-Because the results from the previous section show that the generated poses already have sensible limb angles, it is not to be expected to gain any benefit by engineering knowledge about simple kinematics into the system.
+If such information can be made available to the generator the results might improve.
+Everything exceeding simple restrictions for the relative angles between the limbs is highly complex and would be out of the scope of this work, though.
+As the results from the previous section show that the generated poses already have sensible limb angles, it is not to be expected to gain any benefit by engineering knowledge about simple kinematics into the system.
 
 That leaves the basic structure of the human skeleton.
 As all mammals, humans have a bilaterally symmetrical skeleton.
 That symmetry can be made use of in the following way:
 3D poses are expected to have equally long upper and lower arms, upper and lower legs, foots of equal size etc.
 Also, the distance between the shoulders and the neck, and the hips and the base of the spine should not differ too much.
-
 Concerning the GAN, that means this additional piece of information can be passed to the generator through the loss function.
+
 Let a \emph{limb} $l = (u, v)$ be the connecting body part between joints $u$ and $v$.
 For a set of symmetric limbs $S = \{(l_{i_1}, l_{i_2})~|~ l_{i_1}, l_{i_2}\ \text{are symmetric limbs} \}$ the \emph{limb loss} is defined as:
 \begin{equation}
