@@ -74,6 +74,7 @@ For the synthetic testing data this is certainly the case.
 On the other hand, the results for Protocol 1 show that the poses are already sensible and only seem to lack the right orientation.
 Another reason might be that Human3.6M's monocular 2D poses are in fact being normalized, both in scale and position, other than the synthetic data, which is already naturally normalized in position (and also almost in scale).
 
+\Todo{Maybe try out training where the discriminator and the generator both receive the same dataset at 1:1 ratio, and augmented cameras}
 In order to figure out whether the first conjecture contributes to the discrepancy, the monocular 2D poses are added to the training set.
 A lower MPJPE would indicate that it does.
 For training, the generator receives both real and synthetic poses at a 1:1 ratio.

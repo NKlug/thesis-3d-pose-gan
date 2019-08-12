@@ -1,13 +1,46 @@
-\section{Part 2: Adjusting the network to tolerate shifting}
+\section{Prevention of the Effects of Pose Normalization}
 \label{sec:network-adjusting}
 
-The results of Section \ref{sec:z-shift-error} show that the model proposed by \citet{drover18} is not really viable for practical use.
-Error on original poses when training on "shift generator": 73.75
-\subsection{Original network with correct re-projection}
-These are the results of the original network with a correct re-projection of the estimated poses into three dimensional space.
-If the poses are re-projected into three dimensional space, the lower bound from Section X no longer holds.
+The results of the previous section show that the network proposed by \citet{drover18} is not viable for practical use as is.
+Especially if the camera photographing the poses was not centered at the root joint, a significant increase in MPJPE is measurable.
+This motivates further looking into how this increased error can be circumvented.
+This section will focus on the error introduced by shifting along the image plane, to be precise on shifting along the x axis, as it shows more significant additional MPJPE than shifting along the z axis.
 
-\subsection{"New" network}
-\Todo[inline]{Figure of new network}
-Network that takes a shifted input and also correctly re-projects the estimated poses.
-Experimental results: Very low error for shifted points
+In Equation \eqref{eq:re-projected-X}, if the point would be re-projected correctly (i.e. shifted back before re-projection), the theoretical lower bound would no longer hold true.
+In that case, if the generator estimates all depths perfectly the re-projected pose equals the ground truth pose up to a shift.
+Thus, in a first attempt to efface the error, the re-projection of the poses into three dimensional space will be adapted.
+
+\subsection{Correct Re-Projection}
+
+For a correct re-projection of the 2D poses into three dimensions, the network presented earlier is slightly modified.
+The network now receives poses that are only normalized in scale, but not in location.
+In a first step, the vector $(dx, dy)^\mathrm{T}$ given by the root joint's coordinates is subtracted from all 2D points, such that the 2D poses are now normalized both in scaled and in location.
+Afterwards, the depth offsets $o_i$ are estimated for each point in the same way as in the original network.
+Before the pose is then re-projected into three dimensions, the points are shifted back by adding $(dx, dy)^\mathrm{T}$ to each point again.
+
+\input{figures/x_shift_correct_reprojection}
+
+For the evaluation of this modified network, a pre-trained version of the original network in combination with the correct re-projection is utilized.
+Protocol 2 MPJPEs are calculated for different offsets $dx$, while $dy = 0$.
+The results for this procedure are shown in Figure \ref{fig:x-shift-error-correct-reproj}.
+\Todo{Add evaluation once results are available.}
+
+Comparison to modified network trained from scratch.
+The 3D poses are normalized before the Random Projection Layer in order to avoid having to sample offsets.
+The discriminator still only receives the normalized 2D input poses.
+
+
+\subsection{Modified Network}
+The correct re-projection of the 2D points into three dimensions without further adaption of the network was already able to reduce the MPJPE for shifted poses.
+In an attempt to achieve the same MPJPE for all offsets $dx$, the network receives an additional piece of information.
+On top of the correct re-projection, the vector $(dx, dy)^\mathrm{T}$ is now passed to the network alongside the 2D input pose.
+In theory this should eliminate any ambiguities existing because of the normalization.
+
+The network's input is now a vector of size $32$. 
+The first $30$ elements are the coordinates of the normalized input pose's 15 joints, and the last two elements are the offsets $dx$ and $dy$.
+During training the generator receives poses which have an offset $dx$ between $-10$m and $10$m.
+As before, in order to avoid sampling offsets for the Random Projection Layer, the discriminator receives only such 2D poses which have an offset of $dx = 0$, while $dy = 0$.
+
+Experimental results showed that\dots
+
+New network tested with Human3.6M monocular 2D poses.
