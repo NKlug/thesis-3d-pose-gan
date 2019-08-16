@@ -13,34 +13,20 @@
 	year = {2014}
 }
 
-@misc{drover18,
-	abstract = {  3D pose estimation from a single image is a challenging task in computer
-vision. We present a weakly supervised approach to estimate 3D pose points,
-given only 2D pose landmarks. Our method does not require correspondences
-between 2D and 3D points to build explicit 3D priors. We utilize an adversarial
-framework to impose a prior on the 3D structure, learned solely from their
-random 2D projections. Given a set of 2D pose landmarks, the generator network
-hypothesizes their depths to obtain a 3D skeleton. We propose a novel Random
-Projection layer, which randomly projects the generated 3D skeleton and sends
-the resulting 2D pose to the discriminator. The discriminator improves by
-discriminating between the generated poses and pose samples from a real
-distribution of 2D poses. Training does not require correspondence between the
-2D inputs to either the generator or the discriminator. We apply our approach
-to the task of 3D human pose estimation. Results on Human3.6M dataset
-demonstrates that our approach outperforms many previous supervised and weakly
-supervised approaches.
-},
-	archiveprefix = {arXiv},
-	author = {Drover, Dylan and MV, Rohith and Chen, Ching-Hang and Agrawal, Amit and Tyagi, Ambrish and Huynh, Cong Phuoc},
-	comment = {published = 2018-08-22T01:57:33Z, updated = 2018-08-22T01:57:33Z, Appearing in ECCVW 2018 proceedings},
-	eprint = {1808.07182v1},
-	localfile = {bibliography_resources/drover - can 3d poses be learned from 2d projections alone.pdf},
-	month = aug,
-	primaryclass = {cs.CV},
-	title = {{Can 3D Pose be Learned from 2D Projections Alone?}},
-	url = {http://arxiv.org/abs/1808.07182v1; http://arxiv.org/pdf/1808.07182v1},
-	x-fetchedfrom = {arXiv.org},
-	year = {2018}
+@InProceedings{drover18,
+author="Drover, Dylan
+and M. V, Rohith
+and Chen, Ching-Hang
+and Agrawal, Amit
+and Tyagi, Ambrish
+and Huynh, Cong Phuoc",
+title="Can 3D Pose Be Learned from 2D Projections Alone?",
+booktitle="Computer Vision -- ECCV 2018 Workshops",
+year="2019",
+publisher="Springer International Publishing",
+pages="78--94",
+abstract="3D pose estimation from a single image is a challenging task in computer vision. We present a weakly supervised approach to estimate 3D pose points, given only 2D pose landmarks. Our method does not require correspondences between 2D and 3D points to build explicit 3D priors. We utilize an adversarial framework to impose a prior on the 3D structure, learned solely from their random 2D projections. Given a set of 2D pose landmarks, the generator network hypothesizes their depths to obtain a 3D skeleton. We propose a novel Random Projection layer, which randomly projects the generated 3D skeleton and sends the resulting 2D pose to the discriminator. The discriminator improves by discriminating between the generated poses and pose samples from a real distribution of 2D poses. Training does not require correspondence between the 2D inputs to either the generator or the discriminator. We apply our approach to the task of 3D human pose estimation. Results on Human3.6M dataset demonstrates that our approach outperforms many previous supervised and weakly supervised approaches.",
+isbn="978-3-030-11018-5"
 }
 
 @article{ionescu14,
