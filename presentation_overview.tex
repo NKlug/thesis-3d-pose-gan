@@ -1,0 +1,69 @@
+
+\documentclass[8pt]{beamer}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{pdfpages}
+\usepackage{color}
+\usepackage{graphicx, import}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[numbers, square]{natbib}
+\usepackage{mathtools}
+
+\bibliographystyle{plainnat}
+\usetheme{metropolis}
+\setbeamertemplate{frame footer}{\insertshortauthor~(\insertshortinstitute)}
+\setbeamercolor{footline}{fg=gray}
+
+
+\title[]{Weakly Supervised 2D to 3D Lifting of Human Poses}
+\author[Nikolas Klug]{Nikolas Klug}
+\institute[University of Augsburg]{University of Augsburg}
+\date{21 August 2019}
+
+
+\begin{document}
+	\frame{\titlepage}
+	
+	\begin{frame}[t]{The Problem}
+		This work is based on \\
+		\vspace{5pt}
+		\emph{Can 3D Pose be Learned from 2D Projections Alone?}\linebreak
+		\begin{footnotesize}
+			Dylan Drover, Rohith MV, Ching-Hang Chen, Amit Agrawal, Ambrish Tyagi, and Cong Phuoc Huynh.\linebreak
+			In Computer Vision -- ECCV 2018 Workshops, Pages 78-94, 2019. Springer International Publishing.\par
+		\end{footnotesize}
+		\vspace{2cm}
+		Features:
+		\begin{itemize}
+			\item Lifting human 2D poses to 3D
+			\item Using only 2D poses -- no ground truth required
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Why?}
+		\begin{itemize}
+			\item Very good 2D keypoint detectors out there: Stacked Hourglass, OpenPose etc.
+			\item 3D ground truth requires MoCap System
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{How It Works}
+		content...
+	\end{frame}
+
+	\begin{frame}{Results}
+		
+	\end{frame}
+	
+	\begin{frame}{My Contribution}
+		\begin{itemize}
+			\item Introduction of \emph{Limb Loss}
+			\item Analysis of the Effects of Normalization
+		\end{itemize}
+	\end{frame}
+	
+	
+\end{document}
