@@ -1,21 +1,43 @@
-\section{The Human3.6M dataset}
+\section{3D Human Pose Datasets}
 \label{sec:data}
 
 \begin{itemize}
-	\item Common 3D datasets with 3D annotation. Very few annotated
+	\item Common 3D datasets with 3D annotation. Very few annotated. Human3.6M, HumanEvaI/II, TotalCapture, SURREAL (synthetic)
 	\item Motivation for training with 2D data only
 	\item Different representations of poses (absolute points, angles, ...)?
 	\item 32 joints model / 15 joint model !!!
 	\item all joints and all activities as footnotes
 \end{itemize}
  
+notoriously
+Whereas there are a lot of annotated human 2D pose estimation datasets (MPII, COCO Keypoints, PoseTrack, DensePose), there are only very few annotated 3D pose datasets. 
+2D poses can be easily captured and annotated.
+Only images are necessary for this.
+As opposed to this, capturing ground truth data for 3D poses is notoriously harder.
+For precise ground truth poses, a motion capture system is required which is not broadly available due to the high cost.
+Though, this saves the effort of manual labeling.
 
-For training and evaluation of the models the dataset Human3.6M \cite{ionescu14} is used. 
-It contains 3.6 million three dimensional human poses captured by digital and motion capture cameras, consisting of data from 11 subjects (6 male, 5 female) performing 15 different activities such as walking, taking a photo, eating or smoking.
-The poses are available in different parametrizations, but only the one with 3D joint positions transformed with the camera parameters of the 4 digital cameras were used for training and evaluation (called \texttt{D3\_Positions\_mono} in the dataset).
-The dataset also contains the 2D projections of the monocular 3D poses onto the cameras' image plane.
 
-\todo[inline]{32 joints and 15 / 17 joints; Pose = set of 3D joint locations}
+
+In this work, the Human3.6M dataset \cite{ionescu14} is used for training and evaluation.
+It comprises 3.6 million three dimensional human poses captured by four digital cameras and a motion capture system.
+Within the dataset 11 subjects (6 male, 5 female) perform 15 different activities, such as walking, taking a photo, eating etc.\footnote{
+	The 15 activities are: Giving Directions, Discussing, Eating, Greeting, Phoning, Posing, Purchasing, Sitting, Sitting down (on the ground), Smoking, Taking a Photo, Waiting, Walking, Walking a Dog and Walking Together.
+}
+The poses are available in different forms, such as Cartesian coordinates or Kinematic parametrization.
+Throughout this thesis, the 3D poses in the Cartesian coordinate systems of the four digital cameras are used (\texttt{D3\_Positions\_mono} in the dataset).
+For those monocular 3D poses, 2D projections onto the cameras' image planes are also available.
+
+\Todo{Find out what those points are}
+The poses in the dataset consist of 32 joints.
+In \cite{drover18} only 14 of those joints are used.\footnote{
+The 14 joints are: heels, knees, hips, thorax, head, shoulders, elbows and wrists.
+}
+This work follows the same convention, with the only difference being that the pelvis (center point between hips) is added to those 14 joints.
+
+Later, evaluation results will also be shown for the TotalCapture dataset \cite{trumble17}.
+This dataset consists of about 1.9 million 3D poses.
+One pose comprises 21 joints, among others the 15 joints selected for Human3.6M.
 
 In the literature multiple different evaluation methods are used. 
 This is partly because not all models produce absolute 3D poses, but some only up to a scaling factor or alignment of joints.
