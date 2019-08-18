@@ -2,7 +2,7 @@
 \label{sec:data}
 
 \begin{itemize}
-	\item Common 3D datasets with 3D annotation. Very few annotated. Human3.6M, HumanEvaI/II, TotalCapture, SURREAL (synthetic)
+	\item Common 3D datasets with 3D annotation. Very few annotated. Human3.6M, HumanEvaI/II, TotalCapture, SURREAL (synthetic), KTH Multiview Football II
 	\item Motivation for training with 2D data only
 	\item Different representations of poses (absolute points, angles, ...)?
 	\item 32 joints model / 15 joint model !!!
@@ -19,14 +19,14 @@ Though, this saves the effort of manual labeling.
 
 
 
-In this work, the Human3.6M dataset \cite{ionescu14} is used for training and evaluation.
+In this work, human poses from the Human3.6M dataset \cite{ionescu14} is used for training and evaluation.
 It comprises 3.6 million three dimensional human poses captured by four digital cameras and a motion capture system.
 Within the dataset 11 subjects (6 male, 5 female) perform 15 different activities, such as walking, taking a photo, eating etc.\footnote{
-	The 15 activities are: Giving Directions, Discussing, Eating, Greeting, Phoning, Posing, Purchasing, Sitting, Sitting down (on the ground), Smoking, Taking a Photo, Waiting, Walking, Walking a Dog and Walking Together.
+	The 15 activities are: Giving Directions, Discussing, Eating, Greeting, Phoning, Posing, Purchasing, Sitting, Sitting down (on the ground), SmokinL, Taking a Photo, Waiting, Walking, Walking a Dog and Walking Together.
 }
-The poses are available in different forms, such as Cartesian coordinates or Kinematic parametrization.
+The poses are available in different parametrizations, such as Cartesian coordinates or Kinematic Parametrization.
 Throughout this thesis, the 3D poses in the Cartesian coordinate systems of the four digital cameras are used (\texttt{D3\_Positions\_mono} in the dataset).
-For those monocular 3D poses, 2D projections onto the cameras' image planes are also available.
+For those 3D poses, monocular 2D projections onto the cameras' image planes are also available which will also be used for evaluation.
 
 \Todo{Find out what those points are}
 The poses in the dataset consist of 32 joints.
@@ -35,31 +35,54 @@ The 14 joints are: heels, knees, hips, thorax, head, shoulders, elbows and wrist
 }
 This work follows the same convention, with the only difference being that the pelvis (center point between hips) is added to those 14 joints.
 
-Later, evaluation results will also be shown for the TotalCapture dataset \cite{trumble17}.
+Later, the system will also be evaluated on poses from the TotalCapture dataset \cite{trumble17}.
 This dataset consists of about 1.9 million 3D poses.
-One pose comprises 21 joints, among others the 15 joints selected for Human3.6M.
-
-In the literature multiple different evaluation methods are used. 
-This is partly because not all models produce absolute 3D poses, but some only up to a scaling factor or alignment of joints.
-Therefore, some modifications have to be made in order to measure the quality and allow a fair comparison to other approaches.
-Essentially two different evaluation protocols with minor variations have evolved which will be presented and discussed in the following.
+One pose comprises 21 joints, among which are the same 15 joints that were selected for the Human3.6M dataset.
 
 \subsection{Evaluation Metrics}
 \Todo{Mention Joint Position Error (JPE)? Check with Section \ref{sec:x-shift-error}}
-The most commonly used metric for evaluation is the \textit{Mean Per Joint Position Error} (MPJPE).
-For a pose with $n$ joints, original 3D joint positions $O_i$ and predicted positions $P_i$ it is defined as
-\begin{equation}
-	\frac{1}{n} \sum_{i = 1}^{n}  \norm{O_i - P_i}_2 \ .
-\end{equation}
+In the literature multiple different methods are used to quantitatively evaluate the estimated poses. 
+Essentially most systems estimate the 3D poses in Cartesian coordinates \cite{drover18, chen17, bogo16, grinciunaite16, yasin16, wandt19, tome17, tekin16, tekin17, pavlakos17}.
 
-Another error metric is the \textit{Mean Per Joint Angle Error} (MPJAE). It measures the difference of the ground truth and predicted angles between the joints.
+For this parametrization the most commonly used metric is the \emph{Mean Per Joint Position Error (MPJPE)}.
+It is the mean of the \emph{Joint Position Errors (JPE)} across all joints.
+For a pose with $n$ joints, ground truth 3D joint positions $G_i$ and predicted positions $P_i$ it is defined as
+\begin{equation}
+\frac{1}{n} \sum_{i = 1}^{n}  \norm{G_i - P_i}_2 \ .
+\end{equation}
+The values for this metric are reported in millimeters.
+
+As \citet{ionescu14} point out, the problem with this metric is that it is highly subject specific.
+An estimated pose for a smaller person might be equally bad as for a taller person, but the MPJPE will be much lower for the former.
+In order to circumvent this, they propose a Universal MPJPE (UMPJPE) which normalizes all poses to have the same dimensions (in their case the same limb lengths) before measuring the Euclidean distance.
+
+While not broadly used, \citet{ionescu14} also suggest the \emph{Mean Per Joint Angle Error (MPJAE)}.
+This metric measures the difference of the joint angles between the ground truth and predicted pose.
 It is defined as
 \begin{equation}
-	\frac{1}{3n} \sum_{i = 1}^{3N} \abs{\alpha_i - \beta_i \mod \pm 180\degree}
+\frac{1}{m} \sum_{i = 1}^{m} \abs{\alpha_i - \beta_i \mod \pm 180\degree} \,
 \end{equation}
-This metric is useful for systems which handle the poses in joint angle parametrization. It is used in \Todo{references}
+where $m$ is the number of joint angles and $\alpha_i$ and $\beta_i$ the angles for the ground truth pose and the estimated pose.
+Due to the lacking intuitiveness behind this metric and the straightforward conversion to Cartesian coordinates, although they make use of the Kinematic pose representation, \citet{jahangiri17} and \citet{zhou16_2} also report their results for the MPJPE metric.
 
-\subsection{Protocol 1}
+\subsection{Evaluation Protocols}
+
+For the MPJPE metric, multiple different evaluation protocols with minor variations have evolved.
+Those vary between different datasets, but are also caused by different systems producing different outputs.
+
+
+What most systems have in common is that they produce 3D poses only up to a scaling factor.
+As for a 2D pose there is an infinite amount of 3D poses that project to the same pose, unless the absolute size of the 3D pose is known, the pose can not be estimated to have that exact size.
+And even if that size is known, it is oftentimes easier to estimate poses normalized in size and then scale them to the desired output.
+
+Unless the absolute size of the 3D pose is known   all models produce absolute 3D poses, but some only up to a scaling factor or alignment of joints.
+Therefore, some modifications have to be made in order to measure the quality and allow a fair comparison to other approaches.
+ 
+The most commonly used metric for evaluation is the \textit{Mean Per Joint Position Error} (MPJPE).
+
+
+
+\subsubsection{Protocol 1}
 
 This protocol is used under different names in slightly different variations in \cite{sun17, drover18, moreno-noguer16, yasin16, kostrikov14, tome17}.
 The method commonly referred to as \textbf{Protocol 1} uses subjects S1, S5, S6, S7, S8 and S9 for training and S11 for testing.
@@ -86,7 +109,7 @@ In accordance with the code shipped with the Human3.6M dataset, \citet{sun17}, \
 	\item Original and augmented data
 	\item Data used for training, evaluation and testing.
 \end{itemize}
-\subsection{Protocol 2}\label{sec:protocol2}
+\subsubsection{Protocol 2}\label{sec:protocol2}
 
 The second protocol found in the literature is \textbf{Protocol 2}.
 In this case only S1, S5, S6, S7 and S8 are used for training, while test results are reported for S9 and S11.

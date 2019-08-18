@@ -9,12 +9,17 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{tikz}
 \usepackage[numbers, square]{natbib}
 \usepackage{mathtools}
 
+\usetikzlibrary{external, positioning, fit}
+\tikzexternalize[prefix=figures/]
+
+
 \bibliographystyle{plainnat}
 \usetheme{metropolis}
-\setbeamertemplate{frame footer}{\insertshortauthor~(\insertshortinstitute)}
+\setbeamertemplate{frame footer}{\insertshortauthor\hfill\insertshortinstitute}
 \setbeamercolor{footline}{fg=gray}
 
 
@@ -45,13 +50,14 @@
 
 	\begin{frame}{Why?}
 		\begin{itemize}
+			\item Massive amount of 2D images/videos available
 			\item Very good 2D keypoint detectors out there: Stacked Hourglass, OpenPose etc.
-			\item 3D ground truth requires MoCap System
+			\item Getting 3D ground truth data is hard and expensive
 		\end{itemize}
 	\end{frame}
 
 	\begin{frame}{How It Works}
-		content...
+		\input{figures/model_figure}
 	\end{frame}
 
 	\begin{frame}{Results}

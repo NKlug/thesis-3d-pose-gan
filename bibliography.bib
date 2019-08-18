@@ -13,20 +13,15 @@
 	year = {2014}
 }
 
-@InProceedings{drover18,
-author="Drover, Dylan
-and M. V, Rohith
-and Chen, Ching-Hang
-and Agrawal, Amit
-and Tyagi, Ambrish
-and Huynh, Cong Phuoc",
-title="Can 3D Pose Be Learned from 2D Projections Alone?",
-booktitle="Computer Vision -- ECCV 2018 Workshops",
-year="2019",
-publisher="Springer International Publishing",
-pages="78--94",
-abstract="3D pose estimation from a single image is a challenging task in computer vision. We present a weakly supervised approach to estimate 3D pose points, given only 2D pose landmarks. Our method does not require correspondences between 2D and 3D points to build explicit 3D priors. We utilize an adversarial framework to impose a prior on the 3D structure, learned solely from their random 2D projections. Given a set of 2D pose landmarks, the generator network hypothesizes their depths to obtain a 3D skeleton. We propose a novel Random Projection layer, which randomly projects the generated 3D skeleton and sends the resulting 2D pose to the discriminator. The discriminator improves by discriminating between the generated poses and pose samples from a real distribution of 2D poses. Training does not require correspondence between the 2D inputs to either the generator or the discriminator. We apply our approach to the task of 3D human pose estimation. Results on Human3.6M dataset demonstrates that our approach outperforms many previous supervised and weakly supervised approaches.",
-isbn="978-3-030-11018-5"
+@inproceedings{drover18,
+	abstract = {3D pose estimation from a single image is a challenging task in computer vision. We present a weakly supervised approach to estimate 3D pose points, given only 2D pose landmarks. Our method does not require correspondences between 2D and 3D points to build explicit 3D priors. We utilize an adversarial framework to impose a prior on the 3D structure, learned solely from their random 2D projections. Given a set of 2D pose landmarks, the generator network hypothesizes their depths to obtain a 3D skeleton. We propose a novel Random Projection layer, which randomly projects the generated 3D skeleton and sends the resulting 2D pose to the discriminator. The discriminator improves by discriminating between the generated poses and pose samples from a real distribution of 2D poses. Training does not require correspondence between the 2D inputs to either the generator or the discriminator. We apply our approach to the task of 3D human pose estimation. Results on Human3.6M dataset demonstrates that our approach outperforms many previous supervised and weakly supervised approaches.},
+	author = {Drover, Dylan and {M. V}, Rohith and Chen, Ching-Hang and Agrawal, Amit and Tyagi, Ambrish and Huynh, Cong Phuoc},
+	booktitle = {{Computer Vision -- ECCV 2018 Workshops}},
+	isbn = {978-3-030-11018-5},
+	pages = {78--94},
+	publisher = {Springer International Publishing},
+	title = {{Can 3D Pose Be Learned from 2D Projections Alone?}},
+	year = {2019}
 }
 
 @article{ionescu14,
@@ -779,5 +774,92 @@ a variant of Adam based on the infinity norm.
 	booktitle = {{2017 British Machine Vision Conference (BMVC)}},
 	title = {{Total Capture: 3D Human Pose Estimation Fusing Video and Inertial Sensors}},
 	year = {2017}
+}
+
+@misc{grinciunaite16,
+	abstract = {  This paper explores the capabilities of convolutional neural networks to deal
+with a task that is easily manageable for humans: perceiving 3D pose of a human
+body from varying angles. However, in our approach, we are restricted to using
+a monocular vision system. For this purpose, we apply a convolutional neural
+network approach on RGB videos and extend it to three dimensional convolutions.
+This is done via encoding the time dimension in videos as the 3\ts{rd}
+dimension in convolutional space, and directly regressing to human body joint
+positions in 3D coordinate space. This research shows the ability of such a
+network to achieve state-of-the-art performance on the selected Human3.6M
+dataset, thus demonstrating the possibility of successfully representing
+temporal data with an additional dimension in the convolutional operation.
+},
+	archiveprefix = {arXiv},
+	author = {Grinciunaite, Agne and Gudi, Amogh and Tasli, Emrah and den Uyl, Marten},
+	comment = {published = 2016-08-31T20:55:26Z, updated = 2016-10-19T12:44:15Z, Accepted at ECCV 2016 Workshop on: Brave new ideas for motion representations in videos},
+	doi = {10.1007/978-3-319-49409-8_5},
+	eprint = {1609.00036v3},
+	localfile = {bibliography_resources/grinciunaite16 - human pose estimation in space and time.pdf},
+	month = oct,
+	primaryclass = {cs.CV},
+	title = {{Human Pose Estimation in Space and Time using 3D CNN}},
+	url = {http://arxiv.org/abs/1609.00036v3; http://arxiv.org/pdf/1609.00036v3},
+	x-fetchedfrom = {arXiv.org},
+	year = {2016}
+}
+
+@misc{andriluka18,
+	abstract = {  Human poses and motions are important cues for analysis of videos with people
+and there is strong evidence that representations based on body pose are highly
+effective for a variety of tasks such as activity recognition, content
+retrieval and social signal processing. In this work, we aim to further advance
+the state of the art by establishing "PoseTrack", a new large-scale benchmark
+for video-based human pose estimation and articulated tracking, and bringing
+together the community of researchers working on visual human analysis. The
+benchmark encompasses three competition tracks focusing on i) single-frame
+multi-person pose estimation, ii) multi-person pose estimation in videos, and
+iii) multi-person articulated tracking. To facilitate the benchmark and
+challenge we collect, annotate and release a new \%large-scale benchmark dataset
+that features videos with multiple people labeled with person tracks and
+articulated pose. A centralized evaluation server is provided to allow
+participants to evaluate on a held-out test set. We envision that the proposed
+benchmark will stimulate productive research both by providing a large and
+representative training dataset as well as providing a platform to objectively
+evaluate and compare the proposed methods. The benchmark is freely accessible
+at https://posetrack.net.
+},
+	archiveprefix = {arXiv},
+	author = {Andriluka, Mykhaylo and Iqbal, Umar and Insafutdinov, Eldar and Pishchulin, Leonid and Milan, Anton and Gall, Juergen and Schiele, Bernt},
+	comment = {published = 2017-10-27T06:20:30Z, updated = 2018-04-10T18:20:56Z, www.posetrack.net},
+	eprint = {1710.10000v2},
+	month = apr,
+	primaryclass = {cs.CV},
+	title = {{PoseTrack: A Benchmark for Human Pose Estimation and Tracking}},
+	url = {http://arxiv.org/abs/1710.10000v2; http://arxiv.org/pdf/1710.10000v2},
+	x-fetchedfrom = {arXiv.org},
+	year = {2018}
+}
+
+@misc{guler18,
+	abstract = {  In this work, we establish dense correspondences between RGB image and a
+surface-based representation of the human body, a task we refer to as dense
+human pose estimation. We first gather dense correspondences for 50K persons
+appearing in the COCO dataset by introducing an efficient annotation pipeline.
+We then use our dataset to train CNN-based systems that deliver dense
+correspondence 'in the wild', namely in the presence of background, occlusions
+and scale variations. We improve our training set's effectiveness by training
+an 'inpainting' network that can fill in missing groundtruth values and report
+clear improvements with respect to the best results that would be achievable in
+the past. We experiment with fully-convolutional networks and region-based
+models and observe a superiority of the latter; we further improve accuracy
+through cascading, obtaining a system that delivers highly0accurate results in
+real time. Supplementary materials and videos are provided on the project page
+http://densepose.org
+},
+	archiveprefix = {arXiv},
+	author = {G{\"u}ler, R{\i}za Alp and Neverova, Natalia and Kokkinos, Iasonas},
+	comment = {published = 2018-02-01T18:53:26Z, updated = 2018-02-01T18:53:26Z},
+	eprint = {1802.00434v1},
+	month = feb,
+	primaryclass = {cs.CV},
+	title = {{DensePose: Dense Human Pose Estimation In The Wild}},
+	url = {http://arxiv.org/abs/1802.00434v1; http://arxiv.org/pdf/1802.00434v1},
+	x-fetchedfrom = {arXiv.org},
+	year = {2018}
 }
 
