@@ -21,7 +21,7 @@ Though, this saves the effort of manual labeling.
 
 In this work, human poses from the Human3.6M dataset \cite{ionescu14} is used for training and evaluation.
 It comprises 3.6 million three dimensional human poses captured by four digital cameras and a motion capture system.
-Within the dataset 11 subjects (6 male, 5 female) perform 15 different activities, such as walking, taking a photo, eating etc.\footnote{
+Within the dataset 11 subjects (6 male, 5 female; also referred to as S1, S2, \dots, S11) perform 15 different activities, such as walking, taking a photo, eating etc.\footnote{
 	The 15 activities are: Giving Directions, Discussing, Eating, Greeting, Phoning, Posing, Purchasing, Sitting, Sitting down (on the ground), SmokinL, Taking a Photo, Waiting, Walking, Walking a Dog and Walking Together.
 }
 The poses are available in different parametrizations, such as Cartesian coordinates or Kinematic Parametrization.
@@ -54,7 +54,7 @@ The values for this metric are reported in millimeters.
 
 As \citet{ionescu14} point out, the problem with this metric is that it is highly subject specific.
 An estimated pose for a smaller person might be equally bad as for a taller person, but the MPJPE will be much lower for the former.
-In order to circumvent this, they propose a Universal MPJPE (UMPJPE) which normalizes all poses to have the same dimensions (in their case the same limb lengths) before measuring the Euclidean distance.
+In order to circumvent this, they propose the \emph{Universal MPJPE (UMPJPE)} which normalizes all poses to have the same dimensions (in their case the same limb lengths) before measuring the Euclidean distance.
 
 While not broadly used, \citet{ionescu14} also suggest the \emph{Mean Per Joint Angle Error (MPJAE)}.
 This metric measures the difference of the joint angles between the ground truth and predicted pose.
@@ -68,47 +68,43 @@ Due to the lacking intuitiveness behind this metric and the straightforward conv
 \subsection{Evaluation Protocols}
 
 For the MPJPE metric, multiple different evaluation protocols with minor variations have evolved.
-Those vary between different datasets, but are also caused by different systems producing different outputs.
-
+Those vary between different datasets, but also within them.
+The cause for this is that different systems produce different outputs and thus the evaluation protocols might be stronger or weaker, that is, allow more adjustment than others.
 
 What most systems have in common is that they produce 3D poses only up to a scaling factor.
-As for a 2D pose there is an infinite amount of 3D poses that project to the same pose, unless the absolute size of the 3D pose is known, the pose can not be estimated to have that exact size.
+As for a 2D pose there is an infinite amount of corresponding 3D poses that project to the same pose, unless the absolute size of the 3D pose is known, the pose can hardly be estimated to have that exact size.
 And even if that size is known, it is oftentimes easier to estimate poses normalized in size and then scale them to the desired output.
+The same holds true for absolute position and rotation (to some extent).
+Thus, in order to measure the quality some modifications have to be made in order to measure the quality and allow a fair comparison to other approaches.
 
-Unless the absolute size of the 3D pose is known   all models produce absolute 3D poses, but some only up to a scaling factor or alignment of joints.
-Therefore, some modifications have to be made in order to measure the quality and allow a fair comparison to other approaches.
- 
-The most commonly used metric for evaluation is the \textit{Mean Per Joint Position Error} (MPJPE).
-
-
+In this work the dataset primarily used is Human3.6M.
+Hence, in the following the evaluation protocols for this dataset will be reviewed and analyzed.
+Essentially, two different protocol can be found in the literature.
 
 \subsubsection{Protocol 1}
 
 This protocol is used under different names in slightly different variations in \cite{sun17, drover18, moreno-noguer16, yasin16, kostrikov14, tome17}.
-The method commonly referred to as \textbf{Protocol 1} uses subjects S1, S5, S6, S7, S8 and S9 for training and S11 for testing.
+Concretely, for the Human3.6M dataset, it is commonly referred to as \textbf{Protocol 1} and uses subjects S1, S5, S6, S7, S8 and S9 for training and S11 for testing.
 
-Sometimes the train data is thinned out further by the elimination of similar poses \cite{yasin16}.
+Sometimes the train data is further thinned out by the elimination of poses similar to each other \cite{yasin16}.
+Here, the authors consider two poses as similar when the average Euclidean distance between the joints is less than 1.5mm.
 \citet{drover18} even completely leave out S8 for training.
-It allows rigid alignment \cite{drover18, yasin16, kostrikov14, sun17, tome17, chen17} of the predicted poses to the ground truth data.
 
+For testing, some authors only use every \nth{64} frame of the available test data \cite{sun17, chen17, yasin16, moreno-noguer16, tome17}.
+While other authors mention no such thing \cite{drover18, kostrikov14}, it can be assumed it is a general practice, as the code shipped with the Human3.6M dataset also suggests this.
 
+Before calculating the MPJPE, rigid alignment of the predicted poses to the ground truth data is allowed  \cite{drover18, yasin16, kostrikov14, sun17, tome17, chen17}.
 Most authors do not explicitly state which kind of rigid alignment is applied to the predicted poses.
-Those who do mention a Procrustes Analysis \cite{sun17, tome17} or a Least Squares transformation \cite{kostrikov14}.
-That basically allows kinds of translation, scaling and rotation can be applied in order to best fit the predicted poses to the ground truth data.
+Those who do mention a Procrustes Analysis \cite{sun17, tome17} and a Least Squares transformation \cite{kostrikov14}.
+Both techniques allow different kinds of translation, scaling and rotation in order to fit the predicted poses to the ground truth data.
+Thereby, depending on the exact implementation, the minimal MPJPE possible without changing the joints relative positions to each other might be calculated.
 
-This approach is not very realistic though as in production there is no ground truth data the predicted poses can be fitted to.
-A more realistic testing technique is presented in the Section \ref{sec:protocol2}.
+Although this approach ensures the MPJPE is not wrongly too high, e.g. in a situation where the estimated pose is perfect, but slightly rotated compared to the ground truth pose, it also adds a caveat:
+Perceptually poorly estimated poses can have a low MPJPE through the heavy transformations applied.
+On top of that, in scenarios where the absolute rotation, scale or position of the poses is of interest, Protocol 1 does not offer meaningful results.
 
-In accordance with the code shipped with the Human3.6M dataset, \citet{sun17}, \citet{chen17} and \citet{moreno-noguer16} use only every \nth{64} frame of the available data for testing.
+In conclusion, Protocol 1 can be characterized as a protocol allowing translation, scaling and rotation in some form being applied to the estimate poses before calculating the MPJPE.
 
-
-
-%\input{evaluation_protocols}
-\begin{itemize}
-	\item Dataset Human3.6m
-	\item Original and augmented data
-	\item Data used for training, evaluation and testing.
-\end{itemize}
 \subsubsection{Protocol 2}\label{sec:protocol2}
 
 The second protocol found in the literature is \textbf{Protocol 2}.
@@ -146,3 +142,5 @@ This can be interpreted such that the MPJPE is first calculated for the poses wi
 IMPORTANT: An MPJPE of approximately 5mm can be measured when comparing the scaled ground truth poses with the original ones (the standard deviation of the scaling factors is at $0.01$).!!!!
 
 \Todo[inline]{Mention TotalCapture dataset briefly. Also compare Protocol 1 and 2: "Rotation is the key difference while rotation and translation of the Procrustes transformation might also be better"}
+
+Protocol 1: Better: Absolute minimal MPJPE, no wrongly too high numbers

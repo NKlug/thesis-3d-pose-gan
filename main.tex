@@ -40,7 +40,7 @@
 \captionsetup{justification=raggedright, format=plain, font=small,labelfont=bf}
 
 \usepackage{xr-hyper}  
-\usepackage[hidelinks, pagebackref,pdftex]{hyperref}
+\usepackage[pagebackref, pdftex, colorlinks=true, linkcolor=blue, citecolor=blue]{hyperref}
 
 
 \IfClass{article}{ % Optimize for screen
@@ -78,6 +78,8 @@
 		Werden die Zusammenhänge überall klar?
 		Wird die Motivation, bestimmte Dinge zu tun/ zu analysieren klar?
 	}
+
+	\Todo[inline]{Replace refs by autorefs where possible.}
 	\input{chapters/introduction}
 	
 	\input{chapters/network}
