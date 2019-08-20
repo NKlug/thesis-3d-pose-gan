@@ -1,16 +1,7 @@
 \begin{figure}
-	\begin{tikzpicture}
-%		\draw (1, 1) rectangle ++(2,1);
-%		\draw (4, 1) rectangle ++(2,1);
-%		\node (a) at (1, 1) [draw,thick,minimum width=4cm,minimum height=2cm] {};
-		\node[] (a1) [draw, thick, minimum width=1cm,minimum height=1cm, align=center] {Residual\\ Block};
-		\node[right=.2 of a1] (a2) [draw, thick, minimum width=1cm,minimum height=1cm, align=center] {Residual\\ Block};
-		\node[right=.2 of a2] (a3) [draw, thick, minimum width=1cm,minimum height=1cm, align=center] {Residual\\ Block};
-		\node[right=.2 of a3] (a4) [draw, thick, minimum width=1cm,minimum height=1cm, align=center] {Residual\\ Block};
-		\node[inner sep=.5cm, fit=(a1)(a2)(a3)(a4)] (generator) [draw, thick] {};
-		
-%		\node[right=1 of a] (b) [draw,thick,minimum width=2cm,minimum height=1cm] {};
-%		\path[->] (a) edge [] (b);
-	\end{tikzpicture}
-	\caption{Figure of the system proposed by }
+	\centering
+	\makebox[\textwidth][c]{
+		\includegraphics[width=1.1\textwidth]{figures/system.png}
+	}
+	\caption{The core of this thesis: The 2D-to-3D-Pose GAN proposed by \citet{drover18}.}
 \end{figure}
