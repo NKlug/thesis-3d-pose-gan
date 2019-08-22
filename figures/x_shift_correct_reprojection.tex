@@ -16,11 +16,11 @@
 		tick style={draw=gray!50},
 		scaled x ticks = false,
 		no markers,
-		xtick={-3,-2,...,15},
+%		xtick={-3,-2,...,15},
 		every axis plot/.append style={}
 		]
-		\addplot table [x=a, y=b, col sep=comma] {figures/plot_e_03_07_original_z_shift.csv};
-		\addplot table [x=a, y=b, col sep=comma] {figures/plot_theoretical_z_shift.csv};
+		\addplot table [x=a, y=b, col sep=comma] {figures/plot_e_03_07_original_x_shift.csv};
+		\addplot table [x=a, y=b, col sep=comma] {figures/plot_theoretical_x_shift.csv};
 		\addplot[color=black!60!green] table [x=a, y=b, col sep=comma] {figures/plot_theoretical_z_shift_scaled.csv};
 		\end{axis}
 		\end{tikzpicture}
