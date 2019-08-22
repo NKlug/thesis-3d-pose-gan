@@ -14,7 +14,7 @@ Thus, in a first attempt to efface the error, the re-projection of the poses int
 
 For a correct re-projection of the 2D poses into three dimensions, the network presented earlier is slightly modified.
 The network now receives poses that are only normalized in scale, but not in location.
-In a first step, the vector $(dx, dy)^\mathrm{T}$ given by the root joint's coordinates is subtracted from all 2D points, such that the 2D poses are now normalized both in scaled and in location.
+In a first step, the vector $(dx, dy)$ given by the root joint's coordinates is subtracted from all 2D points, such that the 2D poses are now normalized both in scale and location.
 Afterwards, the depth offsets $o_i$ are estimated for each point in the same way as in the original network.
 Before the pose is then re-projected into three dimensions, the points are shifted back by adding $(dx, dy)^\mathrm{T}$ to each point again.
 

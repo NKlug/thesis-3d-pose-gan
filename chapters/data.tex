@@ -81,11 +81,10 @@ Before calculating the MPJPE, rigid alignment of the predicted poses to the grou
 Most authors do not explicitly state which kind of rigid alignment is applied to the predicted poses.
 Those who do mention a Procrustes Analysis \cite{sun17, tome17} and a Least Squares transformation \cite{kostrikov14}.
 Both techniques allow different kinds of translation, scaling and rotation in order to fit the predicted poses to the ground truth data.
-Thereby, depending on the exact implementation, the minimal possible MPJPE (without changing the joints relative positions) can be calculated.
 
 Although this approach ensures the MPJPE is not wrongly too high, e.g. in a situation where the estimated pose is perfect, but slightly rotated compared to the ground truth pose, it also adds a caveat:
 Perceptually poorly estimated poses can have a low MPJPE through the heavy transformations applied.
-On top of that, in scenarios where the absolute rotation, scale or position of the poses is of interest, Protocol 1 does not offer meaningful results.
+On top of that, in scenarios where the absolute rotation, scale or position of the poses is of interest, Protocol 1 does not provide meaningful results.
 
 In conclusion, Protocol 1 can be characterized as a protocol allowing translation, scaling and rotation in some form being applied to the estimate poses before calculating the MPJPE.
 
@@ -131,25 +130,23 @@ This results in an MPJPE of approximately $5$mm for estimated poses identical to
 Although tempting, this 5mm error cannot simply be subtracted from the MPJPE because still,an MPJPE of 0 can still be obtained, although with pose estimations slightly differing from the ground truth poses.
 However, this is undesirable, as one would like an ideal system to estimate poses equal to the ground truth poses.
 
-Despite this obvious issue, in order to avoid a bad practice, the second approach of scaling only the estimated poses to match the average mean limb length of each subject will be utilized in this work.
+Despite this obvious issue, in order to avoid a bad practice, the second approach of scaling only the estimated poses to match the average mean limb length of each subject will be utilized in this thesis.
 
-\subsection{Comparison of the Protocols}
+\subsubsection{Comparison of the Protocols}
 
-The key difference between the two presented evaluation protocols is that Protocol 1 allows rotation and Protocol 2 does not.
+Both evaluation protocols allow applying different transformations to the poses before calculating the MPJPE.
+During the application of the system there is usually not much information about the 3D ground truth poses available (otherwise one would not need a 3D pose estimation system).
+Here, the user might choose to scale the estimated poses such that is matches a predefined size (e.g. using the average limb length) and translating it in space to the preferred location.
+In order to get insight about the quality of the poses in this scenario, Protocol 2 is the protocol of choice, as it only allows those two transformations.
 
+Compared to that, if one is interested in the quality of the estimated poses regardless of their orientation, Protocol 1 provides meaningful results.
+As rotation is also allowed for this protocol, the estimated poses can be fitted better to the ground truth poses.
+That way -- depending on the implementation of the rigid transformation -- the minimal MPJPE without changing the relative positions of joints can be calculated.
+This gives a measure how realistic the estimated poses are in situations where their orientation is not of interest.
 
-
-Protocol 2 offers several advantages over Protocol 1.
-
-With only few and straightforward transformations applied to the estimated poses, Protocol 2 provides a better intuition for the quality of the estimated poses.
-Especially the scaling comes close to reality as the average limb length of a subject is likely to be known.
-In comparison to Protocol 1, 
-
-First of all, the utilized transformations are very straightforward.
-During practical use there might not be much information available on the 3D poses, but one would like the estimated poses to match those as good as possible, i.e. having the same orientation.
-
-
-Protocol 2 is the protocol closer to practical use.
+The main difference between the two protocols is that Protocol 1 allows stronger transformations, particularly also rotation.
+This means the MPJPEs for Protocol 1 are usually smaller than those for Protocol 2.
 
 
-\Todo[inline]{Also compare Protocol 1 and 2: "Rotation is the key difference while rotation and translation of the Procrustes transformation might also be better" Protocol 1 undurchsichtiges alignment und scaling for imperfect estimated poses especially with all the authors not explicitly mentioning which rigid alignment they use }
+Summarizing the results of this section, with only straightforward, realistic transformations, Protocol 2 is to be preferred when looking at practical applications.
+Hence, this thesis will primarily focus on the results for this protocol.
