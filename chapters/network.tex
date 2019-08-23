@@ -11,33 +11,33 @@
 	\item mention residuals: $dx$ and $dy$ at normalization
 \end{itemize}
 
-\subsection{The Generative Adversarial Network}
-
-\subsection{GAN for 3D Pose Estimation}
-
-Assumptions:
-\begin{enumerate}[label=(\Alph*)]
-	\item The camera is centered at the root joint.
-	\item The distance between the camera and the pose is (approximately) constant. 
-\end{enumerate}
-\begin{itemize}
-	\item[(1)] All 2d data can be scaled in a way that a norm limb is of length 0.1. 
-	Problems with correct camera distance, see section \ref{sec:z-shift-error}. 
-	Problem when camera is perpendicular to the norm limb.
-	\item[(2)] All data was captured with the same camera distance.
-\end{itemize}
-
+\subsection{Generative Adversarial Networks}
 Generative Adversarial Networks (GANs) have first been presented by \citet{goodfellow14} in 2014.
-The basic principle is two players playing a minimax game against each other.
-One of the players, the \textit{discriminator} tries to guess whether the input comes from a real data distribution or a data distribution captured by the second player, the so called \textit{generator}. 
-The generator's goal is to fool the discriminator, that is, to produce such elements that the probability of the discriminator making a mistake is maximal.
+As the name suggests, they are generative models involving two adversary agents, a \emph{generator} and a \emph{discriminator}.
+The discriminator $D$ tries to guess whether its input belongs to the real data distribution $p_{real}$ (the distribution to be learned) or to the distribution $p_{fake}$, which is implicitly captured by the generator.
+The generator $G$ on his behalf tries to learn the distribution $p_{fake}$ such that it resembles $p_{real}$, and thus fool the discriminator into thinking that the data produced by it belongs to $p_{real}$.
 
-\input{figures/model_figure}
+The discriminator and generator can be thought of as two players playing a game with value function $V(D, G)$ against each other, where
+\begin{equation}
+V(D, G) = \mathbb{E}_{r\sim P_{real}}(\log(D(r))) + \mathbb{E}_{p\sim P_{fake}}(\log(1 - D(G(p)))) \ .
+\end{equation}
+Here, the discriminator tries to maximize the probability of correctly estimating whether the input stems from $p_{real}$ or $p_{fake}$.
+The generator simultaneously minimizes the second summand.
+Thus, GANs can be described as a minimax game with players $G$ and $D$.
+\begin{equation}
+\min_G \max_D V(D, G)
+\end{equation}
+\citet{goodfellow14} have shown that this expression takes on its global optimum if and only $p_{fake} = p_{real}$.
+In this case, the discriminator produces an output of $\frac{1}{2}$ for all inputs, which means it is no longer able to distinguish between the distributions.
 
-A (three dimensional) \textit{pose} is a collection of $n$ points in $\mathbb{R}^3$.
+The advantage of GANs compared to other generative models is that they can learn distributions in a weakly supervised manner, that is, only elements from the distribution to be learned are required from training.
+In the system presented by \citet{drover18} that distribution captures all human \emph{2D} poses, which will be further explained in the following sections.
 
-For the projection and re-projection of poses the simplified camera model of a pinhole camera is used.
-It has a focal length $f$ and is described by the perspective projection equation
+\subsection{Perspective Projection}
+
+Throughout this thesis, human poses will have to be projected from three dimensional space into two dimensions and vice versa.
+For this "photography" the simplified model of a pinhole camera is used which has -- for simplicity -- only one intrinsic parameter; a focal length $f$.
+The camera's projection from 3D into 2D can be described by the perspective projection equation:
 \begin{equation}
 	\label{eq:perspective-projection}
 	p = 
@@ -51,8 +51,8 @@ It has a focal length $f$ and is described by the perspective projection equatio
 	Y
 	\end{pmatrix} \ ,
 \end{equation}
-where $P = (X, Y, Z)^\mathrm{T}$ is a 3D point in the camera coordinate system and $p = (x, y)^\mathrm{T}$ the projected point on the (virtual) image plane.
-Throughout this work coordinates of 3D points will be denoted by capital letters and 2D points by lower case letters.
+
+where $P = (X, Y, Z)^\mathrm{T}$ is a is a three dimensional point in the camera coordinate system and $p = (x, y)^\mathrm{T}$ the projected point on the (virtual) image plane.
 
 In general, the \textit{generator} $G$ is a neural network that produces \unsure{wording: elements or values?} elements from the distribution $P_{fake}$.
 In the application of 3D human pose estimation the generator receives a projection of a 3D pose as input and outputs the corresponding 3D pose.
@@ -77,18 +77,16 @@ Afterwards the 2D points are re-projected along the projection rays:
 \end{equation} 
 The 3D pose is then given by $\left(\left(X_i, Y_i, Z_i\right)\right)_{1\leq i \leq n}$.
 
+
+\subsection{GAN for 3D Pose Estimation}
+
+\input{figures/model_figure}
+
 In production the generation process would be over at this point but for training, 2D poses have to be sampled from the reprojected 3D pose.
 The 3D poses are aligned with the origin and randomly rotated with azimuth angles between $0$ and $360$ and elevation between $0$ between $20$ degrees.
 \Todo{When 2D poses are sampled, the extrinsic parameters of the synthetic camera model should match those of the real camera(s)}
 
 The \textit{discriminator} $D$ is defined as a neural network that consumes real 2D poses from the distribution $P_{real}$ and fake 2D poses drawn from $P_{fake}$ and outputs a scalar value in $[0, 1]$.
-A GAN can be formulated as as a minimax game with a value function $V(D, G)$ as follows \cite{goodfellow14}: 
-\begin{equation}
-	\min_G \max_D V(D, G) = \mathbb{E}_{r\sim P_{real}}(\log(D(r))) + \mathbb{E}_{p\sim P_{fake}}(\log(1 - D(p)))
-\end{equation}
-
-\citet{goodfellow14} have shown that this expression takes on its global minimum if and only $P_{fake} = P_{real}$.
-In this case, the discriminator produces an output of $\frac{1}{2}$ for all inputs.
 
 The loss functions used for the generator and the discriminator are the following \cite{goodfellow17}:
 \begin{align}
@@ -119,3 +117,15 @@ The discriminator's architecture is very similar to the generator's.
 It also accepts $n$ 2D joint locations as input which are fed into a fully connected layer of size 1024, followed by three residual blocks.
 The output is then reduced by another fully connected layer to a vector of size 2.
 When softmax is applied during the error calculation, the values will imply the probability of the input being real or generated.
+
+Assumptions:
+\begin{enumerate}[label=(\Alph*)]
+	\item The camera is centered at the root joint.
+	\item The distance between the camera and the pose is (approximately) constant. 
+\end{enumerate}
+\begin{itemize}
+	\item[(1)] All 2d data can be scaled in a way that a norm limb is of length 0.1. 
+	Problems with correct camera distance, see section \ref{sec:z-shift-error}. 
+	Problem when camera is perpendicular to the norm limb.
+	\item[(2)] All data was captured with the same camera distance.
+\end{itemize}

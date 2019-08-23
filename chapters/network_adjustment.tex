@@ -31,9 +31,9 @@ The discriminator still only receives the normalized 2D input poses.
 
 
 \subsection{Modified Network}
-The correct re-projection of the 2D points into three dimensions without further adaption of the network was already able to reduce the MPJPE for shifted poses.
+The correct re-projection of the 2D points into three dimensions without further adaption of the network is already able to reduce the MPJPE for shifted poses.
 In an attempt to achieve the same MPJPE for all offsets $dx$, the network receives an additional piece of information.
-On top of the correct re-projection, the vector $(dx, dy)^\mathrm{T}$ is now passed to the network alongside the 2D input pose.
+On top of the correct re-projection, the vector $(dx, dy$ is now passed to the network alongside the 2D input pose.
 In theory this should eliminate any ambiguities existing because of the normalization.
 
 The network's input is now a vector of size $32$. 
