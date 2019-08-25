@@ -53,7 +53,7 @@ Due to the lacking intuitiveness behind this metric and the straightforward conv
 
 For the MPJPE metric, multiple different evaluation protocols with minor variations have evolved.
 Those vary between different datasets, but also within them.
-The cause for this is that different systems produce different outputs and thus the evaluation protocols might be stronger or weaker, that is, allow more adjustment than others.
+The cause for this is that different systems produce different outputs and thus some evaluation protocols might allow stronger transformations than others to align the estimated poses with the ground truth poses.
 
 What most systems have in common is that they produce 3D poses only up to a scaling factor.
 As for a 2D pose there is an infinite amount of corresponding 3D poses that project to the same pose, unless the absolute size of the 3D pose is known, the pose can hardly be estimated to have that exact size.
