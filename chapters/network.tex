@@ -1,12 +1,5 @@
-\section{Network architecture}\label{sec:network}
-\Todo[inline]{Mention root joint}
-\begin{itemize}
-	\item Mention batch norm not working with reference to other paper and communication with authors
-	\item Norm limb normalization
-	\item Heuristic: If a random projection of a 3D pose is realistic, the 3D pose is also realistic
-	\item mention residuals: $dx$ and $dy$ at normalization
-\end{itemize}
-
+\section{A GAN for 3D Human Pose Estimation}
+\label{sec:network}
 In their work "Can 3D Pose Be Learned from 2D Projections Alone?" \citet{drover18} propose a 3D human pose estimation system that uses a Generative Adversarial Network.
 
 \subsection{Generative Adversarial Networks}
@@ -30,8 +23,22 @@ Thus, GANs can be described as a minimax game with players $G$ and $D$:
 \citet{goodfellow14} have shown that this expression takes on its global optimum if and only $p_{fake} = p_{real}$.
 In this case, the discriminator produces an output of $\frac{1}{2}$ for all inputs, which means it is no longer able to distinguish between the distributions.
 
+Usually, the generator and the discriminator are two neural networks.
+They can be trained with the following loss function \cite{goodfellow17}:
+\begin{align}
+\label{eq:generator-loss}
+loss_G &= -\mathbb{E}_{z\sim p_{z}}(\log(D(G(z)))) \\
+\label{eq:discriminator-loss}
+loss_D &= -\frac{1}{2}\mathbb{E}_{r\sim p_{real}}(\log(D(r))) - \frac{1}{2} \mathbb{E}_{z\sim p_{z}}(\log(1 - D(G(z))))
+\end{align}
+Here, $loss_D$ is the standard cross entropy, as it can be found in a standard (binary) classifier.
+The discriminator tries to minimize it during training.
+Instead of the generator minimizing the same function with flipped sign, \citet{goodfellow17} suggests flipping the generator's target instead.
+This prevents vanishing gradients.
+\autoref{eq:generator-loss} describes the resulting loss for the generator.
+
 The advantage of GANs compared to other generative models is that they can learn distributions in a weakly supervised manner, that is, only elements from the distribution to be learned are required from training.
-In the system presented by \citet{drover18} that distribution captures all human \emph{2D} poses, which will be further explained in the following sections.
+In the system presented by \citet{drover18} that distribution captures all human \emph{2D} poses, which will be further explained in the next sections.
 
 \subsection{Perspective Projection}
 
@@ -39,7 +46,9 @@ In the system presented by \citet{drover18} that distribution captures all human
 
 Throughout this thesis, human poses will be projected from three dimensional space into two dimensions and vice versa.
 For this "photography" the simplified model of a pinhole camera is used whose only intrinsic parameter, in this case, is a focal length $f$.
-The camera's projection from 3D to 2D can be described by the perspective projection equation:
+The camera has its center of projection at $(0, 0, 0)$, with the virtual image plane being located at $(0, 0, f)$, in parallel to the x-y-plane.
+The camera is looking towards positive infinity along the z axis.
+The projection from 3D to 2D can be described by the perspective projection equation:
 \begin{equation}
 	\label{eq:perspective-projection}
 	p = 
@@ -55,7 +64,7 @@ The camera's projection from 3D to 2D can be described by the perspective projec
 \end{equation}
 where $P = (X, Y, Z)$ is a is a three dimensional point in the camera's coordinate system and $p = (x, y)$ the projected point on the (virtual) image plane.
 Note that the projection is only defined for points that have $Z \neq 0$.
-$Z = 0$ would mean the point is in the same x-y-plane as the focal point/ the center of projection.
+$Z = 0$ would mean the point is in the same x-y-plane as the center of projection.
 However, this is not a problem since it will always be ensured that the there is enough distance between the 3D points and the camera.
 A visualization of the projection is depicted in \autoref{fig:camera-projection-setup}.
 
@@ -74,13 +83,18 @@ This re-projection is described by
 \end{equation}
 and the 3D point $P$ in then given by $(X, Y, Z)$.
 
-\subsection{A GAN for 3D Pose Estimation}
+\subsection{Network Architecture}
 
 \input{figures/model_figure}
 
-\autoref{fig:system} displays a diagram of this system.
+In their work, \citet{drover18} make use of a GAN in the context of 3D human pose estimation.
+\autoref{fig:system} displays a diagram of their proposed system.
+It follows the basic GAN architecture and adds some extra layers after the generator.
+The architecture will be described in the following.
 
-For numerical stability, \citet{drover18} require the input 2D poses (the poses to be lifted to 3D) to be normalized in the following way:
+The generator's and discriminator's input are human 2D poses.
+In practice, the generator's input pose is the pose to be lifted to 3D.
+For numerical stability, \citet{drover18} require the input poses for both discriminator and generator to be normalized in the following way:
 \begin{enumerate}[label=(\Alph*)]
 	\item The 2D poses' root joint is centered at the origin of the image plane.
 	\item A designated norm limb has length $0.1$.
@@ -106,41 +120,33 @@ Using the so found depths for each joint, the 2D pose can be re-projected into t
 In practice, the $Z$ in \autoref{eq:depth-clipping} is $10$, such that the re-projected poses have an approximate norm limb length of $1$.
 
 Afterwards, the obtained 3D poses are fed into a \emph{Random Projection Layer}, where they are projected into two dimensions again.
-For this, the poses are randomly rotated with with azimuth angles between $0$ and $360$ degrees and elevation angles between $0$ and $20$ degrees, first and then projected like in \autoref{eq:perspective-projection}.
+For this, the poses are randomly rotated with with azimuth angles between $0$ and $360$ degrees and elevation angles between $0$ and $20$ degrees, first and then projected as in \autoref{eq:perspective-projection}.
 Subsequently, those 2D poses are fed to the discriminator.
 
+During training, the discriminator receives 2D poses from $p_{real}$ and $p_{fake}$ and tries to classify them as either real or fake, that is, as stemming from $p_{real}$ or $p_{fake}$.
 
-The \textit{discriminator} $D$ is defined as a neural network that consumes real 2D poses from the distribution $P_{real}$ and fake 2D poses drawn from $P_{fake}$ and outputs a scalar value in $[0, 1]$.
+\Todo{Find good way to typeset this.}
+This system design is based on one underlying heuristic:\vspace{.5em}\newline
+\vspace{.5em}
+\noindent{\emph{If a random projection of a 2D pose looks realistic, the 3D pose is also realistic.}}\newline
+This heuristic is based on the fact that it is extremely unlikely for a malformed 3D pose to result in a realistic 2D pose when photographed from a random point of view.
 
-The loss functions used for the generator and the discriminator are the following \cite{goodfellow17}:
-\begin{align}
-	\label{eq:generator-loss}
-	loss_G &= -\mathbb{E}_{p\sim P_{fake}}(\log(D(p))) \\
-	\label{eq:discriminator-loss}
-	loss_D &= -\frac{1}{2}\mathbb{E}_{r\sim P_{real}}(\log(D(r))) - \frac{1}{2} \mathbb{E}_{p\sim P_{fake}}(\log(1 - D(p)))
-\end{align}
+\input{figures/residual_block_figure}
 
-Heuristic...
-
-
-\Todo{When 2D poses are sampled, the extrinsic parameters of the synthetic camera model should match those of the real camera(s)}
-
-\Todo[inline]{Figure of residual blocks}
-
-Both generator and discriminator consist of several consecutive \textit{residual blocks}.
-A residual block consists of two fully connected layers of size $1024$ each followed by RELU activation and a residual connection adding the input to the last layer's output.
-\citet{drover18} suggest two additional Batch Normalization layers \cite{ioffe15}, one immediately after each fully connected layer.
-\Todo{Mention correspondence with other authors and code.}
+In practice, both generator and discriminator are neural networks that consist of several consecutive \textit{Residual Blocks}.
+A Residual Block consists of two fully connected layers of size $1024$ each followed by ReLU activation and a residual connection adding the input to the last layer's output (\autoref{fig:residual-block}).
+In their work, \citet{drover18} describe two additional Batch Normalization layers \cite{ioffe15}, one immediately after each fully connected layer.
 Practical tests have shown that when using those additional layers the training does not converge at all.
-\unsure{Wording of "auf die Batch Norm wurde verzichtet"}
-As competitive results could also be achieved with the reduced network design, Batch Normalization has been left out completely in this work.
+\unsure{Should I still mention the "personal communication"? I'm not sure if their paper is related to this work enough.}
+As competitive results could also be achieved with the reduced network design, the proposed Batch Normalization Layers have been left out completely in this work.
 
-The generator takes $n$ 2D joint locations (i.e. $2n$ scalar inputs) as input and feeds them to a fully connected layer of size 1024.
-This is followed by four of the residual blocks described above and concluded by another fully connected layer of size 1024 mapping the output of the last residual block to a vector of size $n$ representing the depth offset of each joint.
-The 2D input and the estimated depth offsets are then combined to a 3D pose as described above.
-From each predicted 3D pose a random 2D projection is created that is used for training.
+Architecture-wise, the generator takes $n$ 2D joint locations (i.e. $2n$ scalar inputs) as input and feeds them to a fully connected layer of size 1024.
+This is followed by four Residual Blocks and concluded by another fully connected layer of size 1024 mapping the output of the last residual block to a vector of size $n$, in which each entry represents the depth offset one joint.
 
 The discriminator's architecture is very similar to the generator's. 
 It also accepts $n$ 2D joint locations as input which are fed into a fully connected layer of size 1024, followed by three residual blocks.
 The output is then reduced by another fully connected layer to a vector of size 2.
-When softmax is applied during the error calculation, the values will imply the probability of the input being real or generated.
+Finally, softmax is applied.
+The resulting values imply the probability of the input being real or fake.
+
+The networks are trained with the standard GAN losses described in Equations~\ref{eq:generator-loss} and~\ref{eq:discriminator-loss}.
