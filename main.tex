@@ -28,19 +28,34 @@
 \usepackage{pgfplots} % plotting data
 \usepackage[section]{placeins} % place figures in the sections they appear in
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\usepackage{parskip} % space between paragraphs instead of indent
+\usepackage{xr-hyper}  
+\usepackage[pagebackref, pdftex, colorlinks=true, linkcolor=blue, citecolor=blue]{hyperref}
 
 
 \usetikzlibrary{external}
 \tikzexternalize[prefix=out/figures/]
 
+% Disable tikz externalization for todo notes
 \makeatletter
 \renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[#1]{#2}\tikzexternalenable}
 \makeatother
 
+\addto\extrasenglish{
+	\renewcommand{\sectionautorefname}{Section}
+	\renewcommand{\subsectionautorefname}{Section}
+	\renewcommand{\subsubsectionautorefname}{Section}
+}
+
+\makeatletter
+\let\oldtheequation\theequation
+\renewcommand\tagform@[1]{\maketag@@@{\ignorespaces#1\unskip\@@italiccorr}}
+\renewcommand\theequation{(\oldtheequation)}
+\makeatother
+
 \captionsetup{justification=raggedright, format=plain, font=small,labelfont=bf}
 
-\usepackage{xr-hyper}  
-\usepackage[pagebackref, pdftex, colorlinks=true, linkcolor=blue, citecolor=blue]{hyperref}
+
 
 
 \IfClass{article}{ % Optimize for screen
