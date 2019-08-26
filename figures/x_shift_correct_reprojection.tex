@@ -22,6 +22,8 @@
 		]
 		\addplot +[restrict expr to domain={\coordindex}{90:491}] table [x=a, y=b, col sep=comma] {figures/plot_e_03_07_original_x_shift.csv};
 		\addplot[color=black!60!green] table [x=a, y=b, col sep=comma] {figures/plot_e_01_06_shifted_generator_x_shift.csv};
+		\addplot[color=red] table [x=a, y=b, col sep=comma] {figures/plot_e_11_08_default_generator_x_shift.csv};
+		\addplot[color=orange] table [x=a, y=b, col sep=comma] {figures/plot_e_03_07_original_correct_reprojection_x_shift.csv};
 		\end{axis}
 		\end{tikzpicture}
 	\caption{
@@ -29,4 +31,5 @@
 		The theoretical errors are obtained by calculating $\Delta d$ for every pose in the Protocol 2 test data.
 		The distance between the camera and the poses is approximately 5m.}
 	\label{fig:x-shift-error-correct-reproj}
+	\Todo[inline]{Use correct data for shifted generator (data with cross entropy loss)}
 \end{figure}
