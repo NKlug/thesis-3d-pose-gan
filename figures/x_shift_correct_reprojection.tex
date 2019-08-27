@@ -27,8 +27,10 @@
 		\end{axis}
 		\end{tikzpicture}
 	\caption{
-		Comparison of MPJPEs for networks with (blue) and without (red) correct re-of the poses into 3D for different offsets $dx$.
-		The theoretical errors are obtained by calculating $\Delta d$ for every pose in the Protocol 2 test data.
+		Comparison of MPJPEs for different networks. A pre-trained version of the original system with correct re-projection of the 2D poses (orange) outperforms the original system (blue).
+		Training the former from ground up (red) reduces the MPJPE significantly, especially for larger offsets $dx$.
+		If the generator with correct re-projection is trained with poses only normalized in scale, but not in location, the MPJPE decreases even more (green).
+		The MPJPEs are calculated using Protocol 2.
 		The distance between the camera and the poses is approximately 5m.}
 	\label{fig:x-shift-error-correct-reproj}
 	\Todo[inline]{Use correct data for shifted generator (data with cross entropy loss)}
