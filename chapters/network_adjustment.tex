@@ -8,10 +8,10 @@ This section will focus on the error introduced by shifting along the image plan
 Again, for simplicity, only shifting along the x axis will be considered.
 
 In \autoref{eq:re-projected-X}, if the 2D points would be re-projected correctly (i.e. shifted back before re-projection), in theory the lower bound in \autoref{eq:delta-d} would no longer apply.
-In that case, if the generator estimates all depths $\widetilde{Z}_i$ perfectly (i.e. $\widetilde{Z}_i = Z_i$) the re-projected pose equals the ground truth pose up to a shift.
+In that case, if the generator estimates all depths $\widetilde{Z}_i$ perfectly (that is $\widetilde{Z}_i = Z_i$) the re-projected pose equals the ground truth pose up to a shift.
 Thus, in a first attempt to efface the increased error, the re-projection of the poses into three dimensional space is adapted.
 
-\subsection{Network with Correct Re-Projection}
+\subsection{Generator with Correct Re-Projection}
 
 For a correct re-projection of the 2D poses into three dimensions, the network presented earlier is slightly modified.
 The network now receives poses that are only normalized in scale, but not in location.
@@ -28,35 +28,40 @@ In another attempt to reduce the MPJPE, the modified network presented above is 
 Similar to \autoref{sec:results-augmented}, the discriminator still receives poses which are already naturally normalized in location.
 Since the generator now produces 3D poses which are not necessarily aligned with the origin of the coordinate system, but may have offsets in x or y dimension, the poses have to be normalized.
 For this, the 3D poses' root joints are aligned with the origin, and then fed to the Random Projection Layer as before.
-For training, the same hyperparameters as described in \autoref{sec:evaluation} are used.
+The system is trained with poses having varying offsets uniformly drawn from $[-10\text{m}, 10\text{m}]$ and the same hyperparameters as in \autoref{sec:evaluation}.
 
-For an offset of $dx = 0$ the MPJPE is slightly higher than for the original network ($59.1$mm vs $54.8$mm).
-However, for larger offsets along the x axis, the MPJPE is now reduced significantly.
+For an offset of $dx = 0$ the MPJPE is slightly higher than for the original network ($59.1$mm vs. $54.8$mm).
+Despite that, for larger offsets along the x axis, the MPJPE is now reduced significantly.
 A plot of the resulting curve is depicted in \autoref{fig:x-shift-error-correct-reproj} (red graph).
-For a camera angle of approximately $63$ degrees ($10$m offset at a camera distance of $5m$) the MPJPE now is only at $82$mm, compared to the previous $350$mm.
-
+For a camera angle of approximately $63^{\circ}$ ($10$m offset at a camera distance of $5$m) the MPJPE now is only at $82$mm, compared to the previous $350$mm.
 
 \input{figures/x_shift_correct_reprojection}
 
-\subsection{Network without Root Joint Alignment}
-ambiguities
-The correct re-projection of the 2D points into three dimensions without further adaption of the network is already able to reduce the MPJPE for shifted poses.
-In an attempt to achieve the same MPJPE for all offsets $dx$, the network receives an additional piece of information.
-On top of the correct re-projection, the vector $(dx, dy$ is now passed to the network alongside the 2D input pose.
-In theory this should eliminate any ambiguities existing because of the normalization.
+\subsection{Generator without Root Joint Alignment}
 
-The network's input is now a vector of size $32$. 
-The first $30$ elements are the coordinates of the normalized input pose's 15 joints, and the last two elements are the offsets $dx$ and $dy$.
-During training the generator receives poses which have an offset $dx$ between $-10$m and $10$m.
-As before, in order to avoid sampling offsets for the Random Projection Layer, the discriminator receives only such 2D poses which have an offset of $dx = 0$, while $dy = 0$.
+With only minor modifications to the system, the results already improved remarkably.
+The correct re-projection of the poses into three dimensions is able to invalidate the lower bound found in \autoref{sec:x-shift-error}.
+However, ambiguities between poses shifted by different offsets still exist, as the generator still only receives normalized poses.
+In order to eliminate those ambiguities, an additional change has to be made to the generator.
 
-Experimental results showed that\dots
+Instead of poses normalized in scale and location, the generator now only receives poses that are normalized in scale.
+That way, it can differentiate between poses photographed with different offsets from the center.
+Again, the system is trained with poses with offsets $dx$ in $[-10\text{m}, 10\text{m}]$ while for $dy$ is still $0$.
+The hyperparameters are the same as in \autoref{sec:evaluation}.
+Note that while prior to now, the root joint could have been left out during training (a constant input of $0$ has no effect on the neural network), it is now important to include it.
 
-New network tested with Human3.6M monocular 2D poses.
+\Todo{Validate those results.}
+Experimental results are displayed in \autoref{fig:x-shift-error-correct-reproj}.
+Compared to the system that only re-projects the poses correctly, the MPJPE could again be reduced.
+On average, the MPJPE is approximately $XX$mm lower.
+At $dx = 0$, the results now equal those for the original system.
+For a $10$m offset at a camera distance of $5m$, the MPJPE is at $YY$mm.
 
-\unsure{New network trained with same images for generator and discriminator}
-
-\Todo[inline]{This is why the inclusion of the root joint into the network was important.}
+Recalling \autoref{sec:results-augmented}, the results for Protocol 2 for the monocular 2D poses included in the Human3.6M dataset could not compete with those for synthetic data.
+The lowest achievable average MPJPE was $72.5$mm.
+One possible explanation for that was that Human3.6M's pose were not naturally aligned with the origin of the image plane.
+With the modified network, this problem should now be solved.
+In fact, the average Protocol 2 MPJPE for those 2D poses could now be reduced to \dots.
 
 These results conclude the section, and the thesis.
-The next section provides a summary over the results from each chapter.
+The next, final section provides a summary of the results from each chapter.
