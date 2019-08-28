@@ -24,7 +24,7 @@ Thus, GANs can be described as a minimax game with players $G$ and $D$:
 In this case, the discriminator produces an output of $\frac{1}{2}$ for all inputs, which means it is no longer able to distinguish between the distributions.
 
 Usually, the generator and the discriminator are two neural networks.
-They can be trained with the following loss function \cite{goodfellow17}:
+They can be trained with the following loss functions \cite{goodfellow17}:
 \begin{align}
 \label{eq:generator-loss}
 loss_G &= -\mathbb{E}_{z\sim p_{z}}(\log(D(G(z)))) \\
@@ -37,7 +37,7 @@ Instead of the generator minimizing the same function with flipped sign, \citet{
 This prevents vanishing gradients.
 \autoref{eq:generator-loss} describes the resulting loss for the generator.
 
-The advantage of GANs compared to other generative models is that they can learn distributions in a weakly supervised manner, that is, only elements from the distribution to be learned are required from training.
+The advantage of GANs compared to other generative models is that they can learn distributions in a weakly supervised manner, that is, only elements from the distribution to be learned are required for training.
 In the system presented by \citet{drover18} that distribution captures all human \emph{2D} poses, which will be further explained in the next sections.
 
 \subsection{Perspective Projection}

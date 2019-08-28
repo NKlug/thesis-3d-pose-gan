@@ -47,21 +47,21 @@ In order to eliminate those ambiguities, an additional change has to be made to 
 Instead of poses normalized in scale and location, the generator now only receives poses that are normalized in scale.
 That way, it can differentiate between poses photographed with different offsets from the center.
 Again, the system is trained with poses with offsets $dx$ in $[-10\text{m}, 10\text{m}]$ while for $dy$ is still $0$.
+As before, the 2D poses are re-projected correctly into three dimensions.
 The hyperparameters are the same as in \autoref{sec:evaluation}.
 Note that while prior to now, the root joint could have been left out during training (a constant input of $0$ has no effect on the neural network), it is now important to include it.
 
 \Todo{Validate those results.}
-Experimental results are displayed in \autoref{fig:x-shift-error-correct-reproj}.
-Compared to the system that only re-projects the poses correctly, the MPJPE could again be reduced.
-On average, the MPJPE is approximately $XX$mm lower.
-At $dx = 0$, the results now equal those for the original system.
-For a $10$m offset at a camera distance of $5m$, the MPJPE is at $YY$mm.
+Experimental results are displayed in \autoref{fig:x-shift-error-correct-reproj} (green graph).
+The MPJPE could again be reduced and is now at $70$mm for a $10$m x offset at a camera distance of $5$m.
+Compared to the results of the previous section, that is an improvement of approximately $10$mm on average.
+At $dx = 0$, the results now equal those for the original system (up to $1$mm).
 
-Recalling \autoref{sec:results-augmented}, the results for Protocol 2 for the monocular 2D poses included in the Human3.6M dataset could not compete with those for synthetic data.
-The lowest achievable average MPJPE was $72.5$mm.
-One possible explanation for that was that Human3.6M's pose were not naturally aligned with the origin of the image plane.
-With the modified network, this problem should now be solved.
-In fact, the average Protocol 2 MPJPE for those 2D poses could now be reduced to \dots.
+%Recalling \autoref{sec:results-augmented}, the results for Protocol 2 for the monocular 2D poses included in the Human3.6M dataset could not compete with those for synthetic data.
+%The lowest achievable average MPJPE was $72.5$mm.
+%One possible explanation for that was that Human3.6M's pose were not naturally aligned with the origin of the image plane.
+%With the modified network, this problem should now be solved.
+%In fact, the average Protocol 2 MPJPE for those 2D poses could now be reduced to \dots.
 
 These results conclude the section, and the thesis.
-The next, final section provides a summary of the results from each chapter.
+The next and last section provides a summary of the results from each chapter.
