@@ -1,6 +1,25 @@
 \begin{figure}
+	\centering
 	\begin{tikzpicture}
+	[
+	 block/.style ={rectangle, draw=black, thick, text width=20em, align=center, minimum height=2em}
+	]
+	\node[] (a) [block] {Fully Connected Layer (1024)};
+	\node[below= -1.5\pgflinewidth of a] (b) [block] {ReLU};
+	\node[below= -1.5\pgflinewidth of b] (c) [block] {Fully Connected Layer (1024)};
+	\node[below= -1.5\pgflinewidth of c] (d) [block] {ReLU};
+	\node[below= -1.5\pgflinewidth of d] (e) [block] {$\bigoplus$};
+	\node[above=of a] (x) [] {};
+	\draw[->, line width=1pt] (x) -- (a);
+	\node[below=of e] (y) [] {};
+	\draw[->, line width=1pt] (e) -- (y);
+	\node[above=.4 of a] (z) [] {};
+	\node[right=12em of z] (h) [] {};
+	\draw[line width=1pt] (z.center) -- (h.center);
+	\draw[->, line width=1pt] (h.center) |- (e.east);
 	\end{tikzpicture}
-	\caption{Architecture of the Residual Blocks in generator and discriminator.}
+	\caption{Architecture of the Residual Blocks in generator and discriminator.
+	Two fully connected layers of size 1024 are each followed by a Rectified Linear Unit (ReLU). After the last ReLU the input is added to the output.
+	\citet{drover18} suggest a Batch Normalization immediately after each Fully Connected Layer, which has not been found to work.}
 	\label{fig:residual-block}
 \end{figure}
