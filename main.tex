@@ -25,6 +25,7 @@
 \usepackage{caption} % change style of figure 
 \usepackage{subcaption} % subfigures
 \usepackage{tikz} % for pgfplots
+\usepackage{tkz-euclide} % for coordinate system etc.
 \usepackage{pgfplots} % plotting data
 \usepackage[section]{placeins} % place figures in the sections they appear in
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
@@ -32,7 +33,7 @@
 \usepackage{xr-hyper}  
 \usepackage[pagebackref, pdftex, colorlinks=true, linkcolor=blue, citecolor=blue]{hyperref}
 
-
+\usetkzobj{all}
 \usetikzlibrary{external}
 \tikzexternalize[prefix=out/figures/]
 
