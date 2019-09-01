@@ -15,7 +15,7 @@ The discriminator and generator can be thought of as two players playing a game 
 	V(D, G) = \mathbb{E}_{r\sim p_{real}}(\log(D(r))) + \mathbb{E}_{z\sim p_{z}}(\log(1 - D(G(z)))) \ .
 \end{equation}
 Here, the discriminator tries to maximize the probability of correctly estimating whether the input stems from $p_{real}$ or $p_{fake}$.
-The generator simultaneously minimizes the second summand, trying to achieve the same discriminator output as for data from $p_{real}$.
+The generator simultaneously minimizes the second summand, trying to get the discriminator to classify its output as stemming from $p_{real}$.
 Thus, GANs can be described as a minimax game with players $G$ and $D$:
 \begin{equation}
 \min_G \max_D V(D, G) \ .

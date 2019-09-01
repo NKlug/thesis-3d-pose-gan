@@ -1,4 +1,5 @@
 \section{Conclusion}
+\label{sec:conclusion}
 In this thesis, the 2D to 3D human pose estimation system by \citet{drover18} has been analyzed with respect to the applied pose normalization.
 In their work "Can 3D Pose Be Learned from 2D Projections Alone?", the authors propose a Generative Adversarial Network in which the generator estimates the depths for each of the 2D input pose's joints.
 With those depths, a 3D pose can be obtained by re-projecting the 2D pose using the perspective projection equation.
@@ -17,7 +18,7 @@ The results reported by \citet{drover18} could only be reproduced up to a $6.8$m
 For the monocular 2D poses included in the Human3.6M dataset, the same results could only be achieved for Protocol 1; for Protocol 2 the MPJPE increased to $80.4$mm.
 When trained with those poses in addition to the synthetic poses, the error could be reduced by about $1$cm.
 
-In \autoref{sec:loss-function-modification} an alternative loss function for the generator has been suggested.
+In \autoref{sec:loss-function-modification} an improved loss function for the generator has been suggested.
 Humans have a bilaterally symmetrical skeleton with many limbs known to have equal lengths.
 The suggested loss function punishes the generator if it produces symmetric limbs of different lengths, by adding the difference of two symmetric limbs to the standard GAN loss for the generator.
 For training, the influence of the new term was increased over time.
@@ -33,5 +34,5 @@ On the other hand, if the poses have to be re-scaled due to a varying camera dis
 As this error is relatively small, especially for small variations, it should be negligible in most applications.
 
 In the last section, \autoref{sec:network-adjusting}, the system suggested by \citet{drover18} has been modified to compensate the effects of pose normalization through alignment.
-When the generator receives poses that are only normalized in scale, but not location, and re-projects those poses correctly into three dimensions, an almost constant performance for poses with all offsets could be achieved.
-For poses that are $60^{\circ}$ off the camera center, in the modified system the MPJPE only increases by about $15$mm, compared to the previous $340$mm.
+When the generator receives poses that are only normalized in scale, but not in location, and re-projects those poses correctly into three dimensions, an almost constant performance for poses with all offsets could be achieved.
+For poses that are $60^{\circ}$ off the camera center, in the modified system the MPJPE only increases by about $15$mm, compared to the previous $285$mm.

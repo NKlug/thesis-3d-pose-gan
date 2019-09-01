@@ -1,14 +1,17 @@
 \begin{figure}
 	\centering
 	\begin{tikzpicture}
-	\draw[thick,->] (0,0) -- (1,0);
-	\draw[thick,->] (0,0) -- (0,-1);
+	\draw[->] (0,0) -- (1,0);
+	\draw[->] (0,0) -- (0,-1);
+	\tkzDefPoint(0,0){orig}
 	\tkzDefPoint(1,0){z}
 	\tkzDefPoint(0,-1){x}
 	\tkzDefPoint(-2, -1.15){imgplane}
 	\tkzDefPoint(2, -1.15){virtimgplane}
 	\tkzLabelPoint[above](z){\tiny{z}}
 	\tkzLabelPoint[left](x){\tiny{x}}
+	\tkzLabelPoint[above=.5cm](orig){\tiny{Center of}}
+	\tkzLabelPoint[above=.25cm](orig){\tiny{Projection}}
 	\tkzLabelPoint[below=.7cm](imgplane){\tiny{Image Plane}}
 	\tkzLabelPoint[below=.7cm](virtimgplane){\tiny{Virtual}}
 	\tkzLabelPoint[below=.95cm](virtimgplane){\tiny{Image Plane}}
@@ -30,7 +33,7 @@
 	\end{tikzpicture}
 	\caption{Visualization of perspective projection in the simplified two dimensional case.
 		The camera with focal length $f$ is located at the origin.
-		The point $(X, Z)$ is projected onto the image plane via perspective projection.
-		The resulting x coordinate is $x = f \cdot \frac{X}{Z}$.}
+		The point $(X, Z)$ is projected onto the (virtual) image plane via perspective projection.
+		The resulting x coordinate is $x = \pm f \cdot \frac{X}{Z}$.}
 	\label{fig:camera-projection-setup}
 \end{figure}
