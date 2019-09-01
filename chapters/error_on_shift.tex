@@ -191,6 +191,7 @@ In case $Z$ is fixed for all poses and only the focal length of the camera varie
 As the focal length is only a scale factor the projected points are multiplied with, dividing by it results in the same 2D pose as if $f$ has been correct in the first place.
 
 On the other hand, when the focal length $f$ of the camera is fixed and the varying lengths of the norm limb are caused by a varying distance between the camera and the root joint, normalization by scaling will introduce an additional error.
+\Todo{Maybe add small example with two points.}
 The intuitional explanation behind this is that the projection rays' relative angles change when the 3D pose is projected with greater or smaller camera distance.
 In photography, this phenomenon is also known as lens compression (a misleading term, as it has nothing to do with the lens).
 Essentially, this phenomenon also affects the poses when they are photographed, or projected.

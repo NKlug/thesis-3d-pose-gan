@@ -42,6 +42,7 @@
 \renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[#1]{#2}\tikzexternalenable}
 \makeatother
 
+% Rename autorefnames
 \addto\extrasenglish{
 	\renewcommand{\sectionautorefname}{Section}
 	\renewcommand{\subsectionautorefname}{Section}
@@ -54,10 +55,8 @@
 \renewcommand\theequation{(\oldtheequation)}
 \makeatother
 
+% Captions for figures
 \captionsetup{justification=raggedright, format=plain, font=small,labelfont=bf}
-
-
-
 
 \IfClass{article}{ % Optimize for screen
 	\geometry{papersize={200mm,200mm},margin=5mm} 
@@ -68,6 +67,7 @@
 \newcommandx{\Todo}[2][1=]{\todo[linecolor=yellow,backgroundcolor=yellow!25,bordercolor=yellow,#1]{#2}}
 \newcommandx{\info}[2][1=]{\todo[linecolor=green,backgroundcolor=green!25,bordercolor=green,#1]{#2}}
 
+% Centered, equally spaced columns
 \newcolumntype{Y}{>{\centering\arraybackslash}X} % centered equidistant columns
 
 \setenumerate{label=(\arabic*),itemsep=0mm} % enumerate labeling and line distance
@@ -93,7 +93,7 @@
 	
 	\pagenumbering{arabic}
 
-	\Todo[inline]{Beim Korrekturlesen darauf achten ob Sachen benutzt werden, die vorher nicht erläutert wurden. Außerdem:
+	\Todo[inline]{Note to myself: Beim Korrekturlesen darauf achten ob Sachen benutzt werden, die vorher nicht erläutert wurden. Außerdem:
 		Werden die Zusammenhänge überall klar?
 		Wird die Motivation, bestimmte Dinge zu tun/ zu analysieren klar?
 	}

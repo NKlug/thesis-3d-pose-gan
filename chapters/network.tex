@@ -112,9 +112,10 @@ Hence, instead of an absolute depth, only a \emph{depth offset} $o_i$ is estimat
 The absolute depths can then be calculated as
 \begin{equation}
 	\label{eq:depth-clipping}
-	Z_i = \max \{f, Z + o_i\} \ .
+	Z_i = \max \{f, Z + o_i\}
 \end{equation}
-The clipping ensures that, at the time of re-projection, the points are projected in front of the camera.
+for $1 \leq i \leq n$.
+%This clipping ensures that, at the time of re-projection to 3D, the points are projected in front of the camera.
 
 Using the so found depths for each joint, the 2D pose can be re-projected into three dimensions using \autoref{eq:perspective-re-projection}.
 In practice, the $Z$ in \autoref{eq:depth-clipping} is $10$, such that the re-projected poses have an approximate norm limb length of $1$.

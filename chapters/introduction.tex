@@ -1,52 +1,66 @@
 \section{Introduction}
 
 Human pose estimation has gained a lot of attention in the last years.
-With the emergence of models that estimate poses from RGB images only, poses estimation has become more accessible than ever.
+With the emergence of models that are able to accurately estimate poses in real-time from RGB images only, pose tracking has become more accessible than ever.
+With systems like DeepCut \cite{pishchulin16}, the Stacked Hourglass architecture \cite{newell16} and most recently OpenPose \cite{cao18} huge advancements have been made in the estimation of two dimensional (2D) human poses from RGB images.
+
+Human pose estimation has been successfully applied in multiple areas.
+In the medical field human pose estimation can help in detecting any movement related disorders.
+\citet{aroeira16} used pose estimation to detect scoliosis in adolescents through the analysis of their postures.
+In another work, \citet{khan18} use poses to monitor Vojta therapy, a form of therapy treating motor disabilities originating from neurological disorders.
+Pose estimation is also necessary in future personal care robots that may be used in the context of assisted living \cite{richter15}.
+Apart from applications in the medical field, an obvious application of human pose estimation is replacing the systems that are currently used for the task.
+Concretely, those are Motion Capture (MoCap) systems used e.g. for animations and visualizations and RGBD cameras like Microsoft Kinect.
+Not only are those systems expensive, but can also not be used in all environments (especially MoCap).
+Another application of pose estimation is monitoring human behavior in surveillance situations, in working environments or elsewhere.
+Human pose estimation can also be applied in the performance analysis of athletes in sports \cite{einfalt18, zecha19}.
+\unsure{Has it actually been applied in sports yet?}
 
 
-Why human pose estimation?
-Human Pose Estimation has various applications.
+\subsection{2D to 3D Human Pose Estimation}
+With the well-performing 2D pose estimators mentioned above, the next logical step is to estimate the poses in three dimensions (3D).
+For this some end-to-end frameworks have been proposed that estimate the 3D poses directly from RGB images \cite{pavlakos17, park16, mehta17, mehta17_2}.
+Another approach is to split the task of 3D pose estimation task into two subtasks \cite{drover18, martinez17, moreno-noguer16}:
+2D pose estimation from RGB images and subsequent 3D pose estimation from the 2D poses.
+This two-step pipeline benefits from the fact that the existing 2D pose estimators can be used for the first part, which means that 3D pose estimation is reduced to the second subtask, that is the to 2D to 3D lifting.
+
+In their work "Can 3D pose be Learned from 2D Projections Alone?", \citet{drover18} propose such a system that estimates human 3D poses from 2D poses.
+On top of the state of the art results for the estimation, this system can be trained in a weakly supervised manner.
+It employs a Generative Adversarial Network \cite{goodfellow14} that relies only on 2D poses for training; no 3D ground truth data is required.
+This makes the system particularly attractive, as compared to 2D ground truth data, acquiring 3D ground truth poses is notoriously harder.
+For a precise data collection, MoCap systems are usually required.
+For the estimation of the 3D poses the 2D input poses are required to be normalized in scale and location.
+
+The objective of this thesis is an analysis of the system proposed by \citet{drover18} with respect to the influence of those normalization constraints on the error.
+In addition to that, a modified loss function is proposed which enables an improved estimation of the 3D poses.
 
 
+%\begin{itemize}
+%	\item definition pose
+%	\item Comparison to \citet{wandt19}
+%\end{itemize}
+%
+%\begin{itemize}
+%	\item Common 3D datasets with 3D annotation. Very few annotated. Human3.6M, HumanEvaI/II, TotalCapture, SURREAL (synthetic), KTH Multiview Football II
+%\end{itemize}
+%
+%notoriously
+%Whereas there are a lot of annotated human 2D pose estimation datasets (MPII, COCO Keypoints, PoseTrack, DensePose), there are only very few annotated 3D pose datasets. 
+%2D poses can be easily captured and annotated.
+%Only RGB images are necessary for this.
+%As opposed to this, capturing ground truth data for 3D poses is notoriously harder.
+%For precise ground truth poses, a motion capture system is required which is not broadly available due to the high cost.
+%Though, this saves the effort of manual labeling.
+%
+%
+%\emph{A (three dimensional) \textit{pose} is a collection of $n$ points in $\mathbb{R}^3$.}
 
-\Todo[inline]{2D/3D = two/three dimensional}
-
-\begin{itemize}
-	\item applications: surveillance in work field, animationen and visualizations, sports, medicine -> tracking of progress
-	\item History: 2D pose estimation systems have made big progress -> Motivation of 2D to 3D lifting
-	\item definition pose
-	\item definition of the task
-	\item Comparison to \citet{wandt19}
-	\item Medical applications \cite{aroeira16, khan18}
-\end{itemize}
-
-\begin{itemize}
-	\item Common 3D datasets with 3D annotation. Very few annotated. Human3.6M, HumanEvaI/II, TotalCapture, SURREAL (synthetic), KTH Multiview Football II
-	\item Motivation for training with 2D data only
-\end{itemize}
-
-notoriously
-Whereas there are a lot of annotated human 2D pose estimation datasets (MPII, COCO Keypoints, PoseTrack, DensePose), there are only very few annotated 3D pose datasets. 
-2D poses can be easily captured and annotated.
-Only images are necessary for this.
-As opposed to this, capturing ground truth data for 3D poses is notoriously harder.
-For precise ground truth poses, a motion capture system is required which is not broadly available due to the high cost.
-Though, this saves the effort of manual labeling.
-
-
-\emph{A (three dimensional) \textit{pose} is a collection of $n$ points in $\mathbb{R}^3$.}
-Throughout this work coordinates of 3D points will be denoted by capital letters and 2D points by lower case letters.
-
-In this work the GAN based 3D human pose estimation system by \citet{drover18} will be analyzed.
-
-\subsection{2D and 3D pose estimation}
-Why 2D to 3D?
 
 
 \subsection{Outline}
 
 \autoref{sec:network} begins with a short introduction into Generative Adversarial Networks and perspective projection.
-Those topics are the core of the 3D human pose estimation system proposed by \citet{drover18} that are explained subsequently.
+Those topics are a substantial part of the pose estimation system proposed by \citet{drover18} that is presented and explained subsequently.
 
 In \autoref{sec:data} the datasets used for evaluation -- which is mainly the Human3.6M dataset \cite{ionescu14} -- are presented.
 As most pose estimation systems do not estimate absolute 3D poses, the estimated poses have to be transformed to be comparable to the ground truth poses.
@@ -55,11 +69,11 @@ Those protocols are analyzed and discussed.
 
 Afterwards, in \autoref{sec:evaluation} baseline errors for a rebuilt version of the system is established.
 Those are needed for the analysis of the effects of pose normalization later.
-The system is evaluated for synthetically generated 2D poses and monocular 2D poses included in the Human3.6M dataset.
+The system is evaluated for synthetically generated 2D poses and the monocular 2D poses included in the Human3.6M dataset.
 In order to get insights about the systems ability to generalize to unknown data, the system is also evaluated with human poses from the TotalCapture dataset \cite{trumble17}.
 
 In \autoref{sec:loss-function-modification} a modified loss function for the generator is presented.
-The new loss passes high-level knowledge about human poses to the generator. who can use this information to refine the estimated 3D poses.
+The new loss leverages high-level knowledge about human poses, which can be used by the generator to refine the estimated 3D poses.
 
 \autoref{sec:effects-of-normalization} is the main part of this thesis.
 Here, the two normalization constraints the 2D input poses have to fulfill in the 3D pose estimation system discussed in \autoref{sec:network} will be analyzed.
@@ -67,7 +81,5 @@ The 2D input poses are expected to be normalized in location and scale.
 By re-constructing the projections and re-projections of the poses during the estimation process, a theoretical lower bound for the minimal error is derived for both types of normalization.
 Experiments are conducted in order to confirm the so-found lower bounds.
 
-The results of the previous section show that especially for the normalization in location introduces a significant additional error.
+The results of the previous section show that especially the normalization in location introduces a significant additional error.
 In \autoref{sec:network-adjusting} the system by \citet{drover18} is modified and trained such that the effects of normalization in location are diminished.
-
-\autoref{sec:conclusion} concludes the thesis. It provides a summary of the results.

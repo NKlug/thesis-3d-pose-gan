@@ -894,6 +894,7 @@ The findings indicated diversity in methodologies; 14/15 articles reviewed were 
 	issn = {1386-5056},
 	journal = {International Journal of Medical Informatics},
 	keywords = {Vojta therapy; Cerebral palsy; Spinal scoliosis; Musculoskeletal system; Computer vision; Microsoft Kinect},
+	localfile = {bibliography_resources/khan - a computer vision based system for monitoring vojta therapy.pdf},
 	pages = {85--95},
 	title = {{A computer vision-based system for monitoring Vojta therapy}},
 	url = {http://www.sciencedirect.com/science/article/pii/S1386505618300819},
@@ -912,5 +913,151 @@ The findings indicated diversity in methodologies; 14/15 articles reviewed were 
 	publisher = {Springer International Publishing},
 	title = {{Pose Estimation and Movement Detection for Mobility Assessment of Elderly People in an Ambient Assisted Living Application}},
 	year = {2015}
+}
+
+@misc{pishchulin16,
+	abstract = {  This paper considers the task of articulated human pose estimation of
+multiple people in real world images. We propose an approach that jointly
+solves the tasks of detection and pose estimation: it infers the number of
+persons in a scene, identifies occluded body parts, and disambiguates body
+parts between people in close proximity of each other. This joint formulation
+is in contrast to previous strategies, that address the problem by first
+detecting people and subsequently estimating their body pose. We propose a
+partitioning and labeling formulation of a set of body-part hypotheses
+generated with CNN-based part detectors. Our formulation, an instance of an
+integer linear program, implicitly performs non-maximum suppression on the set
+of part candidates and groups them to form configurations of body parts
+respecting geometric and appearance constraints. Experiments on four different
+datasets demonstrate state-of-the-art results for both single person and multi
+person pose estimation. Models and code available at
+http://pose.mpi-inf.mpg.de.
+},
+	archiveprefix = {arXiv},
+	author = {Pishchulin, Leonid and Insafutdinov, Eldar and Tang, Siyu and Andres, Bjoern and Andriluka, Mykhaylo and Gehler, Peter and Schiele, Bernt},
+	comment = {published = 2015-11-20T15:37:55Z, updated = 2016-04-26T04:26:29Z, Accepted at IEEE Conference on Computer Vision and Pattern Recognition (CVPR 2016)},
+	eprint = {1511.06645v2},
+	month = apr,
+	primaryclass = {cs.CV},
+	title = {{DeepCut: Joint Subset Partition and Labeling for Multi Person Pose Estimation}},
+	url = {http://arxiv.org/abs/1511.06645v2; http://arxiv.org/pdf/1511.06645v2},
+	x-fetchedfrom = {arXiv.org},
+	year = {2016}
+}
+
+@misc{newell16,
+	abstract = {  This work introduces a novel convolutional network architecture for the task
+of human pose estimation. Features are processed across all scales and
+consolidated to best capture the various spatial relationships associated with
+the body. We show how repeated bottom-up, top-down processing used in
+conjunction with intermediate supervision is critical to improving the
+performance of the network. We refer to the architecture as a "stacked
+hourglass" network based on the successive steps of pooling and upsampling that
+are done to produce a final set of predictions. State-of-the-art results are
+achieved on the FLIC and MPII benchmarks outcompeting all recent methods.
+},
+	archiveprefix = {arXiv},
+	author = {Newell, Alejandro and Yang, Kaiyu and Deng, Jia},
+	comment = {published = 2016-03-22T19:56:42Z, updated = 2016-07-26T19:19:37Z},
+	eprint = {1603.06937v2},
+	month = jul,
+	primaryclass = {cs.CV},
+	title = {{Stacked Hourglass Networks for Human Pose Estimation}},
+	url = {http://arxiv.org/abs/1603.06937v2; http://arxiv.org/pdf/1603.06937v2},
+	x-fetchedfrom = {arXiv.org},
+	year = {2016}
+}
+
+@misc{cao18,
+	abstract = {  Realtime multi-person 2D pose estimation is a key component in enabling
+machines to have an understanding of people in images and videos. In this work,
+we present a realtime approach to detect the 2D pose of multiple people in an
+image. The proposed method uses a nonparametric representation, which we refer
+to as Part Affinity Fields (PAFs), to learn to associate body parts with
+individuals in the image. This bottom-up system achieves high accuracy and
+realtime performance, regardless of the number of people in the image. In
+previous work, PAFs and body part location estimation were refined
+simultaneously across training stages. We demonstrate that a PAF-only
+refinement rather than both PAF and body part location refinement results in a
+substantial increase in both runtime performance and accuracy. We also present
+the first combined body and foot keypoint detector, based on an internal
+annotated foot dataset that we have publicly released. We show that the
+combined detector not only reduces the inference time compared to running them
+sequentially, but also maintains the accuracy of each component individually.
+This work has culminated in the release of OpenPose, the first open-source
+realtime system for multi-person 2D pose detection, including body, foot, hand,
+and facial keypoints.
+},
+	archiveprefix = {arXiv},
+	author = {Cao, Zhe and Hidalgo, Gines and Simon, Tomas and Wei, Shih-En and Sheikh, Yaser},
+	comment = {published = 2018-12-18T18:50:33Z, updated = 2019-05-30T23:46:18Z, Journal version of arXiv:1611.08050, with better accuracy and faster speed, release a new foot keypoint dataset: https://cmu-perceptual-computing-lab.github.io/foot\_keypoint\_dataset/},
+	eprint = {1812.08008v2},
+	month = may,
+	primaryclass = {cs.CV},
+	title = {{OpenPose: Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields}},
+	url = {http://arxiv.org/abs/1812.08008v2; http://arxiv.org/pdf/1812.08008v2},
+	x-fetchedfrom = {arXiv.org},
+	year = {2018}
+}
+
+@misc{einfalt18,
+	abstract = {  In this paper we consider the problem of human pose estimation in real-world
+videos of swimmers. Swimming channels allow filming swimmers simultaneously
+above and below the water surface with a single stationary camera. These
+recordings can be used to quantitatively assess the athletes' performance. The
+quantitative evaluation, so far, requires manual annotations of body parts in
+each video frame. We therefore apply the concept of CNNs in order to
+automatically infer the required pose information. Starting with an
+off-the-shelf architecture, we develop extensions to leverage activity
+information - in our case the swimming style of an athlete - and the continuous
+nature of the video recordings. Our main contributions are threefold: (a) We
+apply and evaluate a fine-tuned Convolutional Pose Machine architecture as a
+baseline in our very challenging aquatic environment and discuss its error
+modes, (b) we propose an extension to input swimming style information into the
+fully convolutional architecture and (c) modify the architecture for continuous
+pose estimation in videos. With these additions we achieve reliable pose
+estimates with up to +16\% more correct body joint detections compared to the
+baseline architecture.
+},
+	archiveprefix = {arXiv},
+	author = {Einfalt, Moritz and Zecha, Dan and Lienhart, Rainer},
+	comment = {published = 2018-02-02T10:56:41Z, updated = 2018-02-02T10:56:41Z, 10 pages, 9 figures, accepted at WACV 2018},
+	eprint = {1802.00634v1},
+	month = feb,
+	primaryclass = {cs.CV},
+	title = {{Activity-conditioned continuous human pose estimation for performance analysis of athletes using the example of swimming}},
+	url = {http://arxiv.org/abs/1802.00634v1; http://arxiv.org/pdf/1802.00634v1},
+	x-fetchedfrom = {arXiv.org},
+	year = {2018}
+}
+
+@inproceedings{zecha19,
+	author = {Zecha, Dan and Einfalt, Moritz and Lienhart, Rainer},
+	booktitle = {{CVPR 2019}},
+	title = {{Refining Joint Locations for Human Pose Tracking in Sports Videos}},
+	year = {2019}
+}
+
+@inbook{park16,
+	abstract = {While there has been a success in 2D human pose estimation with convolutional neural networks (CNNs), 3D human pose estimation has not been thoroughly studied. In this paper, we tackle the 3D human pose estimation task with end-to-end learning using CNNs. Relative 3D positions between one joint and the other joints are learned via CNNs. The proposed method improves the performance of CNN with two novel ideas. First, we added 2D pose information to estimate a 3D pose from an image by concatenating 2D pose estimation result with the features from an image. Second, we have found that more accurate 3D poses are obtained by combining information on relative positions with respect to multiple joints, instead of just one root joint. Experimental results show that the proposed method achieves comparable performance to the state-of-the-art methods on Human 3.6m dataset.},
+	author = {Park, Sungheon and Hwang, Jihye and Kwak, Nojun},
+	booktitle = {{Computer Vision -- ECCV 2016 Workshops}},
+	doi = {10.1007/978-3-319-49409-8_15},
+	isbn = {978-3-319-49409-8},
+	publisher = {Springer},
+	title = {{3D Human Pose Estimation Using Convolutional Neural Networks with 2D Pose Information}},
+	url = {http://dx.doi.org/10.1007/978-3-319-49409-8_15},
+	x-fetchedfrom = {SpringerLink},
+	year = {2016}
+}
+
+@article{mehta17_2,
+	author = {Mehta, Dushyant and Sridhar, Srinath and Sotnychenko, Oleksandr and Rhodin, Helge and Shafiei, Mohammad and Seidel, Hans-Peter and Xu, Weipeng and Casas, Dan and Theobalt, Christian},
+	journal = {ACM Transactions on Graphics},
+	month = {July},
+	number = {4},
+	numpages = {14},
+	title = {{VNect: Real-time 3D Human Pose Estimation with a Single RGB Camera}},
+	volume = {36},
+	year = {2017}
 }
 
