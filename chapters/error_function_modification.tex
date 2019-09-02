@@ -1,28 +1,28 @@
-\section{\unsure{Too complex?}
-	Exploiting Bilateral Symmetry for Improved Results}
+\section{Exploiting Limb Length Symmetry}
 \label{sec:loss-function-modification}
 
 In a standard fully-supervised network, training is heavily dependent on ground truth data.
-As the key feature of the system described in this work is that only 2D poses are required for training, there is substantially lesser information available to the system during the training process.
+As the key feature of the system described in this work is that only 2D poses are required for training, no ground truth data is available to the system during the training process which could be used to improve the estimations.
 
 In GANs, the generator only receives information about the distribution to be learned through the discriminator's error.
 The discriminator on its part only receives information about the elements of the real data distribution.
 Other than that, there is a priori no other information the generator can use to produce improved results.
-Without ground truth data available, one of the only parts of additional knowledge that can be passed to the system during training are general, high-level facts that hold true for all elements of the distribution to be learned.
+Without ground truth data available, one of the only parts of additional knowledge that can be passed to the system during training are general, high-level properties that hold true for all elements of the distribution to be learned.
 
 In the special case of human 3D pose estimation, such facts can be the kinematics or the basic structure of the human skeleton.
 Generally, the movement of limbs relative to each other is highly constrained:
 A leg can not (and if, only rarely) completely fold behind one's back and an hand cannot touch its own forearm.
-If such information can be made available to the generator the results might improve.
+If such information can be made available to the generator, the results might improve.
 However, everything exceeding simple restrictions for the relative angles between the limbs is highly complex and would be out of the scope of this work.
-As the results from the previous section show that the generated poses already have sensible limb angles, it is not to be expected to gain any benefit by engineering knowledge about such simple kinematics into the system.
 
 That leaves the basic structure of the human skeleton.
-As all mammals, humans have a bilaterally symmetrical skeleton.
-That symmetry can be made use of in the following way:
+As all mammals, humans have a pair-wise symmetrical skeleton.
+That symmetry can be leveraged in the following way:
 3D poses are expected to have equally long upper and lower arms, upper and lower legs, foots of equal size etc.
 Also, the distance between the shoulders and the neck, and the hips and the base of the spine should not differ too much.
-Concerning the GAN, that means this additional piece of information can be passed to the generator through the loss function.
+Experimental results show that for the rebuilt system (trained with synthetic poses), the symmetric limbs do \emph{not} have equal lengths.
+For the Protocol 2 test data, if the estimated 3D poses are scaled to match the average mean limb length of the ground truth poses (see \autoref{sec:protocol2}), the symmetric limbs differ by $15.0$mm in length on average.
+Concerning the GAN, this fact motivates passing information about the symmetric limbs to the generator through a loss function.
 
 Let a \emph{limb} $l = (u, v)$ be the connecting body part between joints $u$ and $v$.
 For a set of symmetric limbs $S = \{(l_{i_1}, l_{i_2})~|~ l_{i_1}, l_{i_2}\ \text{are symmetric limbs} \}$ the \emph{limb loss} is defined as:
@@ -47,8 +47,10 @@ For the 15 joint model, the employed symmetric limbs are the upper arms, the low
 The generator trained with the modified loss is able to outperform the generator with standard loss in all categories.
 The average MPJPE is reduced by 4.1mm to 50.7mm, which equals an improvement of more than 7\%.
 For the individual categories the error is reduced by up to 8mm.
+For the Protocol 2 test data, the average difference in symmetric limb lengths could now be reduced to $9.4$mm (with the same scaling as before).
+Compared to the previous $15.0$mm, this is an improvement of more than $35\%$.
+This confirms the conjecture that the limb loss is in fact responsible for the improved results.
 
-In conclusion, the limb loss function for the generator is an improvement to the work of \citet{drover18}.
-As it comes at no cost, it can be easily integrated in future system.
+In conclusion, the limb loss function for the generator is an improvement to the work of \citet{drover18} and worth including into future systems, as it comes at no cost.
 
 
