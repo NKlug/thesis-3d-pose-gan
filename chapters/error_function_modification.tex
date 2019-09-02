@@ -31,6 +31,7 @@ loss_{limb} = \frac{1}{|S|}\sum_{((u_1, v_1), (u_2, v_2)) \in S} \bigl\lvert \no
 \end{equation}
 
 The limb loss penalizes the generator if it produces poses with symmetric limbs of different lengths.
+It is calculated for the 3D poses estimated by the generator without further normalization.
 The new loss for the generator is then given by
 \begin{equation}
 	loss_{G, limb} = loss_G + \lambda \cdot loss_{limb} \ ,
@@ -41,12 +42,13 @@ where $\lambda$ is a weighting factor and $loss_G$ is given in Equation \eqref{e
 
 During training, $\lambda$ was increased linearly.
 Initially it was set to $5$ and then increased by $0.002$ each iteration, until $\lambda = 100$.
-That way, in the beginning the higher weighted standard loss ensures that the generator produces sensible 3D poses, and in later iterations the limb loss helps refining those poses.
+That way, in the beginning the higher weighted GAN loss ensures that the generator produces sensible 3D poses. 
+In later iterations, the limb loss helps refining those poses.
 Table \ref{tbl:results-limb-loss} shows the results of that training procedure.
 For the 15 joint model, the employed symmetric limbs are the upper arms, the lower arms, the upper legs, the lower legs, the hips (distance from left and right hip to the root joint) and the shoulders (distance from shoulders to thorax). 
 The generator trained with the modified loss is able to outperform the generator with standard loss in all categories.
 The average MPJPE is reduced by 4.1mm to 50.7mm, which equals an improvement of more than 7\%.
-For the individual categories the error is reduced by up to 8mm.
+For the individual categories, the error is reduced by up to 8mm.
 For the Protocol 2 test data, the average difference in symmetric limb lengths could now be reduced to $9.4$mm (with the same scaling as before).
 Compared to the previous $15.0$mm, this is an improvement of more than $35\%$.
 This confirms the conjecture that the limb loss is in fact responsible for the improved results.
