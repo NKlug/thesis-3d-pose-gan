@@ -21,6 +21,7 @@ That symmetry can be leveraged in the following way:
 3D poses are expected to have equally long upper and lower arms, upper and lower legs, foots of equal size etc.
 Also, the distance between the shoulders and the neck, and the hips and the base of the spine should not differ too much.
 Experimental results show that for the rebuilt system (trained with synthetic poses), the symmetric limbs do \emph{not} have equal lengths.
+\info{Obtained with e\_19\_06\_original and poses scaled with Protocol 2}
 For the Protocol 2 test data, if the estimated 3D poses are scaled to match the average mean limb length of the ground truth poses (see \autoref{sec:protocol2}), the symmetric limbs differ by $15.0$mm in length on average.
 Concerning the GAN, this fact motivates passing information about the symmetric limbs to the generator through a loss function.
 
@@ -36,7 +37,7 @@ The new loss for the generator is then given by
 \begin{equation}
 	loss_{G, limb} = loss_G + \lambda \cdot loss_{limb} \ ,
 \end{equation}
-where $\lambda$ is a weighting factor and $loss_G$ is given in Equation \eqref{eq:generator-loss}.
+where $\lambda$ is a weighting factor and $loss_G$ is given in\autoref{eq:generator-loss}.
 
 \input{figures/limb_loss_table}
 
@@ -44,12 +45,13 @@ During training, $\lambda$ was increased linearly.
 Initially it was set to $5$ and then increased by $0.002$ each iteration, until $\lambda = 100$.
 That way, in the beginning the higher weighted GAN loss ensures that the generator produces sensible 3D poses. 
 In later iterations, the limb loss helps refining those poses.
-Table \ref{tbl:results-limb-loss} shows the results of that training procedure.
-For the 15 joint model, the employed symmetric limbs are the upper arms, the lower arms, the upper legs, the lower legs, the hips (distance from left and right hip to the root joint) and the shoulders (distance from shoulders to thorax). 
+\autoref{tbl:results-limb-loss} shows the results of that training procedure.
+For the 15 joint model, the employed symmetric limbs are the upper arms, the lower arms, the upper legs, the lower legs, the hips (distance from left and right hip to the root joint) and the collarbones (distance from shoulders to thorax). 
 The generator trained with the modified loss is able to outperform the generator with standard loss in all categories.
 The average MPJPE is reduced by 4.1mm to 50.7mm, which equals an improvement of more than 7\%.
 For the individual categories, the error is reduced by up to 8mm.
 For the Protocol 2 test data, the average difference in symmetric limb lengths could now be reduced to $9.4$mm (with the same scaling as before).
+\info{Obtained with e\_19\_06\_original and poses scaled with Protocol 2}
 Compared to the previous $15.0$mm, this is an improvement of more than $35\%$.
 This confirms the conjecture that the limb loss is in fact responsible for the improved results.
 
