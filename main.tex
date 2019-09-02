@@ -9,6 +9,7 @@
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[automark]{scrpage2}
+%\usepackage[automark, headsepline,footsepline]{scrlayer-scrpage}
 \usepackage{xargs} % Use more than one optional parameter in a new commands
 \usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
 \usepackage{graphicx} % Images etc.
@@ -42,6 +43,8 @@
 \renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[#1]{#2}\tikzexternalenable}
 \makeatother
 
+\rehead{right even}
+
 % Rename autorefnames
 \addto\extrasenglish{
 	\renewcommand{\sectionautorefname}{Section}
@@ -57,10 +60,6 @@
 
 % Captions for figures
 \captionsetup{justification=raggedright, format=plain, font=small,labelfont=bf}
-
-\IfClass{article}{ % Optimize for screen
-	\geometry{papersize={200mm,200mm},margin=5mm} 
-}
 
 
 \newcommandx{\unsure}[2][1=]{\todo[linecolor=orange,backgroundcolor=orange!25,bordercolor=orange,#1]{#2}}
