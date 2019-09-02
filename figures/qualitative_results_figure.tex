@@ -1,0 +1,54 @@
+\begin{figure}
+	\centering
+	\makebox[\textwidth][c]{
+		\begin{minipage}{.35\textwidth}
+			\centering{
+			\includegraphics[width=.45\textwidth]{figures/qualitative_results/gt_1723.png}
+			\includegraphics[width=.45\textwidth]{figures/qualitative_results/inferred_1723.png}
+			}
+		\end{minipage}
+		\hspace{2mm}
+		\begin{minipage}{.35\textwidth}
+			\centering{
+			\includegraphics[width=.45\textwidth]{figures/qualitative_results/gt_3361.png}
+			\includegraphics[width=.45\textwidth]{figures/qualitative_results/inferred_3361.png}
+			}
+		\end{minipage}
+		\hspace{2mm}
+		\begin{minipage}{.35\textwidth}
+			\centering{
+			\includegraphics[width=.45\textwidth]{figures/qualitative_results/gt_4301.png}
+			\includegraphics[width=.45\textwidth]{figures/qualitative_results/inferred_4301.png}
+			}
+		\end{minipage}
+	}
+	\makebox[\textwidth][c]{
+		\begin{minipage}{.35\textwidth}
+			\centering{
+				\includegraphics[width=.45\textwidth]{figures/qualitative_results/gt_original_2212.png}
+				\includegraphics[width=.45\textwidth]{figures/qualitative_results/inferred_original_2212.png}
+			}
+		\end{minipage}
+		\hspace{2mm}
+		\begin{minipage}{.35\textwidth}
+			\centering{
+				\includegraphics[width=.45\textwidth]{figures/qualitative_results/gt_original_2546.png}
+				\includegraphics[width=.45\textwidth]{figures/qualitative_results/inferred_original_2546.png}
+			}
+		\end{minipage}
+		\hspace{2mm}
+		\begin{minipage}{.35\textwidth}
+			\centering{
+				\includegraphics[width=.45\textwidth]{figures/qualitative_results/gt_original_3529.png}
+				\includegraphics[width=.45\textwidth]{figures/qualitative_results/inferred_original_3529.png}
+			}
+		\end{minipage}
+	}
+	\caption{
+	Qualitative results for the rebuilt system trained with synthetic poses.
+	The first row shows poses inferred from synthetic 2D poses, the second poses inferred from the 2D poses included in Human3.6M.
+	Ground truth poses are left and inferred poses right for each pair of poses.
+	}
+	\label{fig:qualitative-results}
+	\info[inline]{All figures obtained with best.ckpt-16161 from e\_03\_07\_original.json}
+\end{figure}
