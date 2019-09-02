@@ -68,6 +68,11 @@ Otherwise only the results for Protocol 2 are meaningful.
 
 \input{figures/qualitative_results_figure}
 
+\autoref{fig:qualitative-results} shows some qualitative results for synthetic 2D poses (first row) and 2D poses from Human3.6M (second row).
+All of the randomly selected inferred poses closely resemble the ground truth poses.
+Usual failures are limbs that are bent in a slightly different direction than in the ground truth pose (e.g. the head in the top center example and the upper body in top right example).
+Overall, all of the 3D poses could be successfully recovered from the 2D poses, with some showing minor differences compared to the ground truth poses.
+
 The system is also evaluated for a different dataset.
 On the test data of TotalCapture \cite{trumble17}, the average MPJPE is 68.3mm and and 100.2mm for Protocol 1 and 2, respectively (\autoref{tbl:results-original-totalcapture}).
 The pose structure in this dataset is slightly different from Human3.6M, which could explain the higher error.
