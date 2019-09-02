@@ -122,7 +122,7 @@ Using the so found depths for each joint, the 2D pose can be re-projected into t
 In practice, the $Z$ in \autoref{eq:depth-clipping} is $10$, such that the re-projected poses have an approximate norm limb length of $1$.
 
 Afterwards, the obtained 3D poses are fed into a \emph{Random Projection Layer}, where they are projected into two dimensions again.
-For this, the poses are randomly rotated with with azimuth angles between $0$ and $360$ degrees and elevation angles between $0$ and $20$ degrees, first and then projected as in \autoref{eq:perspective-projection}.
+For this, the poses are randomly rotated with with azimuth angles between $0$ and $360$ degrees and elevation angles between $0$ and $20$ degrees first and then projected with cameras centered at the root joint with a camera-root-joint-distance of $10$ as in \autoref{eq:perspective-projection}.
 Subsequently, those 2D poses are fed to the discriminator.
 
 During training, the discriminator receives 2D poses from $p_{real}$ and $p_{fake}$ and tries to classify them as either real or fake, that is, as stemming from $p_{real}$ or $p_{fake}$.
