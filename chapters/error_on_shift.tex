@@ -1,14 +1,16 @@
 \section{Analysis of the Effects of Pose Normalization}
 \label{sec:effects-of-normalization}
 
-The 3D pose estimation system by \citet{drover18}, which is described in \autoref{sec:network}, requires the input pose to be normalized in the following way:
+In \autoref{sec:evaluation} the MPJPE for the monocular 2D poses included in the Human3.6M dataset was noticeably higher than the MPJPE for the synthetically generate poses.
+One reason for this can be the transformations that have to be applied to Human3.6M's 2D poses in order to satisfy the constraints described in \autoref{sec:network}.
+Those  are:
 \begin{enumerate}[label=(\Alph*)]
 	\item The 2D input pose's root joint is centered at the origin.
 	\item A designated norm limb has length 0.1.
 \end{enumerate}
 
-In reality, both assumptions are rarely satisfied from the start.
-Thus \citet{drover18} normalize the input 2D poses by shifting and scaling before feeding them to the generator.
+In reality, both constraints are rarely satisfied from the start.
+Thus, the input 2D poses are normalized by shifting and scaling before being fed to the generator.
 In this chapter it will be shown both theoretically and experimentally that this approach inevitably leads to additional errors being introduced into the system.
 
 In the following, the camera used for projection is located at the origin of the coordinate system and looks into positive z direction (see \autoref{fig:camera-projection-setup}).
@@ -16,7 +18,7 @@ The generator $G$ will be regarded as a black box that takes a normalized 2D pos
 
 \subsection{Shifting along one Image Plane Axis}
 \label{sec:x-shift-error}
-First, assumption (A) will be analyzed.
+First, constraint (A) will be analyzed.
 The basic approach here is the following:
 Let $P$ be a 3D pose which is centered at the origin of the x-y-plane at depth $Z$.
 $P$ is shifted by the vector $(dx, dy, 0)$ along the x-y-plane and projected into two dimensions.
@@ -182,9 +184,9 @@ As $dx$ increases, so does the difference between the observed and the theoretic
 \subsection{Shifting along the Z Axis}
 \label{sec:z-shift-error}
 
-In this section, assumption (B) will be analyzed.
+In this section, constraint (B) will be analyzed.
 It states that a 2D pose's designated norm limb should have length $0.1$ when the pose is fed to the generator.
-In case the assumption is not fulfilled from the start, there can be two reasons for this: 
+In case the constraint is not fulfilled from the start, there can be two reasons for this: 
 an incorrect focal length $f$ of the camera, or an either too large or too small distance $Z$ between the camera and the 3D pose's root joint.
 When $Z$ and $f$ are the same for all poses, no matter the exact values, all poses can be normalized with the same factor and the generator's learning behavior is not affected by the scaling, as it could just as well receive the non-normalized poses (ignoring numerical issues).
 
