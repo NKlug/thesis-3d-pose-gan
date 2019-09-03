@@ -1,0 +1,18 @@
+\begin{abstract}
+	With well-performing 2D human pose estimators evolving over the last years, recent work focuses on inferring 3D poses from 2D poses.
+	During the ECCV 2018 Workshops, Drover et al. presented such a 2D to 3D pose estimator in their work "Can 3D Pose Be Learned from 2D Projections Alone?"
+	Using a Generative Adversarial Network, their system is able to achieve state of the art results.
+	On top of that, its main feature is that no 3D ground truth poses are required for training, which makes it especially attractive in applications where no ground truth data is available.
+	
+	In their proposed system, Drover et al. require the 2D input poses to be normalized in scale and position.
+	The goal of this thesis is to analyze the effects of this normalization on the quantitative performance of the 3D pose estimation in that system.
+	For this, baseline results for synthetically generated poses are established in a first step.
+	Subsequently, the effects of normalization in position and scale are analyzed.
+	Both the theoretical findings and the conducted experiments show that the normalization indeed negatively influences the measurable error.
+	As especially the normalization in position accounts for a significant increase in error, the system is modified to compensate for this subsequently.
+	
+	In addition to the analysis of the effects of normalization, an alternative loss function is proposed.
+	It leverages high-level knowledge about the structure of human poses to produce improved results.
+	With this new loss, the error can be reduced by more than $7\%$. 
+	
+\end{abstract}

@@ -2,8 +2,8 @@
 \label{sec:effects-of-normalization}
 
 In \autoref{sec:evaluation} the MPJPE for the monocular 2D poses included in the Human3.6M dataset was noticeably higher than the MPJPE for the synthetically generate poses.
-One reason for this can be the transformations that have to be applied to Human3.6M's 2D poses in order to satisfy the constraints described in \autoref{sec:network}.
-Those  are:
+One reason for this can be the transformations that have to be applied to Human3.6M's 2D poses in order to satisfy the constraints for the input poses described in \autoref{sec:network}.
+Those are:
 \begin{enumerate}[label=(\Alph*)]
 	\item The 2D input pose's root joint is centered at the origin.
 	\item A designated norm limb has length 0.1.
@@ -295,5 +295,3 @@ Because the poses are scaled to match the average limb length of the subject ins
 
 After all, these results show that poses having different absolute z coordinates than those the system was trained on can not be estimated with equal fidelity.
 However, due to the minor increase in MPJPE this effect might be negligible in most applications.
-
-\Todo[inline]{Add table with estimated poses for different x offsets.}

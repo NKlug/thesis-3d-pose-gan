@@ -6,19 +6,18 @@ However, in order to evaluate the system quantitatively, 3D ground truth poses a
 
 In this work, human poses from the Human3.6M dataset \cite{ionescu14} are used for training and evaluation.
 This dataset comprises 3.6 million three dimensional human poses captured by four digital cameras and a motion capture system.
-Within the dataset 11 subjects (6 male, 5 female; also referred to as S1, S2, \dots, S11) perform 15 different activities, such as walking, taking a photo, eating etc.\footnote{
-	The 15 activities are: Giving Directions, Discussing, Eating, Greeting, Phoning, Posing, Purchasing, Sitting, Sitting down (on the ground), Smoking, Taking a Photo, Waiting, Walking, Walking a Dog and Walking Together.
+Within the dataset, 11 subjects (6 male, 5 female; also referred to as S1, S2, \dots, S11) perform 15 different activities, such as walking, taking a photo, eating etc.\footnote{
+	The 15 activities are: Giving Directions, Discussing, Eating, Greeting, Phoning, Posing, Purchasing, Sitting, Sitting Down (on the ground), Smoking, Taking a Photo, Waiting, Walking, Walking a Dog and Walking Together.
 }
 The poses are available in different parametrizations, such as Cartesian coordinates or Kinematic Parametrization.
-Throughout this thesis, the 3D poses in the Cartesian coordinate systems of the four digital cameras are used (\texttt{D3\_Positions\_mono} in the dataset).
-For those 3D poses, monocular 2D projections onto the cameras' image planes are also available which will also be used for evaluation.
+Throughout this thesis, the 3D poses in the Cartesian coordinate systems of the four digital cameras are used (called \texttt{D3\_Positions\_mono} in the dataset).
+For those 3D poses, monocular 2D projections onto the cameras' image planes are available which will also be used in the evaluation.
 
-\Todo{Find out what those points are}
 The poses in the dataset consist of 32 joints.
 In \cite{drover18} only 14 of those joints are used.\footnote{
-The 14 joints are: heels, knees, hips, thorax, head, shoulders, elbows and wrists.
+The 14 employed joints are: heels, knees, hips, thorax, head, shoulders, elbows and wrists.
 }
-This work follows the same convention, with the only difference being that the pelvis (center point between hips) is added to those 14 joints.
+This work follows the same convention, with the only difference being that the pelvis (center point between hips) is added to those 14 joints, resulting in a 15 joint skeleton.
 
 Later, the system will also be evaluated on poses from the TotalCapture dataset \cite{trumble17}.
 This dataset consists of about 1.9 million 3D poses.
@@ -27,10 +26,9 @@ One pose comprises 21 joints, among which are the same 15 joints that were selec
 \subsection{Evaluation Metrics}
 In the literature multiple different methods are used to quantitatively evaluate the estimated poses. 
 Essentially, most systems estimate the 3D poses in Cartesian coordinates \cite{drover18, chen17, bogo16, grinciunaite16, yasin16, wandt19, tome17, tekin16, tekin17, pavlakos17}.
-
 For this parametrization the most commonly used metric is the \emph{Mean Per Joint Position Error (MPJPE)}.
 It is the mean of the \emph{Joint Position Errors (JPE)} across all joints.
-For a pose with $n$ joints, ground truth 3D joint positions $G_i$ and predicted positions $P_i$ it is defined as
+For a pose with $n$ joints, 3D ground truth joint positions $G_i$ and predicted positions $P_i$, it is defined as
 \begin{equation}
 \frac{1}{n} \sum_{i = 1}^{n}  \norm{G_i - P_i}_2 \ .
 \end{equation}
@@ -39,6 +37,7 @@ The values for this metric are reported in millimeters.
 As \citet{ionescu14} point out, the problem with this metric is that it is highly subject specific.
 An estimated pose for a smaller person might be equally bad as for a taller person, but the MPJPE will be much lower for the former.
 In order to circumvent this, they propose the \emph{Universal MPJPE (UMPJPE)} which normalizes all poses to have the same dimensions (in their case the same limb lengths) before measuring the Euclidean distance.
+However, this metric has not prevailed in literature.
 
 While not broadly used, \citet{ionescu14} also suggest the \emph{Mean Per Joint Angle Error (MPJAE)}.
 This metric measures the difference of the joint angles between the ground truth and predicted pose.
@@ -51,59 +50,60 @@ Due to the lacking intuitiveness behind this metric and the straightforward conv
 
 \subsection{Evaluation Protocols}
 
-For the MPJPE metric, multiple different evaluation protocols with minor variations have evolved.
-Those vary between different datasets, but also within them.
-The cause for this is that different systems produce different outputs and thus some evaluation protocols might allow stronger transformations than others to align the estimated poses with the ground truth poses.
+For the MPJPE metric, multiple different evaluation protocols have evolved.
+Those vary across different datasets, but also within them.
+The cause for this is that different systems produce different outputs. 
+Thus some evaluation protocols might allow stronger transformations than others to fit the estimated poses to the ground truth poses.
 
 What most systems have in common is that they produce 3D poses only up to a scaling factor.
 As for a 2D pose there is an infinite amount of corresponding 3D poses that project to the same pose, unless the absolute size of the 3D pose is known, the pose can hardly be estimated to have that exact size.
 And even if that size is known, it is oftentimes easier to estimate poses normalized in size and then scale them to the desired output.
 The same holds true for absolute position and rotation (to some extent).
-Thus, in order to measure the quality some modifications have to be made in order to measure the quality and allow a fair comparison to other approaches.
+Hence, in order to measure the quality some modifications have to be made in order to measure the quality and allow a fair comparison to other approaches.
 
-In this work the dataset primarily used is Human3.6M.
-Hence, in the following the evaluation protocols for this dataset will be reviewed and analyzed.
+The dataset primarily used in this work is Human3.6M.
+In the following, the evaluation protocols for this dataset will be reviewed and analyzed.
 Essentially, two different protocol can be found in the literature.
 
 \subsubsection{Protocol 1}
 
 This protocol is used under different names in slightly different variations in \cite{sun17, drover18, moreno-noguer16, yasin16, kostrikov14, tome17}.
-Concretely, for the Human3.6M dataset, it is commonly referred to as \textbf{Protocol 1} and uses subjects S1, S5, S6, S7, S8 and S9 for training and S11 for testing.
+Concretely, for the Human3.6M dataset, it is commonly referred to as \textbf{Protocol 1} and uses S1, S5, S6, S7, S8 and S9 for training and S11 for testing.
 
 Sometimes the train data is further thinned out by the elimination of poses similar to each other \cite{yasin16}.
 Here, the authors consider two poses as similar when the average Euclidean distance between the joints is less than 1.5mm.
 \citet{drover18} even completely leave out S8 for training.
 
 For testing, some authors only use every \nth{64} frame of the available test data \cite{sun17, chen17, yasin16, moreno-noguer16, tome17}.
-While other authors mention no such thing \cite{drover18, kostrikov14}, it can be assumed it is a general practice, as the code shipped with the Human3.6M dataset also suggests this.
+While others mention no such thing \cite{drover18, kostrikov14}, it can be assumed it is a general practice, as the code shipped with the Human3.6M dataset also suggests this.
 
 Before calculating the MPJPE, rigid alignment of the predicted poses to the ground truth data is allowed  \cite{drover18, yasin16, kostrikov14, sun17, tome17, chen17}.
 Most authors do not explicitly state which kind of rigid alignment is applied to the predicted poses.
 Those who do mention a Procrustes Analysis \cite{sun17, tome17} and a Least Squares transformation \cite{kostrikov14}.
 Both techniques allow different kinds of translation, scaling and rotation in order to fit the predicted poses to the ground truth data.
 
-Although this approach ensures the MPJPE is not wrongly too high, e.g. in a situation where the estimated pose is perfect, but slightly rotated compared to the ground truth pose, it also adds a caveat:
+Although this approach ensures the MPJPE is not falsely too high, e.g. in a situation where the estimated pose is perfect, but slightly rotated compared to the ground truth pose, it also adds a caveat:
 Perceptually poorly estimated poses can have a low MPJPE through the heavy transformations applied.
 On top of that, in scenarios where the absolute rotation, scale or position of the poses is of interest, Protocol 1 does not provide meaningful insights.
 
-In conclusion, Protocol 1 can be characterized as a protocol allowing translation, scaling and rotation in some form being applied to the estimate poses before calculating the MPJPE.
+In conclusion, Protocol 1 can be characterized as a protocol allowing translation, scaling and rotation in some form being applied to the estimated poses before the calculations of the MPJPE.
 
 \subsubsection{Protocol 2}\label{sec:protocol2}
 
 The other evaluation protocol most commonly found in literature is \textbf{Protocol 2}.
 It is used in \cite{sun17, moreno-noguer16, bogo16, martinez17, zhou18, zhou16, tekin16, pavlakos17, sun17} under different names.
-For the Human3.6M datset, for this protocol only S1, S5, S6, S7 and S8 are used for training, while test results are reported for S9 and S11.
+For the Human3.6M dataset, for this protocol only S1, S5, S6, S7 and S8 are used for training, while test results are reported for S9 and S11.
 
 Similar to Protocol 1, the data can be further thinned out.
-Whereas \citet{moreno-noguer16} and \citet{bogo16} only use camera 3 for testing, most authors do not mention which poses exactly are used for testing.
+Whereas \citet{moreno-noguer16} and \citet{bogo16} only use camera 3 for testing, most authors do not mention which poses exactly are employed for testing.
 \citet{sun17} only use every \nth{64} frame for testing, which -- as for Protocol 1 -- is in accordance with the code included in the Human3.6M dataset.
 
 In contrast to Protocol 1, Protocol 2 only allows certain noninvasive changes to the predicted poses.
 In general, rigid alignment like a Procrustes Analysis is not allowed.
 The degree of the changes applied to the predicted poses strongly depends on the model evaluated.
 In a system that predicts absolute 3D poses usually no changes have to be made to the predicted poses in order to obtain meaningful results.
-As this is only rarely the case, many systems \cite{martinez17, zhou18, zhou16, tekin16, pavlakos17} allow aligning two designated root joints (usually the central hip) of the predicted and the ground truth poses.
-Moreover, in cases where it is not possible to correctly estimate the global scale of the poses scaling is also allowed.
+As this is only rarely the case, many systems \cite{martinez17, zhou18, zhou16, tekin16, pavlakos17} allow aligning two designated root joints (usually the pelvis) of the predicted and the ground truth poses.
+Moreover, in cases where it is not possible to correctly estimate the global scale of the poses, scaling is also allowed.
 \citet{zhou18} do this by scaling the estimated 3D poses such that the mean limb length of those poses is identical to the average mean limb length of all ground truth poses for the training subjects.
 This is still suboptimal because if the subjects have different mean limb lengths or the test subjects' mean limb lengths differ considerably from those of the training subjects, the MPJPE for a perfect pose estimation would not vanish -- which, by intuition, should be the case.
 For Human3.6M, this is a problem.
@@ -111,42 +111,40 @@ Here, the subjects have different mean limb lengths due to their different absol
 
 Thus, a better way of scaling has to be found.
 One such approach is the following:
-
 \begin{enumerate}[label={\arabic*.}]
 	\item Calculate the average mean limb length $L_S$ of all poses in the test data for each subject $S$.
-	\item Scale each estimated and ground truth pose such that their mean limb lengths are equal to $L_S$.
+	\item For each subject $S$, scale each estimated and ground truth pose such that their mean limb lengths are equal to $L_S$.
 \end{enumerate}
 This approach ensures that for a perfect estimation, the MPJPE is indeed 0.
 
 In general, adjusting the ground truth data is not a good practice, as the implementations of such adjustment might differ between papers and yield obscured, incomparable results.
-Thus, another -- middle course -- approach is involves only scaling the estimated poses to match the average mean limb length $L_S$.
+A weaker, middle course approach involves only scaling the estimated poses to match the average mean limb length $L_S$.
 
 In theory, all poses for a subject have the same mean limb length, as it is unlikely to change during the recording of the dataset.
 This would make both suggested approaches equally good, as the scale factor for all ground truth poses in the former would be $1$.
 In practice, however, there is variance in the mean limb lengths for the poses of S9 and S11 in Human3.6M.
-\Todo{verify this number and see if they are the same for both subjects.}
-In fact, the standard deviation of the mean limb lengths for each of those subjects is $0.01$.
-This results in an MPJPE of approximately $5$mm for estimated poses identical to the ground truth poses.
-Although tempting, this 5mm error cannot simply be subtracted from the MPJPE because still,an MPJPE of 0 can still be obtained, although with pose estimations slightly differing from the ground truth poses.
-However, this is undesirable, as one would like an ideal system to estimate poses equal to the ground truth poses.
+This might have originated from MoCap trackers slightly moving around during the recording of the dataset.
+In fact, the standard deviation of the mean limb lengths is $1.1$mm and $1.4$mm for S9 and S11, respectively.
+With the second, weaker approach of only scaling the estimated poses, this results in an MPJPE of approximately $5$mm for estimated poses identical to the ground truth poses.
+Although tempting, this 5mm error cannot simply be subtracted from the MPJPE:
+Some poses do match the average mean limb length, and for those, an MPJPE of $0$ can still be achieved.
 
 Despite this obvious issue, in order to avoid a bad practice, the second approach of scaling only the estimated poses to match the average mean limb length of each subject will be utilized in this thesis.
 
 \subsubsection{Comparison of the Protocols}
 
 Both evaluation protocols allow applying different transformations to the poses before calculating the MPJPE.
-During the application of the system there is usually not much information about the 3D ground truth poses available (otherwise one would not need a 3D pose estimation system).
-Here, the user might choose to scale the estimated poses such that is matches a predefined size (e.g. using the average limb length) and translating it in space to the preferred location.
+During the application of the system to real world tasks, there is usually not much information about the 3D ground truth poses available (otherwise one would not need a 3D pose estimation system).
+Here, the user might choose to scale the estimated poses such that is matches a predefined size (e.g. using the average limb length) and translate it in space to the preferred location.
 In order to get insight about the quality of the poses in this scenario, Protocol 2 is the protocol of choice, as it only allows those two transformations.
 
 Compared to that, if one is interested in the quality of the estimated poses regardless of their orientation, Protocol 1 provides meaningful results.
-As rotation is also allowed for this protocol, the estimated poses can be fitted better to the ground truth poses.
-That way -- depending on the implementation of the rigid transformation -- the minimal MPJPE without changing the relative positions of joints can be calculated.
+As rotation is also allowed for this protocol, the estimated poses can be fitted to the ground truth poses with higher fidelity.
+That way -- depending on the implementation of the rigid transformation -- the smallest achievable MPJPE can be calculated.
 This gives a measure how realistic the estimated poses are in situations where their orientation is not of interest.
 
 The main difference between the two protocols is that Protocol 1 allows stronger transformations, particularly also rotation.
 This means the MPJPEs for Protocol 1 are usually smaller than those for Protocol 2.
-
 
 Summarizing the results of this section, with only straightforward, realistic transformations, Protocol 2 is to be preferred when looking at practical applications.
 Hence, this thesis will primarily focus on the results for this protocol.

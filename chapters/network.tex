@@ -1,21 +1,24 @@
 \section{A GAN for 3D Human Pose Estimation}
 \label{sec:network}
-In their work "Can 3D Pose Be Learned from 2D Projections Alone?" \citet{drover18} propose a 3D human pose estimation system that uses a Generative Adversarial Network.
+In their work "Can 3D Pose Be Learned from 2D Projections Alone?" \citet{drover18} propose a weakly supervised 3D human pose estimation system.
+It makes use of a Generative Adversarial Network and can be trained without explicit supervision, meaning that no 3D ground truth poses are required.
+The objective of this section is to present and discuss this system in detail, as it provides the foundation of this thesis.
+In a first step towards this, Generative Adversarial Networks and perspective projection are  briefly explained.
 
 \subsection{Generative Adversarial Networks}
 Generative Adversarial Networks (GANs) have first been presented by \citet{goodfellow14} in 2014.
 As the name suggests, they are generative models involving two adversary agents, a \emph{generator} and a \emph{discriminator}.
-The discriminator $D_{\theta_D}$ with internal parameters $\theta_D$ tries to determine whether its input belongs to the real data distribution $p_{real}$ (the distribution to be learned) or to the distribution $p_{fake}$, which is implicitly captured by the generator.
-The generator $G_{\theta_G}$ is a function that maps elements from a latent distribution $p_z$ to $p_{fake}$.
-During training, it tries to adjust its internal parameters $\theta_G$ such that $p_{fake}$ resembles $p_{real}$, and thus tries to fool the discriminator into thinking that the data produced by it belongs to $p_{real}$.
+The generator $G$ is a function that maps elements from a latent distribution $p_z$ to the distribution $p_{fake}$.
+The discriminator $D$ tries to determine whether its input belongs to the real data distribution $p_{real}$ (the distribution to be learned) or to the distribution $p_{fake}$.
+During training, the generator tries to adjust its internal parameters such that $p_{fake}$ resembles $p_{real}$ as closely as possible, and thus tries to fool the discriminator into thinking that the data produced by it belongs to $p_{real}$.
+Meanwhile, the discriminator learns to distinguish between the two distributions.
 
-The discriminator and generator can be thought of as two players playing a game with value function $V(D, G)$ against each other, where
-\Todo{Think about what happens when $D(G(z))=1$}
+This procedure can be thought of as two players (the generator and the discriminator) playing a game with value function $V(D, G)$ against each other, where
 \begin{equation}
 	V(D, G) = \mathbb{E}_{r\sim p_{real}}(\log(D(r))) + \mathbb{E}_{z\sim p_{z}}(\log(1 - D(G(z)))) \ .
 \end{equation}
 Here, the discriminator tries to maximize the probability of correctly estimating whether the input stems from $p_{real}$ or $p_{fake}$.
-The generator simultaneously minimizes the second summand, trying to get the discriminator to classify its output as stemming from $p_{real}$.
+The generator simultaneously minimizes the second summand, trying to get the discriminator to classify its output as originating from $p_{real}$.
 Thus, GANs can be described as a minimax game with players $G$ and $D$:
 \begin{equation}
 \min_G \max_D V(D, G) \ .
@@ -38,14 +41,15 @@ This prevents vanishing gradients.
 \autoref{eq:generator-loss} describes the resulting loss for the generator.
 
 The advantage of GANs compared to other generative models is that they can learn distributions in a weakly supervised manner, that is, only elements from the distribution to be learned are required for training.
-In the system presented by \citet{drover18} that distribution captures all human \emph{2D} poses, which will be further explained in the next sections.
+In the system presented by \citet{drover18} that distribution captures all human \emph{2D} poses, which will be further explained in \autoref{sec:network-architecture}.
 
 \subsection{Perspective Projection}
 
 \input{figures/camera_projection_figure}
 
 Throughout this thesis, human poses will be projected from three dimensional space into two dimensions and vice versa.
-For this "photography" the simplified model of a pinhole camera is used whose only intrinsic parameter, in this case, is a focal length $f$.
+For this projection the simplified model of a pinhole camera is utilized. 
+Its only intrinsic parameter, in this case, is a focal length $f$.
 The camera has its center of projection at $(0, 0, 0)$, with the virtual image plane being located at $(0, 0, f)$, in parallel to the x-y-plane.
 The camera is looking towards positive infinity along the z axis.
 The projection from 3D to 2D can be described by the perspective projection equation:
@@ -65,8 +69,8 @@ The projection from 3D to 2D can be described by the perspective projection equa
 where $P = (X, Y, Z)$ is a is a three dimensional point in the camera's coordinate system and $p = (x, y)$ the projected point on the (virtual) image plane.
 Note that the projection is only defined for points that have $Z \neq 0$.
 $Z = 0$ would mean the point is in the same x-y-plane as the center of projection.
-However, this is not a problem since it will always be ensured that the there is enough distance between the 3D points and the camera.
-A visualization of the projection is depicted in \autoref{fig:camera-projection-setup}.
+However, this issue will be taken care of by ensuring that the there is always enough distance between the 3D points and the camera.
+A visualization of a simplified form of the projection is depicted in \autoref{fig:camera-projection-setup}.
 
 Similarly to the projection from three dimensions into two, a 2D point on the image plane $(x, y)$ can also be re-projected into 3D if the depth $Z$ of the point is given.
 This re-projection is described by
@@ -91,22 +95,22 @@ and the 3D point $P$ in then again given by $(X, Y, Z)$.
 In their work, \citet{drover18} make use of a GAN in the context of 3D human pose estimation.
 \autoref{fig:system} displays a diagram of their proposed system.
 It follows the basic GAN architecture and adds some extra layers after the generator.
-The architecture will be described in the following.
+The architecture will be explained in the following.
+
+In the system, the latent and the real distribution $p_z$ and $p_{real}$ are both the distribution of real 2D poses.
+This means that the generator is ultimately also trying to learn that distribution.
+On the way to doing that, 3D human poses are created as a byproduct, which can then be used in other applications.
 
 The generator's and discriminator's input are human 2D poses.
-In practice, the generator's input pose is the pose to be lifted to 3D.
+During the application of the system, the generator's input pose will the pose to be lifted to 3D.
 For numerical stability, \citet{drover18} require the input poses for both discriminator and generator to be normalized in the following way:
 \begin{enumerate}[label=(\Alph*)]
 	\item The 2D poses' root joint is centered at the origin of the image plane.
 	\item A designated norm limb has length $0.1$.
 \end{enumerate}
-In this work, the root joint always is the pelvis (the center point between the hips) and the norm limb the connection (or distance) between pelvis and thorax.
+In this work, the root joint is always the pelvis (the center point between the hips) and the norm limb the connection between pelvis and thorax (the spine).
 
-In the system, the latent and the real distribution $p_z$ and $p_real$ are both the distribution of real 2D poses.
-This means that the generator is also trying to learn that distribution.
-On the way to doing that, 3D human poses are created as a byproduct, which can then be used in other applications.
-
-In the proposed system, the generator receives 2D poses as input.
+The generator receives 2D poses as input.
 For those poses, it estimates the depth of each joint.
 In order to eliminate the additional degree of freedom introduced by the scale-distance ambiguity (a 3D pose $P$ and a 3D pose $P'$ twice as far away from the camera and twice as big both project to the same 2D pose), the system aims to estimate 3D poses that have a norm limb length of $1$.
 Hence, instead of an absolute depth, only a \emph{depth offset} $o_i$ is estimated for each joint $(x_i, y_i)$.
@@ -116,18 +120,17 @@ The absolute depths can then be calculated as
 	Z_i = \max \{f, Z + o_i\}
 \end{equation}
 for $1 \leq i \leq n$.
-%This clipping ensures that, at the time of re-projection to 3D, the points are projected in front of the camera.
-
+This clipping ensures that, at the time of re-projection to 3D, the points are projected in front of the camera.
+In order to obtain a norm limb length of (approximately) $1$, $Z = 10$ has been chosen.
 Using the so found depths for each joint, the 2D pose can be re-projected into three dimensions using \autoref{eq:perspective-re-projection}.
-In practice, the $Z$ in \autoref{eq:depth-clipping} is $10$, such that the re-projected poses have an approximate norm limb length of $1$.
 
-Afterwards, the obtained 3D poses are fed into a \emph{Random Projection Layer}, where they are projected into two dimensions again.
+Afterwards, the obtained 3D poses are fed to a \emph{Random Projection Layer}, where they are projected to two dimensions again.
 For this, the poses are randomly rotated with with azimuth angles between $0$ and $360$ degrees and elevation angles between $0$ and $20$ degrees first and then projected with cameras centered at the root joint with a camera-root-joint-distance of $10$ as in \autoref{eq:perspective-projection}.
-Subsequently, those 2D poses are fed to the discriminator.
+The particular choice of elevation angles is based on the heuristic that in reality, people are rather photographed from above than from below.
+After the projection, the 2D poses are fed to the discriminator.
 
-During training, the discriminator receives 2D poses from $p_{real}$ and $p_{fake}$ and tries to classify them as either real or fake, that is, as stemming from $p_{real}$ or $p_{fake}$.
+During training, the discriminator receives 2D poses from $p_{real}$ and $p_{fake}$ and tries to classify them as either real or fake, that is, as originating from $p_{real}$ or $p_{fake}$.
 
-\Todo{Find good way to typeset this.}
 This system design is based on one underlying heuristic:\vspace{.5em}\newline
 \vspace{.5em}
 \noindent{\emph{If a random projection of a 2D pose looks realistic, the 3D pose is realistic.}}\newline
@@ -136,7 +139,7 @@ This heuristic is based on the fact that it is extremely unlikely for a malforme
 \input{figures/residual_block_figure}
 
 In practice, both generator and discriminator are neural networks that consist of several consecutive \textit{Residual Blocks}.
-A Residual Block consists of two fully connected layers of size $1024$ each followed by ReLU activation and a residual connection adding the input to the last layer's output (\autoref{fig:residual-block}).
+A Residual Block consists of two fully connected layers of size $1024$ each followed by Rectified Linear Units (ReLU) and a residual connection adding the input to the last layer's output (\autoref{fig:residual-block}).
 In their work, \citet{drover18} describe two additional Batch Normalization layers \cite{ioffe15}, one immediately after each fully connected layer.
 Practical tests have shown that when using those additional layers the training does not converge at all.
 \unsure{Should I still mention the "personal communication"? I'm not sure if their paper is related to this work enough.}
@@ -149,6 +152,6 @@ The discriminator's architecture is very similar to the generator's.
 It also accepts $n$ 2D joint locations as input which are fed into a fully connected layer of size 1024, followed by three residual blocks.
 The output is then reduced by another fully connected layer to a vector of size 2.
 Finally, softmax is applied.
-The resulting values imply the probability of the input being real or fake.
+The resulting values imply the probability of the input being either real or fake.
 
 The networks are trained with the standard GAN losses described in Equations~\ref{eq:generator-loss} and~\ref{eq:discriminator-loss}.
