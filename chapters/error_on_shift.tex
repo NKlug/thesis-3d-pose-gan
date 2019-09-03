@@ -1,7 +1,7 @@
 \section{Analysis of the Effects of Pose Normalization}
 \label{sec:effects-of-normalization}
 
-In \autoref{sec:evaluation} the MPJPE for the monocular 2D poses included in the Human3.6M dataset was noticeably higher than the MPJPE for the synthetically generate poses.
+In \autoref{sec:evaluation} the MPJPE for the monocular 2D poses included in the Human3.6M dataset was noticeably higher than the MPJPE for the synthetically generated poses.
 One reason for this can be the transformations that have to be applied to Human3.6M's 2D poses in order to satisfy the constraints for the input poses described in \autoref{sec:network}.
 Those are:
 \begin{enumerate}[label=(\Alph*)]
@@ -25,7 +25,7 @@ $P$ is shifted by the vector $(dx, dy, 0)$ along the x-y-plane and projected int
 After the resulting 2D pose has been aligned with the image plane's origin (this equals part of the normalization in \cite{drover18}), it is re-projected into three dimensions.
 The resulting 3D pose $\widetilde{P}$ can then be compared to the original 3D pose $P$ in order to gain insights about the additional error made through normalization.
 For this comparison, the same error model as in Protocol 2 is used.
-This means the poses can be scaled and translated before calculating the MPJPE.
+This means the poses are scaled and translated before calculating the MPJPE.
 
 In the following, let $P = [(X_1, Y_1, Z_1), \dotsc, (X_n, Y_n, Z_n)]$ be a 3D pose.
 For simplicity we will assume that $dy = 0$, that is, the pose $P$ is only shifted along the x axis.
@@ -198,14 +198,14 @@ The intuitional explanation behind this is that the relative angles between the 
 This makes the perspective projection more and more similar to a \emph{weak} perspective projection the more the camera distance increases.
 As a simple example to demonstrate that this issue cannot be solved with scaling only, consider two points $A = (5, 5)$ and $B = (3, 10)$. 
 With the same perspective projection depicted in \autoref{fig:camera-projection-setup}, we get the projected x coordinates $a = \frac{5}{5} = 1$ and $b = \frac{3}{10} = 0.3$.
-Now consider the same points shifted by $5$ in positive z direction, increasing the camera distance: $A' = (5, 10)$ and $B' = (3, 15)$.
+Now consider the same points shifted by $5$ units in positive z direction, increasing the camera distance: $A' = (5, 10)$ and $B' = (3, 15)$.
 The resulting x coordinates are $a' = \frac{5}{10} = (0.5)$ and $b' = \frac{3}{15} = (0.2)$.
 There exists no factor $\gamma$ such that $a = \gamma a'$ \emph{and} $b = \gamma b'$.
 
 This phenomenon also appears in photography, where it is known as lens compression (a misleading term, as it has nothing to do with the lens).
 It manifests itself in the photographed objects moving closer together when the camera distance increases (this is also the case in the example above).
 
-In the following section, the resulting effect on the MPJPE will be analyzed.
+In the following section, the effect of this phenomenon on the MPJPE will be analyzed.
 
 \subsubsection{Theoretical Analysis}
 Again consider a point $P_i=(X_i, Y_i, Z_i) \in P$ and a camera with focal length $f$. Assume that $P_i$ is shifted by $dz$ along the z axis.
@@ -255,12 +255,12 @@ The MPJPE $\Delta d$ of the whole pose $P$ can be calculated as the mean of all 
 The reason for the existence of an additional MPJPE is the scale factor $\rho$.
 As $\rho$ is calculated for the whole pose rather than for each joint separately, $\rho \cdot \frac{Z_i}{Z_i + dz}$ is usually \emph{not} equal to 1.
 This is only the case if $\rho = \frac{Z_i + dz}{Z_i}$ for all $i$, which means $Z_i = Z_j$ for all $1 \leq i, j \leq n$.
-In this case, all joints are aligned in the same x-y plane.
+In this case, all joints are aligned in the same x-y plane and the additional MPJPE vanishes.
 
 Other than the results for shifting along an image plane axis, these results do not necessarily have to provide a lower bound for the MPJPE:
 In theory, if the generator estimates the depths $\widetilde{Z}_i = Z_i + dz$ for all $i$, the estimated pose $\widetilde{P}$ equals $P$ up to a shift.
 At the time of evaluation with Protocol 2, the root joints of the estimated and ground truth poses are aligned and the poses are identical.
-That means that it is theoretically possible that the system still estimate perfect 3D poses from poses with $dz \neq 0$.
+That means that it is theoretically possible that the system still estimates perfect 3D poses from poses with $dz \neq 0$.
 However, in the next section it will be shown that the observable MPJPE follows the here-obtained $\Delta d$ nonetheless.
 
 In general, there exists no factor $\rho$ such that $x_i = \widetilde{x_i}$ for all $i$.
@@ -279,15 +279,15 @@ The camera distance in the experiments for $dz = 0$ is approximately 5m.
 The resulting plots are shown in \autoref{fig:z-shift-error}.
 
 The experimental results confirm the theoretical findings.
-Although the generator could estimate $\widetilde{Z_i}$s such that the MPJPE stays the same for all $dz$, the MPJPE increases for increasing $\abs{dz}$.
+Although the generator could estimate $\widetilde{Z_i}$s such that the MPJPE stays the same for all $dz$ ($\widetilde{Z_i} = Z_i$ for all $i$), the MPJPE increases for increasing $\abs{dz}$.
 This meets the expectations, as otherwise the generator would have to be able to infer the absolute depth of the pose from a normalized 2D projection.
 The theoretical results seem to provide a lower bound for the error, but because for all considered $dz$ the theoretical MPJPE does not exceed the minimal experimental MPJPE, this could just be coincidence.
-The same shape of the two curves though suggests that the theoretical results do actually describe the behavior of the real world MPJPE.
+The same shape of the two curves however suggests that the theoretical results do actually describe the behavior of the real world MPJPE.
 Compared to the effect of shifting along an image plane axis, the MPJPE does not grow significantly for larger offsets $dz$.
 For an offset of 20m, the MPJPE is about 5mm higher than the one without any offset.
 For negative offsets (i.e. poses closer to the camera), a 5mm increase is already measurable at 2.4m.
 It comes as no surprise that the effect is stronger for poses closer to the camera.
-The smaller the camera distance, the more extreme the change in relative projection ray angles, up until the pose moves behind the camera.
+The smaller the camera distance, the more extreme the change in relative projection ray angles, up until the point where the pose moves behind the camera.
 
 It is also notable that for $dz = 0$, the scaled theoretical MPJPE is already at 5mm.
 The reason for this lies in the scaling applied with Protocol 2.

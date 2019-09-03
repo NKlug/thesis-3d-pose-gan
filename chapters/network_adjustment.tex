@@ -2,29 +2,29 @@
 \label{sec:network-adjusting}
 
 The results of the previous section show that the network proposed by \citet{drover18} is not viable for practical use as is.
-Especially if the camera photographing the poses is not centered at the root joint and the root joint thus is not naturally aligned with the origin of the image plane, a significant increase in MPJPE is measurable.
-This motivates further looking into how this increased error can be circumvented and potentially modifying the network.
+Especially if the camera projecting the poses is not centered at the root joint, a significant increase in MPJPE is measurable.
+This motivates further looking into how this increased error can be circumvented.
 This section will focus on the error introduced by shifting along the image plane as it shows a far more significant increase in MPJPE than shifting along the z axis.
 Again, for simplicity, only shifting along the x axis will be considered.
 
-In \autoref{eq:re-projected-X}, if the 2D points would be re-projected correctly (i.e. shifted back before re-projection), in theory the lower bound in \autoref{eq:delta-d} would no longer apply.
+In \autoref{eq:re-projected-X}, if the 2D points would be re-projected correctly (i.e. shifted back before re-projection), in theory, the lower bound in \autoref{eq:delta-d} would no longer hold true.
 In that case, if the generator estimates all depths $\widetilde{Z}_i$ perfectly (that is $\widetilde{Z}_i = Z_i$) the re-projected pose equals the ground truth pose up to a shift.
-Thus, in a first attempt to efface the increased error, the re-projection of the poses into three dimensional space is adapted.
+Thus, in a first attempt to efface the increasing error, the re-projection of the poses into three dimensional space is adapted.
 
 \subsection{Generator with Correct Re-Projection}
 
 For a correct re-projection of the 2D poses into three dimensions, the network presented earlier is slightly modified.
 The network now receives poses that are only normalized in scale, but not in location.
-For an input pose $p$, in a first step, the vector $(dx, dy)$ given by the root joint's coordinates is subtracted from all 2D points, such that the 2D pose is now normalized both in scale and location.
+For an input pose $P$, in a first step, the vector $(dx, dy)$ given by the root joint's coordinates is subtracted from all 2D points, such that the 2D pose is now normalized both in scale and location.
 Afterwards, the depth offsets $o_i$ are estimated for each point in the same way as in the original network.
 Before the pose is then re-projected into three dimensions, the 2D points are shifted back by adding $(dx, dy)$ to each point again.
 As explained above, this procedure theoretically circumvents the lower bound found in the previous section.
-For the evaluation of this modified network, a pre-trained version of the original network in combination with the correct re-projection is used.
+For the evaluation of this modified network, a pre-trained version of the original network in combination with the correct re-projection is utilized.
 The Protocol 2 MPJPEs are again calculated for different offsets $dx$, while $dy = 0$.
 The results for this procedure are shown in \autoref{fig:x-shift-error-correct-reproj} (orange graph).
-The MPJPE decreased notably compared to the original network (blue graph), but still increases significantly for increasing offsets $dx$.
+The MPJPE decreased slightly compared to the original network (blue graph), but still increases significantly for increasing offsets $dx$.
 
-In another attempt to reduce the MPJPE, the modified network presented above is trained from ground up.
+In another attempt to reduce the error, the modified network from above is trained from ground up.
 Similar to \autoref{sec:results-augmented}, the discriminator still receives poses which are already naturally normalized in location.
 Since the generator now produces 3D poses which are not necessarily aligned with the origin of the coordinate system, but may have offsets in x or y dimension, the poses have to be normalized.
 For this, the 3D poses' root joints are aligned with the origin, and then fed to the Random Projection Layer as before.
@@ -45,7 +45,7 @@ However, ambiguities between poses shifted by different offsets still exist, as 
 In order to eliminate those ambiguities, an additional change has to be made to the generator.
 
 Instead of poses normalized in scale and location, the generator now only receives poses that are normalized in scale.
-That way, it can differentiate between poses photographed with different offsets from the center.
+That way, it can differentiate between poses projected with different offsets $dx$ and $dy$.
 Again, the system is trained with poses with offsets $dx$ in $[-10\text{m}, 10\text{m}]$ while for $dy$ is still $0$.
 As before, the 2D poses are re-projected correctly into three dimensions.
 The hyperparameters are the same as in \autoref{sec:evaluation}.
