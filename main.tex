@@ -29,7 +29,7 @@
 \usepackage{tkz-euclide} % for coordinate system etc.
 \usepackage{pgfplots} % plotting data
 \usepackage[section]{placeins} % place figures in the sections they appear in
-\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny, disable]{todonotes}
 \usepackage{parskip} % space between paragraphs instead of indent
 \usepackage{xr-hyper}  
 \usepackage[pagebackref, pdftex, colorlinks=true, linkcolor=blue, citecolor=blue]{hyperref}
@@ -92,13 +92,6 @@
 	
 	\pagenumbering{arabic}
 
-	\Todo[inline]{Note to myself: Beim Korrekturlesen darauf achten ob Sachen benutzt werden, die vorher nicht erläutert wurden. Außerdem:
-		Werden die Zusammenhänge überall klar?
-		Wird die Motivation, bestimmte Dinge zu tun/ zu analysieren klar?
-		Check for abbreviations like "don't".
-		Check for spaces before points and commas.
-	}
-
 	\input{chapters/introduction}
 	
 	\input{chapters/network}
@@ -115,9 +108,8 @@
 	
 	\input{chapters/conclusion}
 	
-	\unsure[inline]{Maybe appendix: shift error for x and y}
 	\pagebreak
-	\Todo{Replace arxiv links with doi or link to journal where possible}
+
 	\bibliography{bibliography}
 	\bibliographystyle{plainnat}
 	
