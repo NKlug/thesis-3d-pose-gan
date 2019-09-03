@@ -142,7 +142,6 @@ In practice, both generator and discriminator are neural networks that consist o
 A Residual Block consists of two fully connected layers of size $1024$ each followed by Rectified Linear Units (ReLU) and a residual connection adding the input to the last layer's output (\autoref{fig:residual-block}).
 In their work, \citet{drover18} describe two additional Batch Normalization layers \cite{ioffe15}, one immediately after each fully connected layer.
 Practical tests have shown that when using those additional layers the training does not converge at all.
-\unsure{Should I still mention the "personal communication"? I'm not sure if their paper is related to this work enough.}
 As competitive results could also be achieved with the reduced network design, the proposed Batch Normalization Layers have been left out completely in this work.
 
 Architecture-wise, the generator takes $n$ 2D joint locations (i.e. $2n$ scalar inputs) as input and feeds them to a fully connected layer of size 1024.
