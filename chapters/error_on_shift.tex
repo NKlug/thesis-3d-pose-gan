@@ -199,7 +199,7 @@ This makes the perspective projection more and more similar to a \emph{weak} per
 As a simple example to demonstrate that this issue cannot be solved with scaling only, consider two points $A = (5, 5)$ and $B = (3, 10)$. 
 With the same perspective projection depicted in \autoref{fig:camera-projection-setup}, we get the projected x coordinates $a = \frac{5}{5} = 1$ and $b = \frac{3}{10} = 0.3$.
 Now consider the same points shifted by $5$ units in positive z direction, increasing the camera distance: $A' = (5, 10)$ and $B' = (3, 15)$.
-The resulting x coordinates are $a' = \frac{5}{10} = (0.5)$ and $b' = \frac{3}{15} = (0.2)$.
+The resulting x coordinates are $a' = \frac{5}{10} = 0.5$ and $b' = \frac{3}{15} = 0.2$.
 There exists no factor $\gamma$ such that $a = \gamma a'$ \emph{and} $b = \gamma b'$.
 
 This phenomenon also appears in photography, where it is known as lens compression (a misleading term, as it has nothing to do with the lens).

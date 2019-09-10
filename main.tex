@@ -31,8 +31,12 @@
 \usepackage[section]{placeins} % place figures in the sections they appear in
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny, disable]{todonotes}
 \usepackage{parskip} % space between paragraphs instead of indent
+\usepackage{csquotes} % autmatic left quotation marks
 \usepackage{xr-hyper}  
 \usepackage[pagebackref, pdftex, colorlinks=true, linkcolor=blue, citecolor=blue]{hyperref}
+
+% use " as left quotation mark
+\MakeOuterQuote{"}
 
 \usetkzobj{all}
 \usetikzlibrary{external, positioning, arrows}
@@ -73,6 +77,7 @@
 \renewcommand{\baselinestretch}{1.1} % line distance
 \allowdisplaybreaks % Make big equations breakable
 
+\DeclareMathOperator{\loss}{loss}
 
 \pagenumbering{gobble}
 

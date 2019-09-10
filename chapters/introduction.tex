@@ -7,7 +7,7 @@ With those well-performing 2D pose estimators, the next logical step is to estim
 For this, some end-to-end frameworks have been proposed, which estimate the 3D poses directly from RGB images \cite{pavlakos17, park16, mehta17, mehta17_2}.
 Another approach is to split the task of 3D pose estimation into two subtasks \cite{drover18, martinez17, moreno-noguer16}:
 2D pose estimation from RGB images and subsequent 3D pose estimation from the 2D poses.
-This two-step pipeline benefits from the fact that the existing 2D pose estimators can be used for the first part, which means that 3D pose estimation is reduced to the second subtask, that is, the to 2D to 3D lifting.
+This two-step pipeline benefits from the fact that the existing 2D pose estimators can be used for the first part, which means that 3D pose estimation is reduced to the second subtask, that is, the 2D to 3D lifting.
 
 Human pose estimation has been successfully applied in multiple areas.
 In the medical field human pose estimation can help in detecting any movement related disorders.
@@ -49,7 +49,7 @@ The system is evaluated for synthetically generated 2D poses and the monocular 2
 In order to gain insights about the system's ability to generalize to unknown data, the system is also evaluated with poses from the TotalCapture dataset \cite{trumble17}.
 
 In \autoref{sec:loss-function-modification}, a modified loss function for the generator is presented.
-The new loss leverages high-level knowledge about human poses, which can be used by the generator to refine the estimated 3D poses.
+The new loss function leverages high-level knowledge about human poses, which can be used by the generator to refine the estimated 3D poses.
 
 \autoref{sec:effects-of-normalization} is the main part of this thesis.
 Here, the two normalization constraints present in the 3D pose estimation system discussed in \autoref{sec:network} are analyzed.

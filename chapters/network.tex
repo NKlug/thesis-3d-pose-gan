@@ -23,7 +23,7 @@ Thus, GANs can be described as a minimax game with players $G$ and $D$:
 \begin{equation}
 \min_G \max_D V(D, G) \ .
 \end{equation}
-\citet{goodfellow14} have shown that this expression takes on its global optimum if and only $p_{fake} = p_{real}$.
+\citet{goodfellow14} have shown that this expression takes on its global optimum if and only if $p_{fake} = p_{real}$.
 In this case, the discriminator produces an output of $\frac{1}{2}$ for all inputs, which means it is no longer able to distinguish between the distributions.
 
 Usually, the generator and the discriminator are two neural networks.
