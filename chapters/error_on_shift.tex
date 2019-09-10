@@ -112,7 +112,7 @@ Putting Equations \eqref{eq:z_i-min}, \eqref{eq:x_i-min} and \eqref{eq:y_i-min} 
 \begin{align}
 	\Delta d_i &= 
 	\sqrt{\left (\widetilde{X}_i^\ast - X_i \right )^2 + \left (\widetilde{Y}_i^\ast - Y_i \right )^2 + \left (\widetilde{Z}_i^\ast - Z_i \right )^2}\\
-	& = \sqrt{\frac{\left (a Y_i - b X_i \right )^2 + \left (a Z_i - X_i \right )^2 + \left (b Z_i - Y_i \right )^2}{1 + a^2 + b^2}} \\
+	& \stackrel{\footnotemark}{=} \sqrt{\frac{\left (a Y_i - b X_i \right )^2 + \left (a Z_i - X_i \right )^2 + \left (b Z_i - Y_i \right )^2}{1 + a^2 + b^2}} \\
 	\label{eq:bzy-zero}
 	&= \sqrt{\frac{\left (dx \cdot Y_i \cdot \left (\frac{1}{Z_i} - \frac{1}{Z} \right) \right)^2 + \left (a Z_i - X_i \right )^2}{1 + a^2 + b^2}}\\
 	& = \sqrt{\frac{\left (dx \cdot Y_i \cdot \left (\frac{1}{Z_i} - \frac{1}{Z} \right ) \right)^2 + \left (dx \cdot Z_i \cdot \left (\frac{1}{Z_i} - \frac{1}{Z} \right ) \right)^2}{1 + a^2 + b^2}} \\
@@ -122,6 +122,7 @@ Putting Equations \eqref{eq:z_i-min}, \eqref{eq:x_i-min} and \eqref{eq:y_i-min} 
 \end{align}
 In \autoref{eq:bzy-zero} $b Z_i - Y_i = 0$ has been used.
 With this $\Delta d_i$ the MPJPE for the whole pose can then be calculated as the mean of all $\Delta d_i$s:
+\footnotetext{This equation was derived using a computer algebra system.}
 \begin{equation}
 	\label{eq:minimum-mpjpe-on-shift}
 	\Delta d = \frac{1}{n} \sum_{i = 1}^{n} \Delta d_i 
