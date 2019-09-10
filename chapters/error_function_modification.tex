@@ -28,16 +28,16 @@ Concerning the GAN, this fact motivates passing information about the symmetric 
 Let a \emph{limb} $l = (u, v)$ be the connecting body part between joints $u$ and $v$.
 For a set of symmetric limbs $S = \{(l_{i_1}, l_{i_2})~|~ l_{i_1}, l_{i_2}\ \text{are symmetric limbs} \}$ the \emph{limb loss} is defined as:
 \begin{equation}
-loss_{limb} = \frac{1}{|S|}\sum_{((u_1, v_1), (u_2, v_2)) \in S} \bigl\lvert \norm{u_1 - v_1}_2 - \norm{u_2 - v_2}_2 \bigr\rvert \ .
+\loss_{limb} = \frac{1}{|S|}\sum_{((u_1, v_1), (u_2, v_2)) \in S} \bigl\lvert \norm{u_1 - v_1}_2 - \norm{u_2 - v_2}_2 \bigr\rvert \ .
 \end{equation}
 
 The limb loss penalizes the generator if it produces poses with symmetric limbs of different lengths.
 It is calculated for the 3D poses estimated by the generator without further normalization.
 The new loss for the generator is then given by
 \begin{equation}
-	loss_{G, limb} = loss_G + \lambda \cdot loss_{limb} \ ,
+	\loss_{G, limb} = \loss_G + \lambda \cdot \loss_{limb} \ ,
 \end{equation}
-where $\lambda$ is a weighting factor and $loss_G$ is given in \autoref{eq:generator-loss}.
+where $\lambda$ is a weighting factor and $\loss_G$ is given in \autoref{eq:generator-loss}.
 
 \input{figures/limb_loss_table}
 

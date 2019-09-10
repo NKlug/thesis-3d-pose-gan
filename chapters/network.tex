@@ -30,11 +30,11 @@ Usually, the generator and the discriminator are two neural networks.
 They can be trained with the following loss functions \cite{goodfellow17}:
 \begin{align}
 \label{eq:generator-loss}
-loss_G &= -\mathbb{E}_{z\sim p_{z}}(\log(D(G(z)))) \\
+\loss_G &= -\mathbb{E}_{z\sim p_{z}}(\log(D(G(z)))) \\
 \label{eq:discriminator-loss}
-loss_D &= -\frac{1}{2}\mathbb{E}_{r\sim p_{real}}(\log(D(r))) - \frac{1}{2} \mathbb{E}_{z\sim p_{z}}(\log(1 - D(G(z))))
+\loss_D &= -\frac{1}{2}\mathbb{E}_{r\sim p_{real}}(\log(D(r))) - \frac{1}{2} \mathbb{E}_{z\sim p_{z}}(\log(1 - D(G(z))))
 \end{align}
-Here, $loss_D$ is the standard cross entropy, as it can be found in a standard (binary) classifier.
+Here, $\loss_D$ is the standard cross entropy, as it can be found in a standard (binary) classifier.
 The discriminator tries to minimize it during training.
 Instead of the generator minimizing the same function with flipped sign, \citet{goodfellow17} suggests flipping the generator's target instead.
 This prevents vanishing gradients.
