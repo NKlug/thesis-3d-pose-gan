@@ -102,7 +102,7 @@ This means that the generator is ultimately also trying to learn that distributi
 On the way to doing that, 3D human poses are created as a byproduct, which can then be used in other applications.
 
 The generator's and discriminator's input are human 2D poses.
-During the application of the system, the generator's input pose will the pose to be lifted to 3D.
+During the application of the system, the generator's input pose will be the pose to be lifted into three dimensions.
 For numerical stability, \citet{drover18} require the input poses for both discriminator and generator to be normalized in the following way:
 \begin{enumerate}[label=(\Alph*)]
 	\item The 2D poses' root joint is centered at the origin of the image plane.
@@ -125,7 +125,7 @@ In order to obtain a norm limb length of (approximately) $1$, $Z = 10$ has been 
 Using the so found depths for each joint, the 2D pose can be re-projected into three dimensions using \autoref{eq:perspective-re-projection}.
 
 Afterwards, the obtained 3D poses are fed to a \emph{Random Projection Layer}, where they are projected to two dimensions again.
-For this, the poses are randomly rotated with with azimuth angles between $0$ and $360$ degrees and elevation angles between $0$ and $20$ degrees first and then projected with cameras centered at the root joint with a camera-root-joint-distance of $10$ as in \autoref{eq:perspective-projection}.
+For this, the poses are randomly rotated with azimuth angles between $0$ and $360$ degrees and elevation angles between $0$ and $20$ degrees first and then projected with cameras centered at the root joint with a camera-root-joint-distance of $10$ as in \autoref{eq:perspective-projection}.
 The particular choice of elevation angles is based on the heuristic that in reality, people are rather photographed from above than from below.
 After the projection, the 2D poses are fed to the discriminator.
 
