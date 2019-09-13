@@ -7,27 +7,28 @@ With those well-performing 2D pose estimators, the next logical step is to estim
 For this, some end-to-end frameworks have been proposed, which estimate the 3D poses directly from RGB images \cite{pavlakos17, park16, mehta17, mehta17_2}.
 Another approach is to split the task of 3D pose estimation into two subtasks \cite{drover18, martinez17, moreno-noguer16}:
 2D pose estimation from RGB images and subsequent 3D pose estimation from the 2D poses.
-This two-step pipeline benefits from the fact that the existing 2D pose estimators can be used for the first part, which means that 3D pose estimation is reduced to the second subtask, that is, the 2D to 3D lifting.
+This two-step pipeline benefits from the fact that the existing 2D pose estimators can be used for the first part. 
+This means that 3D pose estimation is reduced to the second subtask, that is, the 2D to 3D lifting.
 
 Human pose estimation has been successfully applied in multiple areas.
-In the medical field human pose estimation can help in detecting any movement related disorders.
+In the medical field human pose estimation can help to detect any movement related disorders.
 \citet{aroeira16} use pose estimation to detect scoliosis in adolescents through the analysis of their postures.
 In another work, \citet{khan18} use poses to monitor Vojta therapy, a form of therapy treating motor disabilities originating from neurological disorders.
 Pose estimation is also necessary in future personal care robots that may be used in the context of assisted living \cite{richter15}.
 Apart from applications in the medical field, an obvious application of human pose estimation is replacing the systems that are currently used for the task.
 Concretely, those are Motion Capture (MoCap) systems used e.g. for animations and visualizations and RGBD cameras like Microsoft Kinect.
-Not only are those systems expensive, but can also not be used in all environments (especially MoCap).
+Not only are those systems expensive, but they can also only be used in limited environments (especially MoCap).
 Here, pose estimation from RGB images only can provide a cheaper, more easily accessible alternative.
 Human pose estimation can also be of help in the performance analysis of athletes in sports \cite{einfalt18, zecha19}.
-Further applications include monitoring human behavior in surveillance scenarios, in working environments or elsewhere.
+Further applications include monitoring human behavior in surveillance scenarios and in working environments.
 
 \subsection{"Can 3D Pose be Learned from 2D Projections Alone?"}
 
-As explained above, recent work in the field of 3D pose estimation focuses on lifting 2D poses into three dimensions. 
-In the paper "Can 3D Pose be Learned from 2D Projections Alone?", \citet{drover18} propose such a system.
+Recent work in the field of 3D pose estimation focuses on lifting 2D poses into three dimensions. 
+In their paper "Can 3D Pose be Learned from 2D Projections Alone?", \citet{drover18} propose such a system.
 On top of the state of the art results for the estimation, a major advantage of this system is that it can be trained in a weakly supervised manner.
 It employs a Generative Adversarial Network \cite{goodfellow14} that relies only on 2D poses for training; no 3D ground truth data is required.
-This makes the system particularly attractive, as compared to 2D ground truth data, acquiring 3D ground truth poses is notoriously harder (for a precise data collection, MoCap systems are usually required).
+This makes the system particularly attractive, as compared to 2D ground truth data, acquiring 3D ground truth poses is notoriously harder (for precise data collection, MoCap systems are usually required).
 
 However, in this system, the 2D input poses are required to be normalized in scale and location before being lifted to 3D.
 The objective of this thesis is an analysis of this system with respect to the influence of those normalization constraints on the error.
@@ -35,18 +36,18 @@ In addition to that, a modified loss function is proposed which enables an impro
 
 \subsection{Outline}
 
-\autoref{sec:network} begins with a short introduction into Generative Adversarial Networks and perspective projection.
+\autoref{sec:network} begins with a short introduction into Generative Adversarial Networks and perspective projections.
 Those topics are the foundation of the pose estimation proposed by \citet{drover18}, which is presented and explained subsequently.
 
-In \autoref{sec:data} the datasets used for evaluation -- which is mainly the Human3.6M dataset \cite{ionescu14} -- are presented.
+In \autoref{sec:data}, the datasets used for evaluation -- which is mainly the Human3.6M dataset \cite{ionescu14} -- are presented.
 As most pose estimation systems do not infer 3D poses in absolute scale, the estimated poses have to be transformed to be comparable to the ground truth poses.
-The two main protocols that evolved in literature allow the application of different types of transformations to the estimated poses.
+The two main evaluation protocols that evolved in literature allow the application of different types of transformations to the estimated poses.
 These protocols are analyzed and discussed.
 
 Afterwards, in \autoref{sec:evaluation}, baseline errors for a rebuilt version of the system are established.
 Those are required for the analysis of the effects of pose normalization, as well as for an evaluation of the modified loss function in later sections.
 The system is evaluated for synthetically generated 2D poses and the monocular 2D poses included in the Human3.6M dataset.
-In order to gain insights about the system's ability to generalize to unknown data, the system is also evaluated with poses from the TotalCapture dataset \cite{trumble17}.
+In order to gain insights about the system's ability to generalize to unknown data, the system is also evaluated on poses from the TotalCapture dataset \cite{trumble17}.
 
 In \autoref{sec:loss-function-modification}, a modified loss function for the generator is presented.
 The new loss function leverages high-level knowledge about human poses, which can be used by the generator to refine the estimated 3D poses.
@@ -55,9 +56,9 @@ The new loss function leverages high-level knowledge about human poses, which ca
 Here, the two normalization constraints present in the 3D pose estimation system discussed in \autoref{sec:network} are analyzed.
 The 2D input poses are expected to be normalized in location and scale.
 By re-constructing the projections and re-projections of the poses during the estimation process, a theoretical lower bound for the minimal error is derived for both types of normalization.
-Experiments are conducted in order to confirm the so-found lower bounds.
+Experiments are conducted in order to confirm the established lower bounds.
 
 The results of the previous section show that especially the normalization in location introduces a significant additional error.
-Hence, in \autoref{sec:network-adjusting} the system by \citet{drover18} is modified and trained such that the effects of normalization in location are diminished.
+Hence, in \autoref{sec:network-adjusting} the system by \citet{drover18} is modified and trained such that the effects of normalization in location are taken into account.
 
 \autoref{sec:conclusion} concludes the thesis and provides a summary of the most important results.
