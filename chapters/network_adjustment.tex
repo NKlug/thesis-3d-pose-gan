@@ -1,15 +1,33 @@
 \section{Prevention of the Effects of Pose Normalization}
 \label{sec:network-adjusting}
 
-The results of the previous section show that the network proposed by \citet{drover18} is not viable for practical use as is.
-Especially if the camera projecting the poses is not centered at the root joint, a significant increase in MPJPE is measurable.
-This motivates further looking into how this increased error can be circumvented.
+The results of the previous section show that the network proposed by \citet{drover18} is not viable for practical use in unconstrained applications.
+Especially if the camera projecting the poses is not centered at the root joint, a significant increase in MPJPE can be observed.
+This motivates further looking into strategies to circumvent this increased error.
 This section will focus on the error introduced by shifting along the image plane as it shows a far more significant increase in MPJPE than shifting along the z axis.
 Again, for simplicity, only shifting along the x axis will be considered.
 
 In \autoref{eq:re-projected-X}, if the 2D points would be re-projected correctly (i.e. shifted back before re-projection), in theory, the lower bound in \autoref{eq:delta-d} would no longer hold true.
-In that case, if the generator estimates all depths $\widetilde{Z}_i$ perfectly (that is $\widetilde{Z}_i = Z_i$) the re-projected pose equals the ground truth pose up to a shift.
-Thus, in a first attempt to efface the increasing error, the re-projection of the poses into three dimensional space is adapted.
+To show this, let $P = [(X_1, Y_1, Z_1), \dotsc, (X_n, Y_n, Z_n)]$ be a 3D pose with $(X_1, Y_1, Z_1) = (dx, dy, Z)$.
+Let $p = [(x_1, y_1), \dotsc, (x_n, y_n)]$ be its 2D projection with
+\begin{equation}
+	x_i = f \frac{X_i}{Z_i} \ ,\enspace y_i = f \frac{Y_i}{Z_i} \ .
+\end{equation}
+Recall from \autoref{sec:x-shift-error-theoretical} that the coordinates $\widetilde{x}_i$ and $\widetilde{y}_i$ of the normalized 2D pose $\widetilde{p}$ are given by
+\begin{align}
+	\widetilde{x}_i &= x_i - f \frac{dx}{Z} \ ,\\
+	\widetilde{y}_i &= y_i - f \frac{dy}{Z} \ .
+\end{align}
+Assume that the generator estimates all depths $\widetilde{Z}_i$ perfectly, that is, $\widetilde{Z}_i = Z_i$.
+If the 2D pose is shifted back and then re-projected into three dimensions, we have
+\begin{align}
+	\widetilde{X}_i &= \frac{\widetilde{x}_i +  f \frac{dx}{Z}}{f} \cdot \widetilde{Z}_i = \frac{x_i}{f} \cdot Z  = X_i\ ,\\
+	\widetilde{Y}_i &= \frac{\widetilde{y}_i +  f \frac{dy}{Z}}{f} \cdot \widetilde{Z}_i= \frac{y_i}{f} \cdot \widetilde{Z}_i  = \frac{y_i}{f} \cdot Z = Y_i \ .
+\end{align}
+That means that in this case the re-projected pose is equal to the ground truth pose.
+Hence, the previous lower bound no longer holds true.
+
+Because of these results, in a first attempt to efface the increasing error, the re-projection of the poses into three dimensional space is adapted.
 
 \subsection{Generator with Correct Re-Projection}
 
@@ -28,7 +46,7 @@ In another attempt to reduce the error, the modified network from above is train
 Similar to \autoref{sec:results-augmented}, the discriminator still receives poses which are already naturally normalized in location.
 Since the generator now produces 3D poses which are not necessarily aligned with the origin of the coordinate system, but may have offsets in x or y dimension, the poses have to be normalized.
 For this, the 3D poses' root joints are aligned with the origin, and then fed to the Random Projection Layer as before.
-The system is trained with poses having varying offsets uniformly drawn from $[-10\text{m}, 10\text{m}]$ and the same hyperparameters as in \autoref{sec:evaluation}.
+The system is trained with poses having varying offsets $dx$ that are uniformly drawn from $[-10\text{m}, 10\text{m}]$ and the same hyperparameters as in \autoref{sec:evaluation}.
 
 For an offset of $dx = 0$ the MPJPE is slightly higher than for the original network ($59.1$mm vs. $54.8$mm).
 Despite that, for larger offsets along the x axis, the MPJPE is now reduced significantly.
@@ -49,11 +67,11 @@ That way, it can differentiate between poses projected with different offsets $d
 Again, the system is trained with poses with offsets $dx$ in $[-10\text{m}, 10\text{m}]$ while for $dy$ is still $0$.
 As before, the 2D poses are re-projected correctly into three dimensions.
 The hyperparameters are the same as in \autoref{sec:evaluation}.
-Note that while prior to now, the root joint could have been left out during training (a constant input of $0$ has no effect on the neural network), it is now important to include it.
+Note that while before, the root joint could have been left out during training (a constant input of $0$ has no effect on the neural network), it is now important to include it.
 
-Experimental results are displayed in \autoref{fig:x-shift-error-correct-reproj} (green graph).
+Experimental results are depicted in \autoref{fig:x-shift-error-correct-reproj} (green graph).
 The MPJPE could again be reduced and is now at $70$mm for a $10$m x offset at a camera distance of $5$m.
-Compared to the results of the previous section, that is an improvement of approximately $10$mm on average.
+Compared to the results of the previous section, that is an improvement of approximately $10$mm on average over all offsets $dx$.
 At $dx = 0$, the results now equal those for the original system (up to $1$mm).
 
 %Recalling \autoref{sec:results-augmented}, the results for Protocol 2 for the monocular 2D poses included in the Human3.6M dataset could not compete with those for synthetic data.
