@@ -6,7 +6,7 @@
 
 % Packages
 \usepackage[a4paper]{geometry}
-\usepackage[english]{babel}
+\usepackage[english,german]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[automark]{scrpage2}
 %\usepackage[automark, headsepline,footsepline]{scrlayer-scrpage}
@@ -56,6 +56,11 @@
 	\renewcommand{\subsubsectionautorefname}{Section}
 }
 
+% Multiple abstracts
+\newenvironment{polyabstract}[1]
+{\renewcommand{\abstractname}{#1}\begin{abstract}}
+	{\end{abstract}}
+
 \makeatletter
 \let\oldtheequation\theequation
 \renewcommand\tagform@[1]{\maketag@@@{\ignorespaces#1\unskip\@@italiccorr}}
@@ -82,6 +87,8 @@
 \pagenumbering{gobble}
 
 \begin{document}
+	\selectlanguage{english}
+	
 	\input{chapters/header}
 	
 	\input{chapters/reviewers}
