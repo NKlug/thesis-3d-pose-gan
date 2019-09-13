@@ -2,7 +2,7 @@
 \label{sec:evaluation}
 
 Later in this work, the effects of pose normalization in the system by \citet{drover18} will be analyzed, both theoretically and experimentally.
-In a first step towards the experimental analysis, baseline results for a rebuilt version of the system have to be established.
+In a first step towards the experimental analysis, baseline results for a re-implemented version of the system have to be established.
 Those results provide insights about the system's performance under different circumstances and ease a comparison between the original system by \citet{drover18} and modified versions of this system, which will be presented in later sections.
 
 \subsection{Training Procedure and Hyperparameters}
@@ -40,10 +40,10 @@ For training, \citet{drover18} follow a similar procedure and augment synthetic 
 \input{figures/original_system_protocol2_table}
 \input{figures/original_system_total_capture_table}
 
-\autoref{tbl:results-original-protocol1} shows the results for \textbf{Protocol 1} reported in \cite{drover18} and the results for the rebuilt system trained with the synthetic 2D poses.
-For the evaluation of the rebuilt system, one synthetic 2D pose is deterministically sampled from each 3D pose available for Subject 11 in the same way as before.
+\autoref{tbl:results-original-protocol1} shows the results for \textbf{Protocol 1} reported in \cite{drover18} and the results for the re-implemented system trained with the synthetic 2D poses.
+For the evaluation of the re-implemented system, one synthetic 2D pose is deterministically sampled from each 3D pose available for Subject 11 in the same way as before.
 While it is not clear which poses \citet{drover18} exactly used in the evaluation of their system, they also only use poses from S11.
-The results for the rebuilt system cannot compete with the results in \cite{drover18}.
+The results for the re-implemented system cannot compete with the results in \cite{drover18}.
 The exact source of the 6.8mm average discrepancy is not clear; there can be various reasons for it.
 Those include the following:
 \citet{drover18} do not mention whether they also use synthetic poses for testing or evaluate only on 2D poses provided in Human3.6M.

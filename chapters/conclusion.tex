@@ -13,7 +13,7 @@ As the implementation of those protocols varies in literature, a noninvasive way
 This transformation allows aligning two predefined root joints and scaling the poses to match the average limb length of the ground truth poses for each subject in the test dataset.
 This comes close to the transformations that can be applied during application, and thus gives good insight about the quality of the poses in that scenario.
 
-In \autoref{sec:evaluation}, a rebuilt version of the system has been evaluated for different data configurations.
+In \autoref{sec:evaluation}, a re-implemented version of the system has been evaluated for different data configurations.
 The results reported by \citet{drover18} could only be reproduced up to a $6.8$mm margin when trained on synthetic 2D poses with an overall MPJPE of $41.0$mm for Protocol 1 (which allows rigid alignment through a Procrustes Transformation) and $54.8$mm for Protocol 2.
 For the monocular 2D poses included in the Human3.6M dataset, the same results could only be achieved for Protocol 1; for Protocol 2 the MPJPE increased to $80.4$mm.
 When trained with those poses in addition to the synthetic poses, the error could be reduced by about $10$mm.
