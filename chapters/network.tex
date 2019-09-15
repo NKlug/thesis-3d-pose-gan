@@ -133,7 +133,7 @@ In their work, \citet{drover18} use an additional Batch Normalization layer \cit
 Practical tests have shown that when using those additional layers the training does not converge at all.
 As competitive results could also be achieved with the reduced network design, the proposed Batch Normalization Layers have been removed in this work.
 
-Architecture-wise, the generator takes the $n$ 2D joints of the pose $p$ (i.e. $2n$ scalar inputs) as input and feeds them to a fully connected layer of size 1024.
+Architecture-wise, the generator takes the $n$ 2D joints of the pose $p$ (i.e. $2n$ scalars) as input and feeds them to a fully connected layer of size 1024.
 This is followed by four Residual Blocks and concluded by another fully connected layer that maps the output of the last residual block to a vector of size $n$, in which each entry represents the depth offset of one joint.
 
 The discriminator's architecture is very similar to the generator's. 
