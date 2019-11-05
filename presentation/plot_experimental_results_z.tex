@@ -1,0 +1,30 @@
+\begin{figure}
+		\centering
+		\begin{tikzpicture}[trim axis left]
+		\begin{axis}[
+		tiny,
+		width=\textwidth,
+		height=6cm,
+		xlabel={$dz$ [m]},
+		%			axis lines = middle,
+		y label style={at={(axis description cs:0.12,1.08)},rotate=-90,anchor=north},
+		ylabel={MPJPE [mm]},
+		grid=both,
+		enlarge x limits = false,
+		grid style={draw=gray!50},
+		minor tick num = 1,
+		tick style={draw=gray!50},
+		scaled x ticks = false,
+		no markers,
+		xtick={-3,-2,...,15},
+		every axis plot/.append style={}
+		]
+		\addplot table [x=a, y=b, col sep=comma] {figures/plot_e_03_07_original_z_shift.csv};
+		\addplot table [x=a, y=b, col sep=comma] {figures/plot_theoretical_z_shift_scaled.csv};
+		\end{axis}
+		\end{tikzpicture}
+	\caption{Experimental (blue) and theoretical (red) MPJPEs for different values of $dz$.
+		The distance between the camera and the poses is ten times the norm limb length (approximately 5m).
+	}
+	\label{fig:z-shift-error}
+\end{figure}
