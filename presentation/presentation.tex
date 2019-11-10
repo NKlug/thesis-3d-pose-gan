@@ -59,13 +59,13 @@
 		\end{footnotesize}
 	\end{frame}
 
-	\begin{frame}{Why?}
-		\begin{itemize}
-			\item Very good 2D keypoint detectors out there: Stacked Hourglass, OpenPose etc.
-			\item Massive amount of 2D images/videos available
-			\item Acquiring 3D ground truth data is cumbersome and expensive
-		\end{itemize}
-	\end{frame}
+%	\begin{frame}{Why?}
+%		\begin{itemize}
+%			\item Very good 2D keypoint detectors out there: Stacked Hourglass, OpenPose etc.
+%			\item Massive amount of 2D images/videos available
+%			\item Acquiring 3D ground truth data is cumbersome and expensive
+%		\end{itemize}
+%	\end{frame}
 
 	\begin{frame}{How It Works}
 		\begin{figure}
@@ -111,6 +111,7 @@
 		\begin{figure}
 			\hspace{-.5cm}
 			\centering{
+			\uncover<2->{
 			\begin{subfigure}{.45\textwidth}
 			\begin{tikzpicture}
 				\draw[->] (0,0) -- (1.5,0);
@@ -122,15 +123,15 @@
 				\node[] (origin) at (0,0) [circle, fill, inner sep=1.5pt]{};
 				\node[] (shifted) at (-2,1) [yshift=-2pt, xshift=-1pt]
 				{\includegraphics[width=.2\textwidth]{figures/2D_pose_514651_transparent.png}};
-				\uncover<2->{
 				\node[] (normalized) at (0,0) [yshift=-2pt, xshift=-1pt]
 				{\includegraphics[width=.2\textwidth]{figures/2D_pose_514651_transparent.png}};
-				\draw[->, line width=1pt, dashed, shorten >=0.2cm, shorten <=.2cm] (-2, 1) -- (0,0);}
+				\draw[-Latex, line width=1pt, dashed, shorten >=0.2cm, shorten <=.2cm] (-2, 1) -- (0,0);
 				\tkzLabelPoint[below left= .06cm of origin](origin){\tiny{$(0,0)$}};
 			\end{tikzpicture}
 			\vspace{1.4mm}
 			\subcaption{Normalization by translation}
-			\end{subfigure}\hfill
+			\end{subfigure}
+			}\hfill
 			\begin{subfigure}{.45\textwidth}
 				\uncover<3->{\begin{tikzpicture}
 					\draw[->] (0,0) -- (1.5,0);
@@ -142,9 +143,8 @@
 					\node[] (scaled) at (0,0) [yshift=-2pt, xshift=-1pt]
 					{\includegraphics[width=.3\textwidth]{figures/2D_pose_514651_transparent.png}};
 					\node[] (origin) at (0,0) [circle, fill, inner sep=1.5pt]{};
-					\draw[<->, line width=0.5pt, dashed, Latex-Latex](-0.7, 1.5) -- (-0.7, -1.64);
+%					\draw[to-to, line width=0.5pt, dashed](-0.7, 1.5) -- (-0.7, -1.64);
 					\tkzLabelPoint[below left= .6mm of origin](origin){\tiny{$(0,0)$}};
-					\uncover<4->{
 					\draw[->] (3.5,0) -- (5,0);
 					\draw[->] (3.5,0) -- (3.5,1.5);
 					\tkzDefPoint(5,0){x1}
@@ -155,9 +155,8 @@
 					{{\includegraphics[width=.2\textwidth]{figures/2D_pose_514651_transparent.png}}};
 					\node[] (origin1) at (3.5,0) [circle, fill, inner sep=1.5pt]{};
 					\tkzLabelPoint[below left= .6mm and -1mm of origin](origin1){\tiny{$(0,0)$}};
-					\draw[<->, line width=0.5pt, dashed, Latex-Latex](3, 0.98) -- (3, -1.12);
-					\draw[->, line width=1pt, dashed] (1.5, 0.3) -- (2.5, 0.3);
-					}
+%					\draw[line width=0.5pt, dashed, to-to] (3, 0.98) -- (3, -1.12);
+					\draw[-Latex, line width=1pt, dashed] (1.5, 0.3) -- (2.5, 0.3);
 				\end{tikzpicture}
 			\subcaption{Normalization by scaling}
 			}
@@ -169,16 +168,16 @@
 
 	\end{frame}
 
-	\begin{frame}{Analysis of the Effects of Pose Normalization}
+	\begin{frame}{Effects of Pose Normalization by Translation}
 	Theoretical lower bound for the MPJPE caused by translation:
 	\begin{equation*}
-		\Delta d = \abs{dx \left (\frac{1}{Z_i} - \frac{1}{Z} \right )} \sqrt{\frac{Y_i^2 + Z_i^2}{1 + a^2 + b^2}} \ , 
+		\Delta d(X_i, Y_i, Z_i, dx, Z) = \abs{dx \left (\frac{1}{Z_i} - \frac{1}{Z} \right )} \sqrt{\frac{Y_i^2 + Z_i^2}{1 + a^2 + b^2}} \ , 
 	\end{equation*}
 	where:
 	\begin{itemize}
-		\item $dx$ offset along the x axis
-		\item $(X_i, Y_i, Z_i)$ joint of the pose $P$
-		\item $Z$ absolute distance between the camera and $P$'s root joint
+		\item $dx$: offset along the x axis
+		\item $(X_i, Y_i, Z_i)$: joint of the pose $P$
+		\item $Z$: absolute distance between the camera and $P$'s root joint
 		\item $a = \left( \frac{X_i}{Z_i} + dx \left( \frac{1}{Z_i} - \frac{1}{Z} \right) \right )$
 		\item $b = \frac{Y_i}{Z_i}$
 	\end{itemize}  
@@ -193,11 +192,17 @@
 	\end{frame}
 
 	\begin{frame}{Network modification}
-		Prevention of the increased MPJPE (caused by translation)
+		Prevention of the increased MPJPE (caused by translation):
 		\begin{itemize}
-			\item Correct re-projection of the 2D poses
+			\item 2D poses are shifted back before re-projection into 3D
 			\item Removal of the normalization constraint and training with non-normalized poses
 		\end{itemize}
+		\begin{figure}
+			\centering
+			\makebox[\textwidth][c]{
+				\includegraphics[width=1.1\textwidth]{figures/system.png}
+			}                
+		\end{figure}
 	\end{frame}
 
 	\begin{frame}{Results for Modified Network}

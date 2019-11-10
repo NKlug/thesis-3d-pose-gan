@@ -22,9 +22,9 @@
 				]
 				\addplot +[restrict expr to domain={\coordindex}{90:491}] table [x=a, y=b, col sep=comma] {figures/plot_e_03_07_original_x_shift.csv};
 				\addplot[color=black!60!green] table [x=a, y=b, col sep=comma] {figures/plot_e_01_06_shifted_generator_x_shift.csv};
+				\addplot[color=red] table [x=a, y=b, col sep=comma] {figures/plot_e_11_08_default_generator_x_shift.csv};
 				\end{axis}
 				\end{tikzpicture}
 			\end{subfigure}
-			\caption{MPJPEs for original (blue) and modified (green) network for different values of $dx$ without rotation.
-				The distance between the camera and the poses is approximately 5m.}
+			\caption{MPJPEs for original network (blue), network with correct re-projection (red) and network without normalization (green) for different values of $dx$ for Protocol 2.}
 \end{figure}
